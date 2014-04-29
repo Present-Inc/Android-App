@@ -1,0 +1,12 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="login_field_width">200dp</dimen>
+    <dimen name="login_field_height">40dp</dimen>
+
+    <dimen name="camera_preview_height">480dp</dimen>
+    <dimen name="camera_preview_width">480dp</dimen>
+
+</resources>

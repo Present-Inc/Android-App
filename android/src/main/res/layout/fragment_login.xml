@@ -1,0 +1,44 @@
+<RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#000000">
+
+    <EditText
+        android:layout_width="@dimen/login_field_width"
+        android:layout_height="@dimen/login_field_height"
+        android:id="@+id/usernameField"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:background="#FFFFFF"
+        android:capitalize="none"
+        android:clickable="true"
+        android:editable="true"
+        android:enabled="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:hint="Username"
+        android:longClickable="false"
+        android:singleLine="true"
+        android:textIsSelectable="true" />
+
+    <EditText
+        android:layout_width="@dimen/login_field_width"
+        android:layout_height="@dimen/login_field_height"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/passwordField"
+        android:layout_below="@+id/usernameField"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:background="#FFFFFF" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:id="@+id/button"
+        android:layout_below="@+id/passwordField"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp" />
+</RelativeLayout>
