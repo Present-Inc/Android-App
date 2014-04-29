@@ -1,1 +1,1 @@
-include ':android', ':MediaStreamer'
+include ':android'
