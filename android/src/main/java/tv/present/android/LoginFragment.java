@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import tv.present.android.util.PLog;
 import tv.present.api.PUserContext;
 
 /**
@@ -27,7 +28,7 @@ import tv.present.api.PUserContext;
 public class LoginFragment extends Fragment implements OnClickListener, AsyncTaskResponse {
 
     private static String TAG = "tv.present.Present.LoginFragment";
-    private final PAndroidLogger logger = PAndroidLogger.getInstance();
+    private final PLog logger = PLog.getInstance();
     private OnFragmentInteractionListener mListener;
 
     public static LoginFragment newInstance() {
