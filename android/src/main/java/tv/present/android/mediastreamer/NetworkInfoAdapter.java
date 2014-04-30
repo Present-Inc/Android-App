@@ -17,19 +17,21 @@ import java.util.Map;
 import tv.present.android.util.PLog;
 
 /**
- * Created by kbw28 on 4/29/14.
+ * This class returns data regarding the state of the network on the phone.
  */
 public class NetworkInfoAdapter {
 
+    private static String TAG = "tv.present.android.mediastreamer.NetworkInfoAdapter";
     private static Map<String, String> infoMap = new HashMap<String, String>();
     private static Map<Integer, String> phoneType = new HashMap<Integer, String>();
     private static Map<Integer, String> networkType = new HashMap<Integer, String>();
+
+    private static final String UNKNOWN_TYPE = "unknown";
 
     static {
         phoneType.put(0, "None");
         phoneType.put(1, "GSM");
         phoneType.put(2, "CDMA");
-
         networkType.put(0, "Unknown");
         networkType.put(1, "GPRS");
         networkType.put(2, "EDGE");
@@ -42,7 +44,6 @@ public class NetworkInfoAdapter {
         networkType.put(9, "HSUPA");
         networkType.put(10, "HSPA");
         networkType.put(11, "IDEN");
-
         infoMap.put("Cell", "false");
         infoMap.put("Mobile", "false");
         infoMap.put("Wi-Fi", "false");
@@ -64,8 +65,8 @@ public class NetworkInfoAdapter {
         NetworkInfo networkInfo = (NetworkInfo) connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-            NetworkInterface intf = getInternetInterface();
-            infoMap.put("IP", getIPAddress(intf));
+            NetworkInterface networkInterface = getInternetInterface();
+            infoMap.put("IP", getIPAddress(networkInterface));
             String type = (String) networkInfo.getTypeName();
             if (type.equalsIgnoreCase("mobile")) {
                 infoMap.put("Mobile", "true");
@@ -89,7 +90,7 @@ public class NetworkInfoAdapter {
             return phoneType.get(key);
         }
         else {
-            return "unknown";
+            return NetworkInfoAdapter.UNKNOWN_TYPE;
         }
     }
 
@@ -98,7 +99,7 @@ public class NetworkInfoAdapter {
             return networkType.get(key);
         }
         else {
-            return "unknown";
+            return NetworkInfoAdapter.UNKNOWN_TYPE;
         }
     }
 
@@ -120,7 +121,7 @@ public class NetworkInfoAdapter {
                 }
             }
         } catch (SocketException e) {
-            PLog.logWarning(this.TAG, "Caught SocketException in getInternetInterface().  Details: " + e.toString());
+            PLog.logWarning(NetworkInfoAdapter.TAG, "Caught SocketException in getInternetInterface().  Details: " + e.toString());
             return null;
         }
         return null;
