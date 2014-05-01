@@ -35,7 +35,7 @@ public class CameraActivity extends Activity {
     private CameraAutoFocusCallback mAutoFocusCallback;
     private boolean mAlreadyFocused;
     private AccelerometerListener mAccelerometerListener;
-    private MediaRecorder mMediaRecorder;
+    private MediaRecorder mMediaRecorder, mMediaRecorder2;
     private SensorManager sensorManager;
     private String videoFileName;
     private boolean isRecording = false;
@@ -184,26 +184,46 @@ public class CameraActivity extends Activity {
     private boolean prepareVideoRecorder() {
 
         this.mMediaRecorder = new MediaRecorder();
+        this.mMediaRecorder2 = new MediaRecorder();
         this.mCamera.stopPreview();
         this.mCamera.unlock();
+
         this.mMediaRecorder.setCamera(mCamera);
+        this.mMediaRecorder2.setCamera(mCamera);
+
         this.mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
         this.mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+        this.mMediaRecorder2.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
+        this.mMediaRecorder2.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+
         this.mMediaRecorder.setOrientationHint(90);
+        this.mMediaRecorder2.setOrientationHint(90);
+
         this.mMediaRecorder.setMaxDuration(this.VIDEO_CHUNK_LENGTH_MS);
+        this.mMediaRecorder2.setMaxDuration(this.VIDEO_CHUNK_LENGTH_MS);
+
         if (getAndroidSDKVersion() >= 8) {
             this.mMediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH));
+            this.mMediaRecorder2.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH));
         } else {
             this.mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             this.mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
             this.mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
+
+            this.mMediaRecorder2.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+            this.mMediaRecorder2.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+            this.mMediaRecorder2.setVideoEncoder(MediaRecorder.VideoEncoder.DEFAULT);
         }
         this.videoFileName = getOutputMediaFile(MEDIA_TYPE_VIDEO).toString();
         this.mMediaRecorder.setOutputFile(videoFileName);
         this.mMediaRecorder.setPreviewDisplay(mPreview.getHolder().getSurface());
 
+        this.mMediaRecorder2.setOutputFile(getOutputMediaFile2(MEDIA_TYPE_VIDEO).toString());
+        this.mMediaRecorder2.setPreviewDisplay(mPreview.getHolder().getSurface());
+
         try {
             this.mMediaRecorder.prepare();
+            this.mMediaRecorder2.prepare();
         } catch (IllegalStateException e) {
             Log.d(TAG, "IllegalStateException preparing MediaRecorder: " + e.getMessage());
             this.releaseMediaRecorder();
@@ -240,11 +260,40 @@ public class CameraActivity extends Activity {
         return mediaFile;
     }
 
+    private static File getOutputMediaFile2(int type) {
+        // To be safe, you should check that the SDCard is mounted
+        // using Environment.getExternalStorageState() before doing this.
+        File mediaStorageDir = new File(Environment.getExternalStorageDirectory(), "Present");
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d("MyCameraApp", "failed to create directory");
+                return null;
+            }
+        }
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File mediaFile;
+        if (type == MEDIA_TYPE_VIDEO) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "VID2_" + timeStamp + ".mp4");
+        } else {
+            return null;
+        }
+        return mediaFile;
+    }
+
     private void releaseMediaRecorder() {
         if (this.mMediaRecorder != null) {
             this.mMediaRecorder.reset(); // clear recorder configuration
             this.mMediaRecorder.release(); // release the recorder object
             this.mMediaRecorder = null;
+            this.mCamera.lock(); // lock camera for later use
+        }
+        if (this.mMediaRecorder2 != null) {
+            this.mMediaRecorder2.reset(); // clear recorder configuration
+            this.mMediaRecorder2.release(); // release the recorder object
+            this.mMediaRecorder2 = null;
             this.mCamera.lock(); // lock camera for later use
         }
     }
@@ -265,6 +314,7 @@ public class CameraActivity extends Activity {
         // If we're already recording, stop it.
         if (this.isRecording) {
             this.mMediaRecorder.stop();
+            this.mMediaRecorder2.stop();
             this.releaseMediaRecorder();
             this.mCamera.lock();
             setTitle("Not Recording");
@@ -275,6 +325,7 @@ public class CameraActivity extends Activity {
             this.sensorManager.unregisterListener(mAccelerometerListener);
             if (this.prepareVideoRecorder()) {
                 this.mMediaRecorder.start();
+                this.mMediaRecorder2.start();
                 this.setTitle("Recording");
                 this.isRecording = true;
             } else {
