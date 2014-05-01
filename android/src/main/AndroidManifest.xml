@@ -21,8 +21,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="tv.present.android.mediastreamer.StreamerActivity"
-            android:label="@string/title_activity_streamer" >
+            android:name="tv.present.android.mediaextractor.MediaCamera"
+            android:label="@string/title_activity_media_camera" >
         </activity>
     </application>
 
