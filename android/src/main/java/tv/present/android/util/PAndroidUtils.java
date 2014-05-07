@@ -1,4 +1,4 @@
-package tv.present.android;
+package tv.present.android.util;
 
 /**
  * Created by kbw28 on 4/25/14.
