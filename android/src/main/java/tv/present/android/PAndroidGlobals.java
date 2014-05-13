@@ -44,7 +44,7 @@ public final class PAndroidGlobals {
      * The extension of the log file.  Linux based systems do not require an extension, and
      * therefore, this setting can be left blank if you desire.
      */
-    public static final String LOG_FILE_EXTENSION = ".log";
+    public static final String LOG_FILE_EXTENSION = ".txt";
 
     /**
      * Key for Present API
