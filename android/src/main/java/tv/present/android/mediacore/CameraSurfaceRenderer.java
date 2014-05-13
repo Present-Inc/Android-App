@@ -14,6 +14,7 @@ import javax.microedition.khronos.opengles.GL10;
 import tv.present.android.CameraCaptureActivity;
 import tv.present.android.mediacore.gles.FullFrameRect;
 import tv.present.android.mediacore.gles.Texture2dProgram;
+import tv.present.android.util.PLog;
 
 /**
  * Renderer object for our GLSurfaceView.
@@ -60,8 +61,8 @@ public class CameraSurfaceRenderer implements GLSurfaceView.Renderer {
      * @param movieEncoder video encoder object
      * @param outputFile output file for encoded video; forwarded to movieEncoder
      */
-    public CameraSurfaceRenderer(CameraHandler cameraHandler,
-                                 TextureMovieEncoder movieEncoder, File outputFile) {
+    public CameraSurfaceRenderer(CameraHandler cameraHandler, TextureMovieEncoder movieEncoder, File outputFile) {
+
         mCameraHandler = cameraHandler;
         mVideoEncoder = movieEncoder;
         mOutputFile = outputFile;
@@ -87,7 +88,7 @@ public class CameraSurfaceRenderer implements GLSurfaceView.Renderer {
      */
     public void notifyPausing() {
         if (mSurfaceTexture != null) {
-            Log.d(TAG, "renderer pausing -- releasing SurfaceTexture");
+            PLog.logDebug(TAG, "renderer pausing -- releasing SurfaceTexture");
             mSurfaceTexture.release();
             mSurfaceTexture = null;
         }
@@ -102,7 +103,7 @@ public class CameraSurfaceRenderer implements GLSurfaceView.Renderer {
      * Notifies the renderer that we want to stop or start recording.
      */
     public void changeRecordingState(boolean isRecording) {
-        Log.d(TAG, "changeRecordingState: was " + mRecordingEnabled + " now " + isRecording);
+        PLog.logDebug(TAG, "changeRecordingState: was " + mRecordingEnabled + " now " + isRecording);
         mRecordingEnabled = isRecording;
     }
 
@@ -121,7 +122,7 @@ public class CameraSurfaceRenderer implements GLSurfaceView.Renderer {
         float[] kernel = null;
         float colorAdj = 0.0f;
 
-        Log.d(TAG, "Updating filter to " + mNewFilter);
+        PLog.logDebug(TAG, "Updating filter to " + mNewFilter);
         switch (mNewFilter) {
             case CameraCaptureActivity.FILTER_NONE:
                 programType = Texture2dProgram.ProgramType.TEXTURE_EXT;
@@ -189,7 +190,7 @@ public class CameraSurfaceRenderer implements GLSurfaceView.Renderer {
      * so we at least know that they won't execute concurrently.)
      */
     public void setCameraPreviewSize(int width, int height) {
-        Log.d(TAG, "setCameraPreviewSize");
+        PLog.logDebug(TAG, "setCameraPreviewSize");
         mIncomingWidth = width;
         mIncomingHeight = height;
         mIncomingSizeUpdated = true;
@@ -197,7 +198,7 @@ public class CameraSurfaceRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
-        Log.d(TAG, "onSurfaceCreated");
+        PLog.logDebug(TAG, "onSurfaceCreated");
 
         // We're starting up or coming back.  Either way we've got a new EGLContext that will
         // need to be shared with the video encoder, so figure out if a recording is already
@@ -211,29 +212,27 @@ public class CameraSurfaceRenderer implements GLSurfaceView.Renderer {
 
         // Set up the texture blitter that will be used for on-screen display.  This
         // is *not* applied to the recording, because that uses a separate shader.
-        mFullScreen = new FullFrameRect(
-                new Texture2dProgram(Texture2dProgram.ProgramType.TEXTURE_EXT));
+        mFullScreen = new FullFrameRect(new Texture2dProgram(Texture2dProgram.ProgramType.TEXTURE_EXT));
 
         mTextureId = mFullScreen.createTextureObject();
 
-        // Create a SurfaceTexture, with an external texture, in this EGL context.  We don't
+        // Create9
         // have a Looper in this thread -- GLSurfaceView doesn't create one -- so the frame
         // available messages will arrive on the main thread.
         mSurfaceTexture = new SurfaceTexture(mTextureId);
 
         // Tell the UI thread to enable the camera preview.
-        mCameraHandler.sendMessage(mCameraHandler.obtainMessage(
-                CameraHandler.MSG_SET_SURFACE_TEXTURE, mSurfaceTexture));
+        mCameraHandler.sendMessage(mCameraHandler.obtainMessage(CameraHandler.MSG_SET_SURFACE_TEXTURE, mSurfaceTexture));
     }
 
     @Override
     public void onSurfaceChanged(GL10 unused, int width, int height) {
-        Log.d(TAG, "onSurfaceChanged " + width + "x" + height);
+        PLog.logDebug(TAG, "onSurfaceChanged " + width + "x" + height);
     }
 
     @Override
     public void onDrawFrame(GL10 unused) {
-        if (VERBOSE) Log.d(TAG, "onDrawFrame tex=" + mTextureId);
+        if (VERBOSE) PLog.logDebug(TAG, "onDrawFrame tex=" + mTextureId);
         boolean showBox = false;
 
         // Latch the latest frame.  If there isn't anything new, we'll just re-use whatever
@@ -246,13 +245,14 @@ public class CameraSurfaceRenderer implements GLSurfaceView.Renderer {
         if (mRecordingEnabled) {
             switch (mRecordingStatus) {
                 case RECORDING_OFF:
-                    Log.d(TAG, "START recording");
+                    PLog.logDebug(TAG, "START recording");
                     // start recording
-                    mVideoEncoder.startRecording(new TextureMovieEncoder.EncoderConfig(mOutputFile, 640, 480, 1000000, EGL14.eglGetCurrentContext()));
+                    // TODO: Don't hardcode this
+                    mVideoEncoder.startRecording(new EncoderConfig(mOutputFile, 480, 480, 1000000, EGL14.eglGetCurrentContext()));
                     mRecordingStatus = RECORDING_ON;
                     break;
                 case RECORDING_RESUMED:
-                    Log.d(TAG, "RESUME recording");
+                    PLog.logDebug(TAG, "RESUME recording");
                     mVideoEncoder.updateSharedContext(EGL14.eglGetCurrentContext());
                     mRecordingStatus = RECORDING_ON;
                     break;
@@ -267,7 +267,7 @@ public class CameraSurfaceRenderer implements GLSurfaceView.Renderer {
                 case RECORDING_ON:
                 case RECORDING_RESUMED:
                     // stop recording
-                    Log.d(TAG, "STOP recording");
+                    PLog.logDebug(TAG, "STOP recording");
                     mVideoEncoder.stopRecording();
                     mRecordingStatus = RECORDING_OFF;
                     break;
