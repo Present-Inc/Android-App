@@ -8,5 +8,22 @@
     <string name="title_activity_streamer">StreamerActivity</string>
     <string name="title_activity_camera_activity2">CameraActivity2</string>
     <string name="title_activity_media_camera">MediaCamera</string>
+    <string name="title_activity_camera_stream">CameraStreamActivity</string>
+    <string name="title_activity_new_camera">NewCameraActivity</string>
+    <string name="toggleRecordingOn">Start recording</string>
+    <string name="toggleRecordingOff">Stop recording</string>
+
+    <string-array name="cameraFilterNames">
+        <item>Normal</item>
+        <item>Black &amp; white</item>
+        <item>Filter: blur</item>
+        <item>Filter: sharpen</item>
+        <item>Filter: edge detect</item>
+        <item>Filter: emboss</item>
+    </string-array>
+
+    <string name="cameraOutputFileLabel_text">Output file:</string>
+    <string name="cameraOutputFile_text">[filename]</string>
+    <string name="title_activity_glcapture">GLCaptureActivity</string>
 
 </resources>
