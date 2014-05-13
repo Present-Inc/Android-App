@@ -22,7 +22,6 @@ import android.hardware.Camera;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -39,6 +38,7 @@ import tv.present.android.mediacore.CameraHandler;
 import tv.present.android.mediacore.CameraSurfaceRenderer;
 import tv.present.android.mediacore.CameraUtils;
 import tv.present.android.mediacore.TextureMovieEncoder;
+import tv.present.android.util.PLog;
 
 /**
  * Shows the camera preview on screen while simultaneously recording it to a .mp4 file.
@@ -156,8 +156,7 @@ public class CameraCaptureActivity extends Activity implements SurfaceTexture.On
         fileText.setText(outputFile.toString());
 
         Spinner spinner = (Spinner) findViewById(R.id.cameraFilter_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.cameraFilterNames, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.cameraFilterNames, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner.
         spinner.setAdapter(adapter);
@@ -178,12 +177,12 @@ public class CameraCaptureActivity extends Activity implements SurfaceTexture.On
         mGLView.setRenderer(mRenderer);
         mGLView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 
-        Log.d(TAG, "onCreate complete: " + this);
+        PLog.logDebug(TAG, "onCreate complete: " + this);
     }
 
     @Override
     protected void onResume() {
-        Log.d(TAG, "onResume -- acquiring camera");
+        PLog.logDebug(TAG, "onResume -- acquiring camera");
         super.onResume();
         updateControls();
         openCamera(480, 480);      // updates mCameraPreviewWidth/Height
@@ -198,12 +197,12 @@ public class CameraCaptureActivity extends Activity implements SurfaceTexture.On
                 mRenderer.setCameraPreviewSize(mCameraPreviewWidth, mCameraPreviewHeight);
             }
         });
-        Log.d(TAG, "onResume complete: " + this);
+        PLog.logDebug(TAG, "onResume complete: " + this);
     }
 
     @Override
     protected void onPause() {
-        Log.d(TAG, "onPause -- releasing camera");
+        PLog.logDebug(TAG, "onPause -- releasing camera");
         super.onPause();
         releaseCamera();
         mGLView.queueEvent(new Runnable() {
@@ -213,12 +212,12 @@ public class CameraCaptureActivity extends Activity implements SurfaceTexture.On
             }
         });
         mGLView.onPause();
-        Log.d(TAG, "onPause complete");
+        PLog.logDebug(TAG, "onPause complete");
     }
 
     @Override
     protected void onDestroy() {
-        Log.d(TAG, "onDestroy");
+        PLog.logDebug(TAG, "onDestroy");
         super.onDestroy();
         mCameraHandler.invalidateHandler();     // paranoia
     }
@@ -229,7 +228,7 @@ public class CameraCaptureActivity extends Activity implements SurfaceTexture.On
         Spinner spinner = (Spinner) parent;
         final int filterNum = spinner.getSelectedItemPosition();
 
-        Log.d(TAG, "onItemSelected: " + filterNum);
+        PLog.logDebug(TAG, "onItemSelected: " + filterNum);
         mGLView.queueEvent(new Runnable() {
             @Override public void run() {
                 // notify the renderer that we want to change the encoder's state
@@ -246,6 +245,7 @@ public class CameraCaptureActivity extends Activity implements SurfaceTexture.On
      * Sets mCameraPreviewWidth and mCameraPreviewHeight to the actual width/height of the preview.
      */
     private void openCamera(int desiredWidth, int desiredHeight) {
+
         if (mCamera != null) {
             throw new RuntimeException("camera already initialized");
         }
@@ -261,10 +261,12 @@ public class CameraCaptureActivity extends Activity implements SurfaceTexture.On
                 break;
             }
         }
+
         if (mCamera == null) {
-            Log.d(TAG, "No front-facing camera found; opening default");
+            PLog.logDebug(TAG, "No front-facing camera found; opening default");
             mCamera = Camera.open();    // opens first back-facing camera
         }
+
         if (mCamera == null) {
             throw new RuntimeException("Unable to open camera");
         }
@@ -307,7 +309,7 @@ public class CameraCaptureActivity extends Activity implements SurfaceTexture.On
             mCamera.stopPreview();
             mCamera.release();
             mCamera = null;
-            Log.d(TAG, "releaseCamera -- done");
+            PLog.logDebug(TAG, "releaseCamera -- done");
         }
     }
 
@@ -373,7 +375,7 @@ public class CameraCaptureActivity extends Activity implements SurfaceTexture.On
         // Since GLSurfaceView doesn't establish a Looper, this will *probably* execute on
         // the main UI thread.  Fortunately, requestRender() can be called from any thread,
         // so it doesn't really matter.
-        if (VERBOSE) Log.d(TAG, "ST onFrameAvailable");
+        if (VERBOSE) PLog.logDebug(TAG, "ST onFrameAvailable");
         mGLView.requestRender();
     }
 }
