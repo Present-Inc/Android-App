@@ -14,11 +14,6 @@
         </activity>
 
         <activity
-            android:name="tv.present.android.NewCameraActivity"
-            android:label="@string/title_activity_new_camera" >
-        </activity>
-
-        <activity
             android:name=".CameraCaptureActivity"
             android:label="P-CameraCaptureNew" >
             <intent-filter>
