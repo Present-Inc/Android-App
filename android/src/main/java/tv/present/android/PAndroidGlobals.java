@@ -1,5 +1,7 @@
 package tv.present.android;
 
+import android.os.Environment;
+
 /**
  * Defines global values and variables used throughout the application.
  * @author      Kyle Weisel (kyle@present.tv)
@@ -56,6 +58,12 @@ public final class PAndroidGlobals {
      * Splash screen delay (number of seconds)
      */
     public static final int SPLASH_DELAY = 2;
+
+    public static final String SD_ROOT_DIRECTORY = Environment.getExternalStorageDirectory().getAbsolutePath();
+
+    public static final String TEMP_DIRECTORY = PAndroidGlobals.SD_ROOT_DIRECTORY + "/Present";
+
+
 
 }
 
