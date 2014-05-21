@@ -1,21 +1,5 @@
 package tv.present.android;
 
-/*
- * Copyright 2013 Google Inc. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 import android.app.Activity;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
@@ -25,10 +9,8 @@ import android.os.Environment;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
@@ -152,15 +134,17 @@ public class CameraCaptureActivity extends Activity implements SurfaceTexture.On
         String outDirectory = SDRootDirectory + "/" + "Present";
 
         File outputFile = new File(outDirectory, "test2.mp4");
-        TextView fileText = (TextView) findViewById(R.id.cameraOutputFile_text);
-        fileText.setText(outputFile.toString());
+        //TextView fileText = (TextView) findViewById(R.id.cameraOutputFile_text);
+        //fileText.setText(outputFile.toString());
 
+        /*
         Spinner spinner = (Spinner) findViewById(R.id.cameraFilter_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.cameraFilterNames, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner.
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(this);
+        */
 
         // Define a handler that receives camera-control messages from other threads.  All calls
         // to Camera must be made on the same thread.  Note we create this before the renderer
@@ -294,8 +278,8 @@ public class CameraCaptureActivity extends Activity implements SurfaceTexture.On
             previewFacts += " @[" + (fpsRange[0] / 1000.0) +
                     " - " + (fpsRange[1] / 1000.0) + "] fps";
         }
-        TextView text = (TextView) findViewById(R.id.cameraParams_text);
-        text.setText(previewFacts);
+        //TextView text = (TextView) findViewById(R.id.cameraParams_text);
+        //text.setText(previewFacts);
 
         mCameraPreviewWidth = mCameraPreviewSize.width;
         mCameraPreviewHeight = mCameraPreviewSize.height;
@@ -340,8 +324,7 @@ public class CameraCaptureActivity extends Activity implements SurfaceTexture.On
      */
     private void updateControls() {
         Button toggleRelease = (Button) findViewById(R.id.toggleRecording_button);
-        int id = mRecordingEnabled ?
-                R.string.toggleRecordingOff : R.string.toggleRecordingOn;
+        int id = mRecordingEnabled ? R.string.toggleRecordingOff : R.string.toggleRecordingOn;
         toggleRelease.setText(id);
 
         //CheckBox cb = (CheckBox) findViewById(R.id.rebindHack_checkbox);
