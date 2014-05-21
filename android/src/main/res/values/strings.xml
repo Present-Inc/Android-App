@@ -25,5 +25,11 @@
     <string name="cameraOutputFileLabel_text">Output file:</string>
     <string name="cameraOutputFile_text">[filename]</string>
     <string name="title_activity_glcapture">GLCaptureActivity</string>
+    <string name="title_activity_home_feed">HomeFeedActivity</string>
+    <string name="title_section1">Home</string>
+    <string name="title_section2">Notifications</string>
+    <string name="title_section3">Discover</string>
+    <string name="title_section4">Profile</string>
+    <string name="title_activity_login">LoginActivity</string>
 
 </resources>
