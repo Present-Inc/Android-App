@@ -1,8 +1,32 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="android:Theme.Holo.Light">
+    </style>
+
+    <!-- Styles the login activity EditTexts -->
+    <style name="LoginField" parent="@android:style/Widget.EditText">
+        <item name="android:background">@drawable/rounded_edittext</item>
+        <item name="android:capitalize">none</item>
+        <item name="android:clickable">true</item>
+        <item name="android:editable">true</item>
+        <item name="android:enabled">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_height">@dimen/login_field_height</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:longClickable">true</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:textIsSelectable">true</item>
+        <item name="android:inputType">text</item>
+    </style>
+
+    <style name="TextFieldHint" parent="@android:style/Widget.EditText">
+        <item name="android:textColor">#CCCCCC</item>
     </style>
 
 </resources>
