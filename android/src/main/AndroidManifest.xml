@@ -7,22 +7,24 @@
         android:icon="@drawable/icon_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-
         <activity
-            android:name="tv.present.android.MainActivity"
-            android:label="@string/app_name" >
-        </activity>
-
-        <activity
-            android:name=".CameraCaptureActivity"
+            android:name="tv.present.android.CameraCaptureActivity"
             android:label="P-CameraCaptureNew" >
+        </activity>
+        <activity
+            android:name="tv.present.android.views.HomeFeedActivity"
+            android:label="@string/title_activity_home_feed" >
+        </activity>
+        <activity
+            android:name="tv.present.android.views.LoginActivity"
+            android:label="@string/app_name">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
