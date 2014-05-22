@@ -1,13 +1,241 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="tv.present.android.views.CreateAccountActivity">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/createAccountRootLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:descendantFocusability="beforeDescendants"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        tools:context="tv.present.android.views.CreateAccountActivity"
+    android:background="#FFFFFF">
 
-</FrameLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/createAccountHero"
+        android:src="@drawable/register_hero"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:adjustViewBounds="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome to Present"
+        android:id="@+id/welcomeText"
+        android:fontFamily="sans-serif"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"
+
+        android:shadowColor="#000000"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="10"
+
+        android:layout_alignBottom="@+id/createAccountHero"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="76dp" />
+
+    <EditText style="@style/LoginField"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/createEmailAddressField"
+        android:background="#FFFFFF"
+        android:layout_marginTop="30dp"
+
+
+        android:inputType="textEmailAddress"
+        android:hint="E-mail Address"
+        android:ems="10"
+        android:layout_marginLeft="50dp"
+
+        android:layout_marginRight="50dp"
+        android:layout_below="@+id/selectProfilePictureButton" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC"
+        android:layout_below="@+id/createEmailAddressField"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:id="@+id/view" />
+
+    <EditText style="@style/LoginField"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/createUsernameField"
+        android:background="#FFFFFF"
+        android:layout_below="@+id/createEmailAddressField"
+        android:layout_marginTop="2dp"
+        android:inputType="textNoSuggestions|textVisiblePassword"
+        android:hint="Choose username"
+        android:ems="10"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC"
+        android:layout_below="@+id/createUsernameField"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp" />
+
+    <EditText style="@style/LoginField"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/createPasswordField"
+        android:background="#FFFFFF"
+        android:layout_below="@+id/createUsernameField"
+        android:layout_marginTop="2dp"
+        android:inputType="textPassword"
+        android:hint="Choose password"
+        android:ems="10"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC"
+        android:layout_below="@+id/createPasswordField"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp" />
+
+    <EditText style="@style/LoginField"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/createFullNameField"
+        android:background="#FFFFFF"
+        android:layout_below="@+id/createPasswordField"
+        android:layout_marginTop="2dp"
+        android:inputType="textCapWords"
+        android:hint="Full name (optional)"
+        android:ems="10"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC"
+        android:layout_below="@+id/createFullNameField"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp" />
+
+    <EditText style="@style/LoginField"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/createPhoneNumberField"
+        android:background="#FFFFFF"
+        android:layout_below="@+id/createFullNameField"
+        android:layout_marginTop="2dp"
+        android:inputType="phone"
+        android:hint="Phone number (optional)"
+        android:ems="10"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp" />
+
+    <ImageButton
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/selectProfilePictureButton"
+        android:src="@drawable/icon_pick_photo"
+        android:layout_below="@+id/createAccountHero"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-50dp" />
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="16dp"
+        android:id="@+id/emailAddressIcon"
+        android:src="@drawable/icon_email"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/view"
+        android:layout_alignLeft="@+id/createEmailAddressField"
+        android:layout_alignBottom="@+id/selectProfilePictureButton"
+        android:layout_marginLeft="-20dp"
+        android:layout_marginBottom="-55dp" />
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:id="@+id/usernameIcon"
+        android:src="@drawable/icon_username"
+        android:layout_alignStart="@+id/view"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/createUsernameField"
+        android:layout_marginLeft="-20dp"
+        android:layout_below="@+id/createEmailAddressField"
+        android:layout_marginTop="8dp" />
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:id="@+id/passwordIcon"
+        android:src="@drawable/icon_password"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="-20dp"
+        android:layout_below="@+id/createUsernameField"
+        android:layout_alignLeft="@+id/createPasswordField"
+        android:layout_marginTop="8dp" />
+
+    <ImageView
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:id="@+id/fullNameIcon"
+        android:src="@drawable/icon_fullname"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="-20dp"
+        android:layout_marginTop="8dp"
+        android:layout_below="@+id/createPasswordField"
+        android:layout_alignLeft="@+id/createFullNameField" />
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:id="@+id/phoneNumberIcon"
+        android:src="@drawable/icon_phonenumber"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="-20dp"
+        android:layout_marginTop="8dp"
+        android:layout_below="@+id/createFullNameField"
+        android:layout_alignLeft="@+id/createPhoneNumberField" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Next"
+        android:id="@+id/loginButton"
+        android:layout_below="@+id/createPhoneNumberField"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/next_button"
+        android:fontFamily="sans-serif-light"
+        android:textColor="#FFFFFF"
+
+
+        android:shadowColor="#258AAA"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="5"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your phone number is never displayed on Present.  By continuing, you implicitly agree to our Terms of Use and Privacy Policy."
+        android:id="@+id/legalNotice"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:textColor="#CCCCCC"
+        android:layout_marginBottom="10dp" />
+
+
+</RelativeLayout>
