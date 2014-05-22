@@ -3,17 +3,19 @@ package tv.present.android.views;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import tv.present.android.R;
 import tv.present.android.util.PLog;
@@ -21,6 +23,10 @@ import tv.present.android.util.PLog;
 public class CreateAccountFragment extends Fragment implements View.OnFocusChangeListener, View.OnClickListener, View.OnTouchListener  {
 
     private static final String TAG = "tv.present.android.views.CreateAccountFragment";
+    private final int REQUEST_CODE_PROFILE_IMAGE_CAPTURE = 420;
+
+    ImageView cameraResult;
+    ImageButton choosePhotoButton;
 
     public CreateAccountFragment() {
         /* empty constructor */
@@ -73,6 +79,9 @@ public class CreateAccountFragment extends Fragment implements View.OnFocusChang
         passwordField.setOnFocusChangeListener(this);
         fullNameField.setOnFocusChangeListener(this);
         phoneNumberField.setOnFocusChangeListener(this);
+
+        this.choosePhotoButton = (ImageButton) rootView.findViewById(R.id.selectProfilePictureButton);
+        this.choosePhotoButton.setOnClickListener(this);
 
         emailAddressField.clearFocus();
 
@@ -134,36 +143,25 @@ public class CreateAccountFragment extends Fragment implements View.OnFocusChang
 
     public void onClick(View view) {
 
-        if (view instanceof Button) {
-            EditText username = (EditText) this.getActivity().findViewById(R.id.usernameField);
-            EditText password = (EditText) this.getActivity().findViewById(R.id.passwordField);
-
-            String text = "Your username was " + username.getText() + " and password was " + password.getText();
-
-            Toast.makeText(this.getActivity().getBaseContext(), text, Toast.LENGTH_LONG).show();
-        }
-        else if (view instanceof TextView) {
-
-
-            switch(view.getId()) {
-
-                // Create a new account activity
-                case R.id.createAccountText :
-                    //this.getActivity().getActionBar().show();
-                    this.getFragmentManager().beginTransaction().replace(R.id.container, new CreateAccountFragment()).commit();
-                    break;
-
-                // Start the forgot password activity
-                case R.id.forgotPasswordText :
-
-                    break;
+        if (view instanceof ImageButton) {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(this.getActivity().getPackageManager()) != null) {
+                startActivityForResult(takePictureIntent, REQUEST_CODE_PROFILE_IMAGE_CAPTURE);
             }
-            String text = "We got you covered!";
-            Toast.makeText(this.getActivity().getBaseContext(), text, Toast.LENGTH_LONG).show();
         }
-
 
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_PROFILE_IMAGE_CAPTURE && resultCode == this.getActivity().RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            this.choosePhotoButton.setImageBitmap(imageBitmap);
+        }
+    }
+
+
 
 
 
