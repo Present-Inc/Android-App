@@ -145,7 +145,8 @@
         android:src="@drawable/icon_pick_photo"
         android:layout_below="@+id/createAccountHero"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="-50dp" />
+        android:layout_marginTop="-50dp"
+        android:adjustViewBounds="true"/>
 
     <ImageView
         android:layout_width="20dp"
@@ -208,7 +209,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Next"
-        android:id="@+id/loginButton"
+        android:id="@+id/createContinueButton"
         android:layout_below="@+id/createPhoneNumberField"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
@@ -222,7 +223,8 @@
         android:shadowDy="2"
         android:shadowRadius="5"
         android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp" />
+        android:layout_marginRight="25dp"
+        android:layout_alignParentStart="false" />
 
     <TextView
         android:layout_width="wrap_content"
