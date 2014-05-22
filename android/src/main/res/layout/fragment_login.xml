@@ -19,7 +19,9 @@
         android:hint="Username"
         android:nextFocusDown="@+id/passwordField"
         android:inputType="textNoSuggestions|textVisiblePassword"
-        />
+        android:layout_below="@+id/imageView"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="60dp" />
 
     <EditText style="@style/LoginField"
         android:inputType="textPassword"
@@ -27,7 +29,7 @@
         android:ems="10"
         android:id="@+id/passwordField"
         android:layout_below="@+id/usernameField"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="15dp"
         />
 
     <Button
@@ -37,7 +39,7 @@
         android:id="@+id/loginButton"
         android:layout_below="@+id/passwordField"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="25dp"
         android:background="@drawable/login_button"
         android:fontFamily="sans-serif-light"
         android:textColor="#FFFFFF"
@@ -54,18 +56,28 @@
         android:layout_height="80dp"
         android:id="@+id/imageView"
         android:src="@drawable/p_logo_light"
-        android:layout_marginBottom="69dp"
-        android:layout_above="@+id/usernameField"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Forgot Password?"
+        android:text="Forgot Password"
         android:id="@+id/forgotPasswordText"
+        android:textColor="#FFFFFF"
+        android:layout_alignTop="@+id/createAccountText"
+        android:layout_toRightOf="@+id/imageView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create an Account"
+        android:id="@+id/createAccountText"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="20dp"
         android:layout_below="@+id/loginButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:textColor="#FFFFFF"/>
+        android:layout_toLeftOf="@+id/imageView" />
+
 
 </RelativeLayout>
