@@ -31,5 +31,6 @@
     <string name="title_section3">Discover</string>
     <string name="title_section4">Profile</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_main">MainActivity</string>
 
 </resources>
