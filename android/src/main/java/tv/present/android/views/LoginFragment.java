@@ -2,6 +2,8 @@ package tv.present.android.views;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -76,6 +78,9 @@ public class LoginFragment extends Fragment implements View.OnFocusChangeListene
         Button loginButton = (Button) rootView.findViewById(R.id.loginButton);
         loginButton.setOnClickListener(this);
 
+        TextView createAccountText = (TextView) rootView.findViewById(R.id.createAccountText);
+        createAccountText.setOnClickListener(this);
+
         TextView forgotPasswordText = (TextView) rootView.findViewById(R.id.forgotPasswordText);
         forgotPasswordText.setOnClickListener(this);
 
@@ -118,10 +123,6 @@ public class LoginFragment extends Fragment implements View.OnFocusChangeListene
         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
 
-    public void removeFocus(View view) {
-
-    }
-
     public boolean onTouch(View view, MotionEvent event) {
 
         if (view instanceof EditText) {
@@ -147,7 +148,28 @@ public class LoginFragment extends Fragment implements View.OnFocusChangeListene
             Toast.makeText(this.getActivity().getBaseContext(), text, Toast.LENGTH_LONG).show();
         }
         else if (view instanceof TextView) {
-            String text = "Oh shit, we got you covered!";
+
+
+            switch(view.getId()) {
+
+                // Create a new account activity
+                case R.id.createAccountText :
+                    //this.getActivity().getActionBar().show();
+
+                    FragmentManager fragmentManager = this.getFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                    fragmentTransaction.replace(R.id.container, new CreateAccountFragment());
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
+                    break;
+
+                // Start the forgot password activity
+                case R.id.forgotPasswordText :
+
+                    break;
+            }
+            String text = "We got you covered!";
             Toast.makeText(this.getActivity().getBaseContext(), text, Toast.LENGTH_LONG).show();
         }
 
