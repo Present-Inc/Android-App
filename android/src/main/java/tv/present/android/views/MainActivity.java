@@ -22,20 +22,13 @@ import tv.present.android.R;
 
 public class MainActivity extends Activity implements ActionBar.TabListener {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v13.app.FragmentStatePagerAdapter}.
-     */
+    // Provides fragments for each of the sections
     SectionsPagerAdapter mSectionsPagerAdapter;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
+    // View pager to host the section contents
     ViewPager mViewPager;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,7 +136,24 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+
+            final Fragment returnValue;
+            switch(position) {
+                case 0:
+                    returnValue = HomeFeedFragment.newInstance();
+                    break;
+                case 1:
+                    returnValue = NotificationsFragment.newInstance();
+                    break;
+                default:
+                    returnValue = PlaceholderFragment.newInstance(position + 1);
+                    break;
+            }
+
+
+            return returnValue;
+
+
         }
 
         @Override
