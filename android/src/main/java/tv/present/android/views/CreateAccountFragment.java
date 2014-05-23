@@ -14,38 +14,23 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import tv.present.android.R;
 import tv.present.android.util.PLog;
 
-public class CreateAccountFragment extends Fragment implements View.OnFocusChangeListener, View.OnClickListener, View.OnTouchListener  {
+/**
+ * This fragment represents the first screen in the onboarding process.
+ */
+public final class CreateAccountFragment extends Fragment implements View.OnFocusChangeListener, View.OnClickListener, View.OnTouchListener  {
 
     private static final String TAG = "tv.present.android.views.CreateAccountFragment";
-    private final int REQUEST_CODE_PROFILE_IMAGE_CAPTURE = 420;
+    private final int REQUEST_CODE_PROFILE_IMAGE_CAPTURE = 8;
 
-    ImageView cameraResult;
     ImageButton choosePhotoButton;
 
     public CreateAccountFragment() {
         /* empty constructor */
-    }
-
-    /**
-     * Registers default touch listeners on all of the view objects that are contained within a
-     * view.
-     * @param view is a View to register listeners to.  If it is a ViewGroup, this function will be
-     *             called recursively.
-     */
-    private void registerTouchListeners(View view) {
-        view.setOnTouchListener(this);
-        if (view instanceof ViewGroup) {
-            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-                View innerView = ((ViewGroup) view).getChildAt(i);
-                this.registerTouchListeners(innerView);
-            }
-        }
     }
 
     /**
@@ -66,29 +51,30 @@ public class CreateAccountFragment extends Fragment implements View.OnFocusChang
 
         View rootView = inflater.inflate(R.layout.fragment_create_account, container, false);
 
+        this.getActivity().getActionBar().hide();
+
         this.registerTouchListeners(rootView);
 
-        EditText emailAddressField = (EditText) rootView.findViewById(R.id.createEmailAddressField);
-        EditText usernameField = (EditText) rootView.findViewById(R.id.createUsernameField);
-        EditText passwordField = (EditText) rootView.findViewById(R.id.createPasswordField);
-        EditText fullNameField = (EditText) rootView.findViewById(R.id.createFullNameField);
-        EditText phoneNumberField = (EditText) rootView.findViewById(R.id.createPhoneNumberField);
-
+        // Set focus change listeners for the text fields
+        final EditText emailAddressField = (EditText) rootView.findViewById(R.id.createEmailAddressField);
+        final EditText usernameField = (EditText) rootView.findViewById(R.id.createUsernameField);
+        final EditText passwordField = (EditText) rootView.findViewById(R.id.createPasswordField);
+        final EditText fullNameField = (EditText) rootView.findViewById(R.id.createFullNameField);
+        final EditText phoneNumberField = (EditText) rootView.findViewById(R.id.createPhoneNumberField);
         emailAddressField.setOnFocusChangeListener(this);
         usernameField.setOnFocusChangeListener(this);
         passwordField.setOnFocusChangeListener(this);
         fullNameField.setOnFocusChangeListener(this);
         phoneNumberField.setOnFocusChangeListener(this);
 
+        // Set click listener for the profile photo button
         this.choosePhotoButton = (ImageButton) rootView.findViewById(R.id.selectProfilePictureButton);
         this.choosePhotoButton.setOnClickListener(this);
 
+        // Don't initially focus on a field, give it to the RelativeLayout -- do we want this?
         emailAddressField.clearFocus();
-
-        RelativeLayout rootLayout = (RelativeLayout) rootView.findViewById(R.id.createAccountRootLayout);
+        final RelativeLayout rootLayout = (RelativeLayout) rootView.findViewById(R.id.createAccountRootLayout);
         rootLayout.requestFocus();
-
-        this.getActivity().getActionBar().hide();
 
         return rootView;
 
@@ -103,11 +89,11 @@ public class CreateAccountFragment extends Fragment implements View.OnFocusChang
 
         PLog.logDebug(TAG, "Focus has changed to " + hasFocus + " on the " + view.toString() + " view.");
 
-        InputMethodManager inputMethodManager = (InputMethodManager) this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        final InputMethodManager inputMethodManager = (InputMethodManager) this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 
         // Shows the keyboard when a login field gets focus.
         if(hasFocus) {
-            EditText field = (EditText) view;
+            final EditText field = (EditText) view;
             inputMethodManager.showSoftInput(field, InputMethodManager.SHOW_FORCED);
         }
         /* Hides it on lost focus. - Don't do this
@@ -122,15 +108,25 @@ public class CreateAccountFragment extends Fragment implements View.OnFocusChang
 
     }
 
+    /**
+     * Hides the soft keyboard.
+     * @param activity is the calling Activity.
+     */
     public void hideKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        final InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
 
+    /**
+     * Handles touch events.  If the calling View is not a textbox, we hide the keyboard.
+     * @param view is the View that was touched.
+     * @param event is the MotionEvent that occured.
+     * @return false
+     */
     public boolean onTouch(View view, MotionEvent event) {
 
         if (view instanceof EditText) {
-            InputMethodManager inputMethodManager = (InputMethodManager) this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            final InputMethodManager inputMethodManager = (InputMethodManager) this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_FORCED);
             return false;
         }
@@ -141,10 +137,15 @@ public class CreateAccountFragment extends Fragment implements View.OnFocusChang
 
     }
 
+    /**
+     * Handles clicks on buttons.
+     * @param view is the View (Button) that was clicked.
+     */
     public void onClick(View view) {
 
+        // Remember: there is only one ImageButton on this view
         if (view instanceof ImageButton) {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (takePictureIntent.resolveActivity(this.getActivity().getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent, REQUEST_CODE_PROFILE_IMAGE_CAPTURE);
             }
@@ -152,12 +153,34 @@ public class CreateAccountFragment extends Fragment implements View.OnFocusChang
 
     }
 
+    /**
+     * Handles the callback from another activity that was started for a result.
+     * @param requestCode is the integer code of the requesting Activity.
+     * @param resultCode is the integer result code from the Activity.
+     * @param data is any returned Intent data from the finished Activity.
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_PROFILE_IMAGE_CAPTURE && resultCode == this.getActivity().RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            final Bundle extras = data.getExtras();
+            final Bitmap imageBitmap = (Bitmap) extras.get("data");
             this.choosePhotoButton.setImageBitmap(imageBitmap);
+        }
+    }
+
+    /**
+     * Registers default touch listeners on all of the view objects that are contained within a
+     * view.
+     * @param view is a View to register listeners to.  If it is a ViewGroup, this function will be
+     *             called recursively.
+     */
+    private void registerTouchListeners(View view) {
+        view.setOnTouchListener(this);
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                final View innerView = ((ViewGroup) view).getChildAt(i);
+                this.registerTouchListeners(innerView);
+            }
         }
     }
 
