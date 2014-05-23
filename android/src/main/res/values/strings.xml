@@ -1,35 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Application -->
     <string name="application_name">Present</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="application_version">0.10</string>
+
+    <!-- Section Names -->
+    <string name="title_section_1">Home</string>
+    <string name="title_section_2">Notifications</string>
+    <string name="title_section_3">Discover</string>
+    <string name="title_section_4">Profile</string>
+
+    <!-- Menu Actions -->
     <string name="action_settings">Settings</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_streamer">StreamerActivity</string>
-    <string name="title_activity_camera_activity2">CameraActivity2</string>
-    <string name="title_activity_media_camera">MediaCamera</string>
-    <string name="title_activity_camera_stream">CameraStreamActivity</string>
-    <string name="title_activity_new_camera">NewCameraActivity</string>
-    <string name="toggleRecordingOn">Start recording</string>
-    <string name="toggleRecordingOff">Stop recording</string>
+    <string name="action_create_present">Create</string>
+    <string name="action_about">About</string>
 
-    <string-array name="cameraFilterNames">
-        <item>Normal</item>
-        <item>Black &amp; white</item>
-        <item>Filter: blur</item>
-        <item>Filter: sharpen</item>
-        <item>Filter: edge detect</item>
-        <item>Filter: emboss</item>
-    </string-array>
-
-    <string name="cameraOutputFileLabel_text">Output file:</string>
-    <string name="cameraOutputFile_text">[filename]</string>
-    <string name="title_activity_glcapture">GLCaptureActivity</string>
-    <string name="title_activity_home_feed">HomeFeedActivity</string>
-    <string name="title_section1">Home</string>
-    <string name="title_section2">Notifications</string>
-    <string name="title_section3">Discover</string>
-    <string name="title_section4">Profile</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_demo">DemoActivity</string>
