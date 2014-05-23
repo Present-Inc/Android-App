@@ -4,15 +4,16 @@
 
     <item android:id="@+id/action_create"
         android:icon="@drawable/icon_add_present"
-        android:title="Create"
+        android:title="@string/action_create_present"
         android:showAsAction="ifRoom" />
-    <!-- Settings, should always be in the overflow -->
+
+    <!-- Settings will always be in the overflow. -->
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:showAsAction="never" />
 
     <item android:id="@+id/action_about"
-        android:title="About"
+        android:title="@string/action_about"
         android:showAsAction="never" />
 
 </menu>
