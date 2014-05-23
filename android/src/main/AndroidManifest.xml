@@ -6,7 +6,7 @@
         android:allowBackup="true"
         android:icon="@drawable/icon_launcher"
         android:label="@string/application_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/PresentTheme" >
         <activity
             android:name="tv.present.android.views.LoginActivity"
             android:label="@string/application_name"
