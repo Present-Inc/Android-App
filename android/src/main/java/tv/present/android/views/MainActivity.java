@@ -157,13 +157,13 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
             Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
-                    return getString(R.string.title_section1);
+                    return getString(R.string.title_section_1);
                 case 1:
-                    return getString(R.string.title_section2);
+                    return getString(R.string.title_section_2);
                 case 2:
-                    return getString(R.string.title_section3);
+                    return getString(R.string.title_section_3);
                 case 3:
-                    return getString(R.string.title_section4);
+                    return getString(R.string.title_section_4);
             }
             return null;
         }
@@ -195,8 +195,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
