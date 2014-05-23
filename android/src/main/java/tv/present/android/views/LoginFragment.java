@@ -20,7 +20,7 @@ import android.widget.Toast;
 import tv.present.android.R;
 import tv.present.android.util.PLog;
 
-public class LoginFragment extends Fragment implements View.OnFocusChangeListener, View.OnClickListener, View.OnTouchListener {
+public final class LoginFragment extends Fragment implements View.OnFocusChangeListener, View.OnClickListener, View.OnTouchListener {
 
     private static final String TAG = "tv.present.android.views.LoginFragment";
 
@@ -40,7 +40,7 @@ public class LoginFragment extends Fragment implements View.OnFocusChangeListene
         }
         if (view instanceof ViewGroup) {
             for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
-                View innerView = ((ViewGroup) view).getChildAt(i);
+                final View innerView = ((ViewGroup) view).getChildAt(i);
                 this.registerTouchListeners(innerView);
             }
         }
@@ -62,26 +62,26 @@ public class LoginFragment extends Fragment implements View.OnFocusChangeListene
 
         PLog.logDebug(TAG, "Creating and configuring fragment view.");
 
-        View rootView = inflater.inflate(R.layout.fragment_login, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
         this.registerTouchListeners(rootView);
 
-        RelativeLayout rootLayout = (RelativeLayout) rootView.findViewById(R.id.loginRootLayout);
+        final RelativeLayout rootLayout = (RelativeLayout) rootView.findViewById(R.id.loginRootLayout);
         rootLayout.requestFocus();
 
-        EditText passwordField = (EditText) rootView.findViewById(R.id.passwordField);
-        EditText usernameField = (EditText) rootView.findViewById(R.id.usernameField);
+        final EditText passwordField = (EditText) rootView.findViewById(R.id.passwordField);
+        final EditText usernameField = (EditText) rootView.findViewById(R.id.usernameField);
         passwordField.setOnFocusChangeListener(this);
         usernameField.setOnFocusChangeListener(this);
         usernameField.clearFocus();
 
-        Button loginButton = (Button) rootView.findViewById(R.id.loginButton);
+        final Button loginButton = (Button) rootView.findViewById(R.id.loginButton);
         loginButton.setOnClickListener(this);
 
-        TextView createAccountText = (TextView) rootView.findViewById(R.id.createAccountText);
+        final TextView createAccountText = (TextView) rootView.findViewById(R.id.createAccountText);
         createAccountText.setOnClickListener(this);
 
-        TextView forgotPasswordText = (TextView) rootView.findViewById(R.id.forgotPasswordText);
+        final TextView forgotPasswordText = (TextView) rootView.findViewById(R.id.forgotPasswordText);
         forgotPasswordText.setOnClickListener(this);
 
         this.getActivity().getActionBar().hide();
@@ -99,16 +99,16 @@ public class LoginFragment extends Fragment implements View.OnFocusChangeListene
 
         PLog.logDebug(TAG, "Focus has changed to " + hasFocus + " on the " + view.toString() + " view.");
 
-        InputMethodManager inputMethodManager = (InputMethodManager) this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        final InputMethodManager inputMethodManager = (InputMethodManager) this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 
         // Shows the keyboard when a login field gets focus.
         if(hasFocus) {
-            EditText field = (EditText) view;
+            final EditText field = (EditText) view;
             inputMethodManager.showSoftInput(field, InputMethodManager.SHOW_FORCED);
         }
         /* Hides it on lost focus.
         else {
-            EditText field = (EditText) view;
+            final EditText field = (EditText) view;
             view.setFocusable(false);
             view.setFocusableInTouchMode(false);
             view.setFocusable(true);
@@ -118,15 +118,25 @@ public class LoginFragment extends Fragment implements View.OnFocusChangeListene
 
     }
 
+    /**
+     * Hides the soft keyboard.
+     * @param activity is the calling Activity.
+     */
     public void hideKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        final InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
 
+    /**
+     * Handles touch events.  If the calling View is not a textbox, we hide the keyboard.
+     * @param view is the View that was touched.
+     * @param event is the MotionEvent that occured.
+     * @return false
+     */
     public boolean onTouch(View view, MotionEvent event) {
 
         if (view instanceof EditText) {
-            InputMethodManager inputMethodManager = (InputMethodManager) this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            final InputMethodManager inputMethodManager = (InputMethodManager) this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_FORCED);
             return false;
         }
@@ -137,18 +147,21 @@ public class LoginFragment extends Fragment implements View.OnFocusChangeListene
 
     }
 
+    /**
+     * Handles clicks on buttons.
+     * @param view is the View (Button) that was clicked.
+     */
     public void onClick(View view) {
 
         if (view instanceof Button) {
-            EditText username = (EditText) this.getActivity().findViewById(R.id.usernameField);
-            EditText password = (EditText) this.getActivity().findViewById(R.id.passwordField);
+            final EditText username = (EditText) this.getActivity().findViewById(R.id.usernameField);
+            final EditText password = (EditText) this.getActivity().findViewById(R.id.passwordField);
 
-            String text = "Your username was " + username.getText() + " and password was " + password.getText();
+            final String text = "Your username was " + username.getText() + " and password was " + password.getText();
 
             Toast.makeText(this.getActivity().getBaseContext(), text, Toast.LENGTH_LONG).show();
         }
         else if (view instanceof TextView) {
-
 
             switch(view.getId()) {
 
@@ -156,8 +169,8 @@ public class LoginFragment extends Fragment implements View.OnFocusChangeListene
                 case R.id.createAccountText :
                     //this.getActivity().getActionBar().show();
 
-                    FragmentManager fragmentManager = this.getFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    final FragmentManager fragmentManager = this.getFragmentManager();
+                    final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
                     fragmentTransaction.replace(R.id.container, new CreateAccountFragment());
                     fragmentTransaction.addToBackStack(null);
@@ -169,7 +182,8 @@ public class LoginFragment extends Fragment implements View.OnFocusChangeListene
 
                     break;
             }
-            String text = "We got you covered!";
+
+            final String text = "We got you covered!";
             Toast.makeText(this.getActivity().getBaseContext(), text, Toast.LENGTH_LONG).show();
         }
 
