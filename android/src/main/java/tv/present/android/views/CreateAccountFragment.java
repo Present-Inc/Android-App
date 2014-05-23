@@ -110,7 +110,7 @@ public class CreateAccountFragment extends Fragment implements View.OnFocusChang
             EditText field = (EditText) view;
             inputMethodManager.showSoftInput(field, InputMethodManager.SHOW_FORCED);
         }
-        /* Hides it on lost focus.
+        /* Hides it on lost focus. - Don't do this
         else {
             EditText field = (EditText) view;
             view.setFocusable(false);
