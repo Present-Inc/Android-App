@@ -106,7 +106,7 @@ public class LoginFragment extends Fragment implements View.OnFocusChangeListene
             EditText field = (EditText) view;
             inputMethodManager.showSoftInput(field, InputMethodManager.SHOW_FORCED);
         }
-        // Hides it on lost focus.
+        /* Hides it on lost focus.
         else {
             EditText field = (EditText) view;
             view.setFocusable(false);
@@ -114,7 +114,7 @@ public class LoginFragment extends Fragment implements View.OnFocusChangeListene
             view.setFocusable(true);
             view.setFocusableInTouchMode(true);
             inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
+        } */
 
     }
 
