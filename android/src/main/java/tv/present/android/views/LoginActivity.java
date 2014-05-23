@@ -10,6 +10,10 @@ import tv.present.android.R;
 
 public final class LoginActivity extends Activity {
 
+    /**
+     * Creates this view.
+     * @param savedInstanceState is a Bundle of data that represents how this view once existed.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
