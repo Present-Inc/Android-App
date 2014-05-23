@@ -1,5 +1,6 @@
 package tv.present.android.views;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -51,7 +52,10 @@ public final class CreateAccountFragment extends Fragment implements View.OnFocu
 
         View rootView = inflater.inflate(R.layout.fragment_create_account, container, false);
 
-        this.getActivity().getActionBar().hide();
+        ActionBar actionBar = this.getActivity().getActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
 
         this.registerTouchListeners(rootView);
 
@@ -113,8 +117,11 @@ public final class CreateAccountFragment extends Fragment implements View.OnFocu
      * @param activity is the calling Activity.
      */
     public void hideKeyboard(Activity activity) {
-        final InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+        final View currentView = activity.getCurrentFocus();
+        if (currentView != null) {
+            final InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(currentView.getWindowToken(), 0);
+        }
     }
 
     /**
@@ -161,7 +168,7 @@ public final class CreateAccountFragment extends Fragment implements View.OnFocu
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_PROFILE_IMAGE_CAPTURE && resultCode == this.getActivity().RESULT_OK) {
+        if (requestCode == REQUEST_CODE_PROFILE_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             final Bundle extras = data.getExtras();
             final Bitmap imageBitmap = (Bitmap) extras.get("data");
             this.choosePhotoButton.setImageBitmap(imageBitmap);
