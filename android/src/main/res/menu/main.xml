@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="tv.present.android.views.MainActivity" >
+
+    <item android:id="@+id/action_create"
+        android:icon="@drawable/icon_add_present"
+        android:title="Create"
+        android:showAsAction="ifRoom" />
+    <!-- Settings, should always be in the overflow -->
+    <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:showAsAction="never" />
+
+    <item android:id="@+id/action_about"
+        android:title="About"
+        android:showAsAction="never" />
+
+</menu>
