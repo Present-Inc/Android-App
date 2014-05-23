@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light">
+    <style name="PresentTheme" parent="android:Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/PresentActionBar</item>
         <item name="android:actionBarTabStyle">@style/PresentActionBarTabs</item>
         <item name="android:tabWidgetStyle">@style/PresentActionBarTabs</item>
