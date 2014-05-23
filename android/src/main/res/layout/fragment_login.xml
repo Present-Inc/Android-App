@@ -43,8 +43,6 @@
         android:background="@drawable/login_button"
         android:fontFamily="sans-serif-light"
         android:textColor="#FFFFFF"
-
-
         android:shadowColor="#258AAA"
         android:shadowDx="2"
         android:shadowDy="2"
