@@ -1,5 +1,6 @@
 package tv.present.android.views;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -64,6 +65,11 @@ public final class LoginFragment extends Fragment implements View.OnFocusChangeL
 
         final View rootView = inflater.inflate(R.layout.fragment_login, container, false);
 
+        ActionBar actionBar = this.getActivity().getActionBar();
+        if (actionBar != null) {
+            actionBar.hide();
+        }
+
         this.registerTouchListeners(rootView);
 
         final RelativeLayout rootLayout = (RelativeLayout) rootView.findViewById(R.id.loginRootLayout);
@@ -83,8 +89,6 @@ public final class LoginFragment extends Fragment implements View.OnFocusChangeL
 
         final TextView forgotPasswordText = (TextView) rootView.findViewById(R.id.forgotPasswordText);
         forgotPasswordText.setOnClickListener(this);
-
-        this.getActivity().getActionBar().hide();
 
         return rootView;
 
@@ -123,8 +127,11 @@ public final class LoginFragment extends Fragment implements View.OnFocusChangeL
      * @param activity is the calling Activity.
      */
     public void hideKeyboard(Activity activity) {
-        final InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+        final View currentView = activity.getCurrentFocus();
+        if (currentView != null) {
+            final InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(currentView.getWindowToken(), 0);
+        }
     }
 
     /**
