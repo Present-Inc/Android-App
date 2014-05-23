@@ -10,34 +10,45 @@ import android.widget.Button;
 
 import tv.present.android.R;
 
-public class DemoActivity extends Activity implements View.OnClickListener {
+public final class DemoActivity extends Activity implements View.OnClickListener {
 
+    /**
+     * Creates this view.
+     * @param savedInstanceState is a Bundle of data that represents how this view once existed.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
-
-        Button demoButton1 = (Button) this.findViewById(R.id.demo1Button);
-        Button demoButton2 = (Button) this.findViewById(R.id.demo2Button);
-
+        // Set button click listeners
+        final Button demoButton1 = (Button) this.findViewById(R.id.demo1Button);
+        final Button demoButton2 = (Button) this.findViewById(R.id.demo2Button);
         demoButton1.setOnClickListener(this);
         demoButton2.setOnClickListener(this);
+
     }
 
-
+    /**
+     * Inflate the menu.
+     * @param menu is a Menu.
+     * @return true
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.demo, menu);
         return true;
     }
 
+    /**
+     * Handles clicks on the action bar.  Home/Up clicks are handled automatically so long as a
+     * parent is specified in the manifest.
+     * @param item is the MenuItem that was clicked.
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
@@ -45,6 +56,10 @@ public class DemoActivity extends Activity implements View.OnClickListener {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Handles clicks on each of the demo buttons.
+     * @param view is the View (Button) that was clicked.
+     */
     public void onClick(View view) {
 
         Intent intent;
@@ -61,7 +76,6 @@ public class DemoActivity extends Activity implements View.OnClickListener {
                     startActivity(intent);
                     break;
             }
-
 
         }
 
