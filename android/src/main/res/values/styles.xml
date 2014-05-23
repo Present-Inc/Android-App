@@ -2,6 +2,12 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Light">
+        <item name="android:actionBarStyle">@style/PresentActionBar</item>
+        <item name="android:actionBarTabStyle">@style/PresentActionBarTabs</item>
+        <item name="android:tabWidgetStyle">@style/PresentActionBarTabs</item>
+        <item name="android:actionBarTabTextStyle">@style/PresentActionBarTabsText</item>
+        <item name="android:actionBarDivider">@drawable/gradient_tabseparator</item>
+        <item name="android:actionBarTabBarStyle">@style/PresentActionBarTabBar</item>
     </style>
 
     <!-- Styles the login activity EditTexts -->
@@ -30,5 +36,56 @@
     <style name="TextFieldHint" parent="@android:style/Widget.EditText">
         <item name="android:textColor">#CCCCCC</item>
     </style>
+
+    <style name="PresentActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@drawable/gradient_actionbar</item>
+        <item name="android:height">48dip</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:titleTextStyle">@style/PresentActionBarTitleText</item>
+
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">2</item>
+        <item name="android:shadowDy">2</item>
+        <item name="android:shadowRadius">5</item>
+
+    </style>
+
+    <style name="PresentActionBarTabBar" parent="@android:style/Widget.Holo.ActionBar.TabBar">
+        <item name="android:showDividers">middle</item>
+        <item name="android:divider">@drawable/gradient_tabseparator</item>
+        <item name="android:dividerPadding">2dp</item>
+        <item name="android:background">@drawable/gradient_tabs</item>
+    </style>
+
+    <style name="PresentActionBarTabs" parent="@android:style/Widget.Holo.ActionBar.TabView">
+
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:color">#FFFFFF</item>
+        <item name="android:icon">@drawable/icon_home</item>
+        <item name="android:maxHeight">20dip</item>
+        <item name="android:showDividers">none</item>
+        <item name="android:measureWithLargestChild">true</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="PresentActionBarTabsText" parent="@android:style/Widget.Holo.ActionBar.TabText">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textAllCaps">false</item>
+        <!-- <item name="android:ellipsize">none</item> -->
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="PresentActionBarTitleText" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">2</item>
+        <item name="android:shadowDy">2</item>
+        <item name="android:shadowRadius">5</item>
+    </style>
+
 
 </resources>
