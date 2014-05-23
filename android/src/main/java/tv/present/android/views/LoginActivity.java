@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import tv.present.android.R;
 
-public class LoginActivity extends Activity {
+public final class LoginActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,21 +19,25 @@ public class LoginActivity extends Activity {
         }
     }
 
-
+    /**
+     * Inflate the menu.
+     * @param menu is a Menu.
+     * @return true
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.login, menu);
-
-
         return true;
     }
 
+    /**
+     * Handle clicks on the action bar.  Home/Up clicks are handled automatically so long as a
+     * parent is specified in the manifest.
+     * @param item is the MenuItem that was clicked.
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.menu_about) {
 
