@@ -1,0 +1,36 @@
+<RelativeLayout
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/notificationsScrollView"
+        android:layout_gravity="center"
+        android:fillViewport="true">
+
+        <TableLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/notificationsTableLayout"
+            android:showDividers="middle|end"
+            android:divider="@drawable/horizontal_rule_gradient"
+            android:orientation="vertical">
+
+            <View xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/horizontal_rule_gradient"
+                android:layout_below="@+id/createEmailAddressField"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:id="@+id/notificationRowSeparator" />
+
+            <!-- This will get filled programatically -->
+
+        </TableLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
