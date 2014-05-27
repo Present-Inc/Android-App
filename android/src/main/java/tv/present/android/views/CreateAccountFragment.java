@@ -1,5 +1,6 @@
 package tv.present.android.views;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -52,6 +53,9 @@ public final class CreateAccountFragment extends Fragment implements View.OnFocu
 
         View rootView = inflater.inflate(R.layout.fragment_create_account, container, false);
 
+        // This app is not compatible with API levels that require the SupportActionBar, therefore,
+        // we will not use it.
+        @SuppressLint("AppCompatMethod")
         ActionBar actionBar = this.getActivity().getActionBar();
         if (actionBar != null) {
             actionBar.hide();
