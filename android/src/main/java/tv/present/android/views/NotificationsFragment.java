@@ -22,7 +22,7 @@ import android.widget.Toast;
 import tv.present.android.R;
 import tv.present.android.util.PLog;
 
-public class NotificationsFragment extends Fragment implements View.OnFocusChangeListener, View.OnClickListener, View.OnTouchListener {
+public class NotificationsFragment extends Fragment implements View.OnFocusChangeListener, View.OnClickListener, View.OnTouchListener, View.OnLongClickListener {
 
     private static final String TAG = "tv.present.android.views.NotificationsListFragment";
     private final int REQUEST_CODE_PROFILE_IMAGE_CAPTURE = 8;
@@ -67,6 +67,9 @@ public class NotificationsFragment extends Fragment implements View.OnFocusChang
         for (int i = 0; i < 10; i++) {
 
             TableRow tableRow = (TableRow) inflater.inflate(R.layout.tablerow_notification, null, false);
+
+            tableRow.setOnClickListener(this);
+            tableRow.setOnLongClickListener(this);
             ImageView tableRowHR = (ImageView) inflater.inflate(R.layout.imageview_hr, null, false);
 
             TextView tableRowTextView = (TextView) tableRow.findViewById(R.id.notificationTextView);
@@ -140,11 +143,28 @@ public class NotificationsFragment extends Fragment implements View.OnFocusChang
             inputMethodManager.showSoftInput(view, InputMethodManager.SHOW_FORCED);
             return false;
         }
+        else if (view instanceof TableRow) {
+            PLog.logDebug(TAG, "TableRow was touched");
+            Toast.makeText(this.getActivity(), "Test!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         else {
             this.hideKeyboard(this.getActivity());
             return false;
         }
 
+    }
+
+    public boolean onLongClick(View view) {
+        if (view instanceof TableRow) {
+            TableRow row = (TableRow) view;
+            PLog.logDebug(TAG, "TableRow was long clicked");
+            Toast.makeText(this.getActivity(), "Long click, yo!", Toast.LENGTH_LONG).show();
+            row.setBackgroundColor(this.getResources().getColor(R.color.color_light_select));
+            return true;
+        }
+
+        return true;
     }
 
     /**
@@ -155,7 +175,8 @@ public class NotificationsFragment extends Fragment implements View.OnFocusChang
 
         PLog.logDebug(TAG, "Registered cick on view " + view.toString());
         if (view instanceof TableRow) {
-            Toast.makeText(this.getActivity(), "Blah blah blah", Toast.LENGTH_LONG);
+            PLog.logDebug(TAG, "TableRow was clicked");
+            Toast.makeText(this.getActivity(), "Blah blah blah", Toast.LENGTH_LONG).show();
         }
 
 
