@@ -70,8 +70,8 @@ public class NotificationsFragment extends Fragment implements View.OnFocusChang
 
         for (int i = 0; i < 10; i++) {
 
-            TableRow tableRow = (TableRow) inflater.inflate(R.layout.tablerow_notifications, null, false);
-            ImageView tableRowHR = (ImageView) inflater.inflate(R.layout.imageview_horizontalrule, null, false);
+            TableRow tableRow = (TableRow) inflater.inflate(R.layout.tablerow_notification, null, false);
+            ImageView tableRowHR = (ImageView) inflater.inflate(R.layout.imageview_hr, null, false);
 
 
             TextView tableRowTextView = (TextView) tableRow.findViewById(R.id.notificationTextView);
