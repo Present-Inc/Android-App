@@ -7,7 +7,7 @@
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
     android:clickable="true"
-    android:divider="@drawable/horizontal_rule_gradient">
+    android:divider="@drawable/gradient_horizontalrule">
 
 
     <ImageView
@@ -27,7 +27,7 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@drawable/horizontal_rule_gradient"
+        android:background="@drawable/gradient_horizontalrule"
         android:layout_below="@+id/notificationTextView"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
