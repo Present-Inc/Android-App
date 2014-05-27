@@ -24,14 +24,4 @@
         android:id="@+id/notificationTextView"
         android:layout_marginLeft="10dp"/>
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/gradient_horizontalrule"
-        android:layout_below="@+id/notificationTextView"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:id="@+id/notificationRowSeparator"/>
-
-
 </TableRow>
