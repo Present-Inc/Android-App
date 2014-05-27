@@ -13,8 +13,11 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import tv.present.android.R;
@@ -63,22 +66,24 @@ public class NotificationsFragment extends Fragment implements View.OnFocusChang
 
 
         TableLayout tableLayout = (TableLayout) rootView.findViewById(R.id.notificationsTableLayout);
+        ScrollView scrollView = (ScrollView) rootView.findViewById(R.id.notificationsScrollView);
+
+        for (int i = 0; i < 10; i++) {
+
+            TableRow tableRow = (TableRow) inflater.inflate(R.layout.tablerow_notifications, null, false);
+            ImageView tableRowHR = (ImageView) inflater.inflate(R.layout.imageview_horizontalrule, null, false);
 
 
-       /* for (int i = 0; i < 10; i++) {
-
-            View tableRow = inflater.inflate(R.layout.tablerow_notifications, null, false);
-            View tableRowHR = inflater.inflate(R.layout.tablerow_hr, null, false);
-
-            ImageView tableRowImageView = (ImageView) tableRow.findViewById(R.id.notificationSrcProfile);
             TextView tableRowTextView = (TextView) tableRow.findViewById(R.id.notificationTextView);
-
             tableRowTextView.setText("Dan started a Present:  Real G's");
 
             tableLayout.addView(tableRow);
             tableLayout.addView(tableRowHR);
 
-        } */
+
+        }
+
+
 
 
 
