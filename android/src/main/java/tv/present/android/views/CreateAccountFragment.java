@@ -195,8 +195,4 @@ public final class CreateAccountFragment extends Fragment implements View.OnFocu
         }
     }
 
-
-
-
-
 }
