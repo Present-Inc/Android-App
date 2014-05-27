@@ -9,8 +9,13 @@
     tools:context="tv.present.android.views.DetailActivity">
 
     <TextView
-        android:text="@string/hello_world"
+        android:text="Kyle Weisel"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:id="@+id/profileFullName"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="74dp" />
 
 </RelativeLayout>
