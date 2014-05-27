@@ -38,14 +38,14 @@ public final class LoginActivity extends Activity {
      * Handle clicks on the action bar.  Home/Up clicks are handled automatically so long as a
      * parent is specified in the manifest.
      * @param item is the MenuItem that was clicked.
-     * @return
+     * @return true
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_about) {
 
-            Toast.makeText(this, "You clicked the menu!", Toast.LENGTH_LONG);
+            Toast.makeText(this, "You clicked the menu!", Toast.LENGTH_LONG).show();
             return true;
         }
         return super.onOptionsItemSelected(item);
