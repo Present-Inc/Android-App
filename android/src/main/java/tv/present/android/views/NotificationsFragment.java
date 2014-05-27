@@ -14,7 +14,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -63,16 +62,12 @@ public class NotificationsFragment extends Fragment implements View.OnFocusChang
         PLog.logDebug(TAG, "Creating and configuring fragment view.");
 
         View rootView = inflater.inflate(R.layout.fragment_notifications, container, false);
-
-
         TableLayout tableLayout = (TableLayout) rootView.findViewById(R.id.notificationsTableLayout);
-        ScrollView scrollView = (ScrollView) rootView.findViewById(R.id.notificationsScrollView);
 
         for (int i = 0; i < 10; i++) {
 
             TableRow tableRow = (TableRow) inflater.inflate(R.layout.tablerow_notification, null, false);
             ImageView tableRowHR = (ImageView) inflater.inflate(R.layout.imageview_hr, null, false);
-
 
             TextView tableRowTextView = (TextView) tableRow.findViewById(R.id.notificationTextView);
             tableRowTextView.setText("Dan started a Present:  Real G's");
