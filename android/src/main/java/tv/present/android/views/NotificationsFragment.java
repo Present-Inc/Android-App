@@ -78,13 +78,6 @@ public class NotificationsFragment extends Fragment implements View.OnFocusChang
 
         }
 
-
-
-
-
-
-
-
         /*ActionBar actionBar = this.getActivity().getActionBar();
         if (actionBar != null) {
             actionBar.hide();
