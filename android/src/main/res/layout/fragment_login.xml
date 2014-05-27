@@ -40,7 +40,7 @@
         android:layout_below="@+id/passwordField"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
-        android:background="@drawable/login_button"
+        android:background="@drawable/button_login"
         android:fontFamily="sans-serif-light"
         android:textColor="#FFFFFF"
         android:shadowColor="#258AAA"
