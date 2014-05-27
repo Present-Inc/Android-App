@@ -2,6 +2,7 @@ package tv.present.android.views;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
+import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -18,8 +19,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import tv.present.android.R;
+import tv.present.android.util.PLog;
 
 public class MainActivity extends Activity implements ActionBar.TabListener {
+
+    private static final String TAG = "tv.present.android.views.MainActivity";
 
     // Provides fragments for each of the sections
     SectionsPagerAdapter mSectionsPagerAdapter;
@@ -73,23 +77,32 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
             switch(i) {
                 case 0:
-                    actionBar.addTab(actionBar.newTab().setIcon(R.drawable.icon_home).setTabListener(this));
+                    actionBar.addTab(this.tabCreator(actionBar, R.drawable.icon_home));
                     break;
                 case 1:
-                    actionBar.addTab(actionBar.newTab().setIcon(R.drawable.icon_notifications).setTabListener(this));
+                    actionBar.addTab(this.tabCreator(actionBar, R.drawable.icon_notifications));
                     break;
                 case 2:
-                    actionBar.addTab(actionBar.newTab().setIcon(R.drawable.icon_discover).setTabListener(this));
+                    actionBar.addTab(this.tabCreator(actionBar, R.drawable.icon_discover));
                     break;
                 case 3:
-                    actionBar.addTab(actionBar.newTab().setIcon(R.drawable.icon_profile).setTabListener(this));
+                    actionBar.addTab(this.tabCreator(actionBar, R.drawable.icon_profile));
                     break;
                 default:
-                    actionBar.addTab(actionBar.newTab().setIcon(R.drawable.icon_home).setTabListener(this));
+                    PLog.logWarning(TAG, "Reached default case when building tabs, within switch on counter i.");
                 break;
             }
 
         }
+    }
+
+    private Tab tabCreator(ActionBar actionBar, int resource) {
+        Tab newTab = actionBar.newTab();
+        if(newTab != null) {
+            newTab.setIcon(resource);
+            newTab.setTabListener(this);
+        }
+        return newTab;
     }
 
 
