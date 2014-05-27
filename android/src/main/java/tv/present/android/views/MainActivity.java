@@ -1,5 +1,6 @@
 package tv.present.android.views;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -15,8 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import java.util.Locale;
 
 import tv.present.android.R;
 
@@ -35,10 +34,16 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Set up the action bar.
+        // This app is not compatible with API levels that require the SupportActionBar, therefore,
+        // we will not use it.
+        @SuppressLint("AppCompatMethod")
         final ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setIcon(R.drawable.trans);
+
+        if (actionBar != null) {
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+            actionBar.setIcon(R.drawable.trans);
+        }
+
 
         // Create the adapter that will return a fragment for each of the
         // primary sections of the activity.
@@ -110,8 +115,15 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
         // When the given tab is selected, switch to the corresponding page in
         // the ViewPager.
         mViewPager.setCurrentItem(tab.getPosition());
+
+        // This app is not compatible with API levels that require the SupportActionBar, therefore,
+        // we will not use it.
+        @SuppressLint("AppCompatMethod")
         final ActionBar actionBar = getActionBar();
-        actionBar.setTitle(this.mSectionsPagerAdapter.getPageTitle(tab.getPosition()));
+        if (actionBar != null) {
+            actionBar.setTitle(this.mSectionsPagerAdapter.getPageTitle(tab.getPosition()));
+        }
+
     }
 
     @Override
@@ -164,7 +176,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
                     return getString(R.string.title_section_1);
