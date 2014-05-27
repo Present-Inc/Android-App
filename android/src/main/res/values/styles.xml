@@ -12,7 +12,7 @@
 
     <!-- Styles the login activity EditTexts -->
     <style name="LoginField" parent="@android:style/Widget.EditText">
-        <item name="android:background">@drawable/rounded_edittext</item>
+        <item name="android:background">@drawable/edittext_rounded</item>
         <item name="android:capitalize">none</item>
         <item name="android:clickable">true</item>
         <item name="android:editable">true</item>
