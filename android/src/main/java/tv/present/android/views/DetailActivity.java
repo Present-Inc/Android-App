@@ -35,7 +35,7 @@ public final class DetailActivity extends Activity {
      * Handles clicks on the action bar.  Home/Up clicks are handled automatically so long as a
      * parent is specified in the manifest.
      * @param item is the MenuItem that was clicked.
-     * @return
+     * @return true
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
