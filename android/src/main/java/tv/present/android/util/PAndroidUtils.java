@@ -1,7 +1,12 @@
 package tv.present.android.util;
 
+import android.app.Activity;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+
 /**
- * Created by kbw28 on 4/25/14.
+ * Utilities class used with common utility functions.
+ * @author Kyle Weisel (kyle@present.tv)
  */
 public class PAndroidUtils {
 
@@ -17,6 +22,18 @@ public class PAndroidUtils {
             version = -1;
         }
         return version;
+    }
+
+    /**
+     * Hides the soft keyboard.
+     * @param activity is the calling Activity.
+     */
+    public static void hideKeyboardInActivity(Activity activity) {
+        final View currentView = activity.getCurrentFocus();
+        if (currentView != null) {
+            final InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(currentView.getWindowToken(), 0);
+        }
     }
 
 }
