@@ -8,6 +8,8 @@
         <item name="android:actionBarTabTextStyle">@style/PresentActionBarTabsText</item>
         <item name="android:actionBarDivider">@drawable/gradient_tabseparator</item>
         <item name="android:actionBarTabBarStyle">@style/PresentActionBarTabBar</item>
+        <!--<item name="android:windowContentOverlay">@drawable/gradient_actionbar</item>-->
+
     </style>
 
     <!-- Styles the login activity EditTexts -->
