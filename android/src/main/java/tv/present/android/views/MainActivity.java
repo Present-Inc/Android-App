@@ -90,7 +90,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
                     break;
                 default:
                     PLog.logWarning(TAG, "Reached default case when building tabs, within switch on counter i.");
-                break;
+                    break;
             }
 
         }
