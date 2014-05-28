@@ -1,10 +1,7 @@
 package tv.present.android.views;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -13,24 +10,27 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import tv.present.android.R;
+import tv.present.android.presenters.NotificationsPresenter;
+import tv.present.android.util.PAndroidUtils;
 import tv.present.android.util.PLog;
 
-public class NotificationsFragment extends Fragment implements View.OnFocusChangeListener, View.OnClickListener, View.OnTouchListener, View.OnLongClickListener {
+public class NotificationsFragment extends Fragment implements View.OnFocusChangeListener, View.OnClickListener, View.OnTouchListener, View.OnLongClickListener  {
 
     private static final String TAG = "tv.present.android.views.NotificationsListFragment";
     private final int REQUEST_CODE_PROFILE_IMAGE_CAPTURE = 8;
 
-    ImageButton choosePhotoButton;
+    private View rootView;
+    private TableLayout tableLayout;
+    private ImageButton choosePhotoButton;
+    private NotificationsPresenter presenter;
 
     public NotificationsFragment() {
-        /* empty constructor */
+        this.presenter = new NotificationsPresenter(this);
     }
 
     /**
@@ -38,10 +38,6 @@ public class NotificationsFragment extends Fragment implements View.OnFocusChang
      * number.
      */
     public static NotificationsFragment newInstance() {
-        //PlaceholderFragment fragment = new PlaceholderFragment();
-        //Bundle args = new Bundle();
-        //args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-        //fragment.setArguments(args);
         return new NotificationsFragment();
     }
 
@@ -61,73 +57,18 @@ public class NotificationsFragment extends Fragment implements View.OnFocusChang
 
         PLog.logDebug(TAG, "Creating and configuring fragment view.");
 
-        View rootView = inflater.inflate(R.layout.fragment_notifications, container, false);
-        TableLayout tableLayout = (TableLayout) rootView.findViewById(R.id.notificationsTableLayout);
+        this.rootView = inflater.inflate(R.layout.fragment_notifications, container, false);
+        this.tableLayout = (TableLayout) this.rootView.findViewById(R.id.notificationsTableLayout);
 
-        for (int i = 0; i < 10; i++) {
-
-            TableRow tableRow = (TableRow) inflater.inflate(R.layout.tablerow_notification, null, false);
-
-            tableRow.setOnClickListener(this);
-            tableRow.setOnLongClickListener(this);
-            ImageView tableRowHR = (ImageView) inflater.inflate(R.layout.imageview_hr, null, false);
-
-            TextView tableRowTextView = (TextView) tableRow.findViewById(R.id.notificationTextView);
-            tableRowTextView.setText("Dan started a Present:  Real G's");
-
-            tableLayout.addView(tableRow);
-            tableLayout.addView(tableRowHR);
-
-
-        }
-
-        /*ActionBar actionBar = this.getActivity().getActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }*/
+        // This will be preceeded by a show cached notifications call
+        this.presenter.updateNotifications();
 
         return rootView;
 
     }
 
-    /**
-     * This method is called when focus changes on either of the two input textboxes.
-     * @param view is the view that called this method (ie: the EditText box).
-     * @param hasFocus is a boolean value which specifies whether the view has focus or no longer does (ie: lost it).
-     */
-    public void onFocusChange(final View view, final boolean hasFocus) {
-
-        PLog.logDebug(TAG, "Focus has changed to " + hasFocus + " on the " + view.toString() + " view.");
-
-        final InputMethodManager inputMethodManager = (InputMethodManager) this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        // Shows the keyboard when a login field gets focus.
-        if(hasFocus) {
-            final EditText field = (EditText) view;
-            inputMethodManager.showSoftInput(field, InputMethodManager.SHOW_FORCED);
-        }
-        /* Hides it on lost focus. - Don't do this
-        else {
-            EditText field = (EditText) view;
-            view.setFocusable(false);
-            view.setFocusableInTouchMode(false);
-            view.setFocusable(true);
-            view.setFocusableInTouchMode(true);
-            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }*/
-
-    }
-
-    /**
-     * Hides the soft keyboard.
-     * @param activity is the calling Activity.
-     */
-    public void hideKeyboard(Activity activity) {
-        final View currentView = activity.getCurrentFocus();
-        if (currentView != null) {
-            final InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(currentView.getWindowToken(), 0);
-        }
+    public void addViewToTable(View view) {
+        this.tableLayout.addView(view);
     }
 
     /**
@@ -149,7 +90,7 @@ public class NotificationsFragment extends Fragment implements View.OnFocusChang
             return false;
         }
         else {
-            this.hideKeyboard(this.getActivity());
+            PAndroidUtils.hideKeyboardInActivity(this.getActivity());
             return false;
         }
 
@@ -159,7 +100,7 @@ public class NotificationsFragment extends Fragment implements View.OnFocusChang
         if (view instanceof TableRow) {
             TableRow row = (TableRow) view;
             PLog.logDebug(TAG, "TableRow was long clicked");
-            Toast.makeText(this.getActivity(), "Long click, yo!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this.getActivity(), "Long click, yo (from Controller)!", Toast.LENGTH_LONG).show();
             row.setBackgroundColor(this.getResources().getColor(R.color.color_light_select));
             return true;
         }
@@ -179,23 +120,6 @@ public class NotificationsFragment extends Fragment implements View.OnFocusChang
             Toast.makeText(this.getActivity(), "Blah blah blah", Toast.LENGTH_LONG).show();
         }
 
-
-
-    }
-
-    /**
-     * Handles the callback from another activity that was started for a result.
-     * @param requestCode is the integer code of the requesting Activity.
-     * @param resultCode is the integer result code from the Activity.
-     * @param data is any returned Intent data from the finished Activity.
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_PROFILE_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            final Bundle extras = data.getExtras();
-            final Bitmap imageBitmap = (Bitmap) extras.get("data");
-            this.choosePhotoButton.setImageBitmap(imageBitmap);
-        }
     }
 
     /**
@@ -212,6 +136,28 @@ public class NotificationsFragment extends Fragment implements View.OnFocusChang
                 this.registerTouchListeners(innerView);
             }
         }
+    }
+
+    /**
+     * This method is called when focus changes on either of the two input textboxes.
+     * @param view is the view that called this method (ie: the EditText box).
+     * @param hasFocus is a boolean value which specifies whether the view has focus or no longer does (ie: lost it).
+     */
+    public void onFocusChange(final View view, final boolean hasFocus) {
+
+        PLog.logDebug(TAG, "Focus has changed to " + hasFocus + " on the " + view.toString() + " view.");
+
+        final InputMethodManager inputMethodManager = (InputMethodManager) this.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        // Shows the keyboard when a login field gets focus.
+        if(hasFocus) {
+            final EditText field = (EditText) view;
+            inputMethodManager.showSoftInput(field, InputMethodManager.SHOW_FORCED);
+        }
+    }
+
+    public ImageButton getChoosePhotoButton() {
+        return this.choosePhotoButton;
     }
 
 }
