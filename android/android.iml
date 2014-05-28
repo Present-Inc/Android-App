@@ -71,7 +71,10 @@
     <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="support-v13-19.0.1" level="project" />
+    <orderEntry type="library" exported="" name="tv.present.models" level="project" />
     <orderEntry type="library" exported="" name="tv.present.api-v1.3" level="project" />
+    <orderEntry type="library" exported="" name="tv.present.api" level="project" />
+    <orderEntry type="library" exported="" name="Present-API-Client-v1.6" level="project" />
     <orderEntry type="library" exported="" name="support-v4-19.0.1" level="project" />
   </component>
 </module>
