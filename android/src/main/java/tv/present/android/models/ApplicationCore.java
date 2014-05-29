@@ -51,10 +51,11 @@ public final class ApplicationCore implements Serializable {
     }
 
     /**
-     * Instantiates the ApplicationModel.
+     * Instantiates the ApplicationModel.  This constructor is private, and therefore this object
+     * needs to be acquired through the public static getInstance() method.
      */
     private ApplicationCore() {
-        /* Empty private constructor.  This model is a singleton and needs to be acquired using the static getInstance() method. */
+        this.userContext = null;
     }
 
     public UserContext getUserContext() {
