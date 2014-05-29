@@ -18,7 +18,6 @@ public class LoginPresenter {
     public void doLogin(String username, String password) {
 
 
-
     }
 
 
