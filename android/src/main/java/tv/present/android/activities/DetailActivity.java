@@ -1,4 +1,4 @@
-package tv.present.android.views;
+package tv.present.android.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
