@@ -1,14 +1,19 @@
-package tv.present.android.views;
+package tv.present.android.activities;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import tv.present.android.R;
+import tv.present.android.interfaces.FragmentC;
+import tv.present.android.views.LoginFragment;
 
 public final class LoginActivity extends Activity {
+
+    private Fragment loginFragment;
 
     /**
      * Creates this view.
@@ -19,7 +24,8 @@ public final class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction().add(R.id.container, new LoginFragment()).commit();
+            FragmentC loginFragment = new LoginFragment();
+            getFragmentManager().beginTransaction().add(R.id.container, loginFragment).commit();
         }
     }
 
@@ -50,5 +56,6 @@ public final class LoginActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 
 }
