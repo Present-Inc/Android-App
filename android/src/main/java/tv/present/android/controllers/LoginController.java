@@ -1,5 +1,6 @@
 package tv.present.android.controllers;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
@@ -7,7 +8,6 @@ import android.widget.Toast;
 import tv.present.android.activities.MainActivity;
 import tv.present.android.interfaces.Controller;
 import tv.present.android.interfaces.LoginWorkerCallback;
-import tv.present.android.views.LoginFragment;
 import tv.present.android.workers.LoginWorker;
 
 /**
@@ -16,14 +16,14 @@ import tv.present.android.workers.LoginWorker;
 public class LoginController extends Controller implements LoginWorkerCallback {
 
     private static final String TAG = "tv.present.android.controllers.LoginController";
-    private final LoginFragment loginFragment;
+    private final Fragment fragment;
 
-    public LoginController(LoginFragment loginFragment) {
-        this.loginFragment = loginFragment;
+    public LoginController(Fragment fragment) {
+        this.fragment = fragment;
     }
 
-    public LoginFragment getLoginFragment() {
-        return this.loginFragment;
+    public Fragment getFragment() {
+        return this.fragment;
     }
 
     /**
@@ -50,12 +50,12 @@ public class LoginController extends Controller implements LoginWorkerCallback {
 
         if (successfulLogin) {
             // Move to the main activity
-            Intent intent = new Intent(this.loginFragment.getActivity(), MainActivity.class);
-            this.loginFragment.startActivity(intent);
+            Intent intent = new Intent(this.fragment.getActivity(), MainActivity.class);
+            this.fragment.startActivity(intent);
         }
         else {
             // Display an error message in the current activity
-            Toast.makeText(this.loginFragment.getActivity().getBaseContext(), "Blashhsdf", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.fragment.getActivity().getBaseContext(), "Blashhsdf", Toast.LENGTH_SHORT).show();
         }
 
     }
