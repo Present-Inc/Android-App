@@ -14,7 +14,7 @@ import tv.present.android.views.NotificationsFragment;
  */
 public final class NotificationsPresenter {
 
-    private static final String TAG = "tv.present.android.controllers.NotificationsController";
+    private static final String TAG = "tv.present.android.controllers.NotificationsPresenter";
     private final int REQUEST_CODE_PROFILE_IMAGE_CAPTURE = 8;
     private NotificationsFragment subject;
 
