@@ -1,31 +1,36 @@
 package tv.present.android.models;
 
+import java.io.Serializable;
+
 import tv.present.models.UserContext;
 
 /**
- *  Maintains the state of the application.
+ *  Maintains the state of the application.  Most importantly, this class stores the logged in user
+ *  context for reference later on.
+ *
+ *  @author  Kyle Weisel (kyle@present.tv)
+ *
  */
-public class ApplicationModel {
+public final class ApplicationCore implements Serializable {
 
-    private static volatile ApplicationModel instance;
+    private static volatile ApplicationCore instance;
     private UserContext userContext;
 
     /**
-     * Gets the one (and only) instance of the model.
-     * Note - the is an issue with the synchronized call at this time (05/28/2014)
-     * @return  the model object.
+     * Gets the one (and only) instance of the application core.
+     * @return  the ApplicationCore object.
      */
-    public static ApplicationModel getInstance() {
+    public static ApplicationCore getInstance() {
 
-        if(ApplicationModel.instance == null) {
-            //synchronized(PAndroidLogger.getInstance()) {
-            if(ApplicationModel.instance == null) {
-                ApplicationModel.instance = new ApplicationModel();
+        if(ApplicationCore.instance == null) {
+            synchronized(ApplicationCore.class) {
+                if (ApplicationCore.instance == null) {
+                    ApplicationCore.instance = new ApplicationCore();
+                }
             }
-            //}
         }
 
-        return ApplicationModel.instance;
+        return ApplicationCore.instance;
     }
 
     /**
@@ -48,7 +53,7 @@ public class ApplicationModel {
     /**
      * Instantiates the ApplicationModel.
      */
-    private ApplicationModel() {
+    private ApplicationCore() {
         /* Empty private constructor.  This model is a singleton and needs to be acquired using the static getInstance() method. */
     }
 
