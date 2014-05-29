@@ -1,4 +1,4 @@
-package tv.present.android.views;
+package tv.present.android.activities;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -20,10 +20,12 @@ import android.widget.TextView;
 
 import tv.present.android.R;
 import tv.present.android.util.PLog;
+import tv.present.android.views.HomeFeedFragment;
+import tv.present.android.views.NotificationsFragment;
 
 public class MainActivity extends Activity implements ActionBar.TabListener {
 
-    private static final String TAG = "tv.present.android.views.MainActivity";
+    private static final String TAG = "tv.present.android.activities.MainActivity";
 
     // Provides fragments for each of the sections
     SectionsPagerAdapter mSectionsPagerAdapter;
