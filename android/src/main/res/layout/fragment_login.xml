@@ -12,7 +12,7 @@
     android:descendantFocusability="beforeDescendants"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context="tv.present.android.views.LoginActivity$PlaceholderFragment">
+    tools:context="tv.present.android.activities.LoginActivity$PlaceholderFragment">
 
     <EditText style="@style/LoginField"
         android:id="@+id/usernameField"
