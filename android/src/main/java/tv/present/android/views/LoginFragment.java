@@ -3,7 +3,6 @@ package tv.present.android.views;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -20,14 +19,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import tv.present.android.R;
+import tv.present.android.controllers.LoginController;
+import tv.present.android.interfaces.Controller;
+import tv.present.android.interfaces.FragmentC;
 import tv.present.android.util.PLog;
 
-public final class LoginFragment extends Fragment implements View.OnFocusChangeListener, View.OnClickListener, View.OnTouchListener {
+public final class LoginFragment extends FragmentC implements View.OnFocusChangeListener, View.OnClickListener, View.OnTouchListener {
 
     private static final String TAG = "tv.present.android.views.LoginFragment";
+    private Controller controller;
 
+    /**
+     * Creates a new login fragment with an associated controller.
+     */
     public LoginFragment() {
-        /* empty constructor */
+        this.controller = new LoginController(this);
     }
 
     /**
@@ -170,7 +176,11 @@ public final class LoginFragment extends Fragment implements View.OnFocusChangeL
 
             final String text = "Your username was " + username.getText() + " and password was " + password.getText();
 
+            LoginController loginController = (LoginController) this.controller;
+            loginController.executeLogin(username.getText().toString(), password.getText().toString());
+
             Toast.makeText(this.getActivity().getBaseContext(), text, Toast.LENGTH_LONG).show();
+
         }
         else if (view instanceof TextView) {
 
