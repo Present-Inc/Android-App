@@ -63,8 +63,6 @@ public final class PAndroidGlobals {
 
     public static final String TEMP_DIRECTORY = PAndroidGlobals.SD_ROOT_DIRECTORY + "/Present";
 
-
-
 }
 
 
