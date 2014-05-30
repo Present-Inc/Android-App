@@ -10,6 +10,9 @@ import android.view.inputmethod.InputMethodManager;
  */
 public class PAndroidUtils {
 
+    private static final String TAG = "tv.present.android.util.PAndroidUtils";
+    private static final int IO_BUFFER_SIZE = 2 * 1024;
+
     /**
      * Gets the version of the Android SDK version installed.
      * @return the integer version of the Android SDK, or -1 if unable to determine.
