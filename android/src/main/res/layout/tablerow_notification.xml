@@ -13,11 +13,17 @@
     android:longClickable="true">
 
 
-    <ImageView
+    <!--<ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:id="@+id/notificationSrcProfile"
-        android:src="@drawable/profile_dan" />
+        android:src="@drawable/profile_dan" />-->
+
+    <tv.present.android.views.CircularImageView
+        android:id="@+id/notificationSrcProfile"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/profile_dan"/>
 
     <TextView
         android:layout_width="match_parent"
