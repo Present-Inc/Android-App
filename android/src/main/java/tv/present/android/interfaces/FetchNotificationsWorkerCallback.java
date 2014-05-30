@@ -1,10 +1,12 @@
 package tv.present.android.interfaces;
 
-import tv.present.models.ResultSetActivities;
+import tv.present.models.PResultSet;
+import tv.present.models.UserActivity;
 
 /**
- * Created by kbw28 on 5/29/14.
+ *  This interface defines the callback method used by the FetchNotificationsWorker.
+ *  @author Kyle Weisel (kyle@present.tv)
  */
 public interface FetchNotificationsWorkerCallback {
-    public void callbackFetchNotifications(ResultSetActivities resultSet);
+    public void callbackFetchNotifications(PResultSet<UserActivity> resultSet);
 }
