@@ -10,9 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import tv.present.android.PAndroidGlobals;
-import tv.present.android.PLogLevel;
-
 /**
  * Wraps the Android Logger so that we can direct logs to multiple sources, and for flexibility in
  * future revisions of this application.  This is a singleton class and can only ever be
