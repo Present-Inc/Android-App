@@ -17,7 +17,7 @@ import tv.present.models.User;
 import tv.present.models.UserContext;
 
 /**
- *  Controller that manages the CreateAccount Fragment view.
+ *  The CreateAccountController manages the FragmentCreateAccount view.
  *  @author Kyle Weisel (kyle@present.tv)
  */
 public class CreateAccountController extends Controller implements CreateAccountWorkerCallback, LoginWorkerCallback, UpdateUserDetailsWorkerCallback {
@@ -25,7 +25,6 @@ public class CreateAccountController extends Controller implements CreateAccount
     private static final String TAG = "tv.present.android.controllers.CreateAccountController";
     private final CreateAccountFragment createAccountFragment;
     private UserContext userContext;
-
     private String username;
     private String password;
     private String emailAddress;
@@ -93,6 +92,11 @@ public class CreateAccountController extends Controller implements CreateAccount
         }
     }
 
+    /**
+     * This method is a callback from the UpdateUserDetailsWorker.
+     * @param successfulUpdate is a boolean value that indicates whether the user details update was
+     *                         successful or not.
+     */
     public void callbackUpdateUserDetails(boolean successfulUpdate) {
         // Regardless of whether the update was successful, move on.  We will just log the error.
         if (!successfulUpdate) {
@@ -103,6 +107,11 @@ public class CreateAccountController extends Controller implements CreateAccount
         this.createAccountFragment.startActivity(intent);
     }
 
+    /**
+     * This method is a callback from the LoginWorker.
+     * @param successfulLogin is a boolean value that indicates whether the user loing was
+     *                        successful or not.
+     */
     public void callbackLogin(Boolean successfulLogin) {
 
         if (successfulLogin) {
