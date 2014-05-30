@@ -2,6 +2,8 @@ package tv.present.android.views;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -10,11 +12,19 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import tv.present.android.R;
+import tv.present.android.controllers.NotificationsController;
 import tv.present.android.presenters.NotificationsPresenter;
 import tv.present.android.util.PAndroidUtils;
 import tv.present.android.util.PLog;
@@ -22,7 +32,8 @@ import tv.present.android.util.PLog;
 public class NotificationsFragment extends Fragment implements View.OnFocusChangeListener, View.OnClickListener, View.OnTouchListener, View.OnLongClickListener  {
 
     private static final String TAG = "tv.present.android.views.NotificationsListFragment";
-    private final int REQUEST_CODE_PROFILE_IMAGE_CAPTURE = 8;
+
+    private final NotificationsController controller;
 
     private View rootView;
     private TableLayout tableLayout;
@@ -30,7 +41,7 @@ public class NotificationsFragment extends Fragment implements View.OnFocusChang
     private NotificationsPresenter presenter;
 
     public NotificationsFragment() {
-        this.presenter = new NotificationsPresenter(this);
+        this.controller = new NotificationsController(this);
     }
 
     /**
@@ -61,7 +72,8 @@ public class NotificationsFragment extends Fragment implements View.OnFocusChang
         this.tableLayout = (TableLayout) this.rootView.findViewById(R.id.notificationsTableLayout);
 
         // This will be preceeded by a show cached notifications call
-        this.presenter.updateNotifications();
+        //this.controller.updateNotifications();
+        this.controller.executeFetchNotifications(0, 20);
 
         return rootView;
 
@@ -158,6 +170,35 @@ public class NotificationsFragment extends Fragment implements View.OnFocusChang
 
     public ImageButton getChoosePhotoButton() {
         return this.choosePhotoButton;
+    }
+
+    public void addNotification(String profileImageURL, String message) {
+
+        LayoutInflater inflater = (LayoutInflater) this.getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        TableRow tableRow = (TableRow) inflater.inflate(R.layout.tablerow_notification, null, false);
+
+        tableRow.setOnClickListener(this);
+        tableRow.setOnLongClickListener(this
+        );
+        ImageView tableRowHR = (ImageView) inflater.inflate(R.layout.imageview_hr, null, false);
+
+        TextView tableRowTextView = (TextView) tableRow.findViewById(R.id.notificationTextView);
+        tableRowTextView.setText(message);
+
+        CircularImageView circularImageView = (CircularImageView) tableRow.findViewById(R.id.notificationSrcProfile);
+        try {
+            Bitmap bitmap = BitmapFactory.decodeStream((InputStream) new URL(profileImageURL).getContent());
+            circularImageView.setImageBitmap(bitmap);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        this.tableLayout.addView(tableRow);
+        this.tableLayout.addView(tableRowHR);
+
     }
 
 }
