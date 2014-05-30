@@ -4,15 +4,17 @@ import android.os.AsyncTask;
 
 import tv.present.android.interfaces.FetchNotificationsWorkerCallback;
 import tv.present.android.models.ApplicationCore;
-import tv.present.models.ResultSetActivities;
+import tv.present.android.util.PLog;
+import tv.present.models.PResultSet;
 import tv.present.models.UserActivity;
 import tv.present.models.UserContext;
 
 /**
  * Created by kbw28 on 5/29/14.
  */
-public class FetchNotificationsWorker extends AsyncTask<Integer, Void, ResultSetActivities> {
+public class FetchNotificationsWorker extends AsyncTask<Integer, Void, PResultSet<UserActivity>> {
 
+    private static final String TAG = "tv.present.android.workers.FetchNotificationsWorker";
     private FetchNotificationsWorkerCallback fetchNotificationsWorkerCallback;
 
     public FetchNotificationsWorker(FetchNotificationsWorkerCallback callback) {
@@ -22,11 +24,11 @@ public class FetchNotificationsWorker extends AsyncTask<Integer, Void, ResultSet
     // Inovked on UI before thread is executed
     @Override
     public void onPreExecute() {
-        // Do nothing
+        PLog.logDebug(TAG, "Spinning up the notifications worker");
     }
 
     @Override
-    public ResultSetActivities doInBackground(Integer ... params) {
+    public PResultSet<UserActivity> doInBackground(Integer ... params) {
 
         final int cursor = params[0];
         final int limit = params[1];
@@ -34,7 +36,7 @@ public class FetchNotificationsWorker extends AsyncTask<Integer, Void, ResultSet
         ApplicationCore appCore = ApplicationCore.getInstance();
         UserContext userContext = appCore.getUserContext();
 
-        ResultSetActivities results = null;
+        PResultSet<UserActivity> results = null;
         if (userContext != null) {
             results = UserActivity.getActivities(userContext, limit, cursor);
         }
@@ -46,7 +48,8 @@ public class FetchNotificationsWorker extends AsyncTask<Integer, Void, ResultSet
     //  Check whether the boolean was true or false
     //  Advance the UI to the main screen on a successful login
     @Override
-    public void onPostExecute(ResultSetActivities resultSet) {
+    public void onPostExecute(PResultSet<UserActivity> resultSet) {
+        PLog.logDebug(TAG, "The resultSet onPostExecute has size: " + resultSet.getResults().size());
         this.fetchNotificationsWorkerCallback.callbackFetchNotifications(resultSet);
     }
 
