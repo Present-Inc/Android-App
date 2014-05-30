@@ -1,7 +1,8 @@
 package tv.present.android.interfaces;
 
 /**
- * Created by kbw28 on 5/29/14.
+ *  This interface defines the callback method used by the LoginWorker.
+ *  @author Kyle Weisel (kyle@present.tv)
  */
 public interface LoginWorkerCallback {
     public void callbackLogin(Boolean successfulLogin);
