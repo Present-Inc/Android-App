@@ -11,7 +11,8 @@ import tv.present.android.interfaces.LoginWorkerCallback;
 import tv.present.android.workers.LoginWorker;
 
 /**
- * Created by kbw28 on 5/29/14.
+ * The LoginController manages the FragmentLogin view.
+ * @author Kyle Weisel (kyle@present.tv)
  */
 public class LoginController extends Controller implements LoginWorkerCallback {
 
@@ -43,8 +44,9 @@ public class LoginController extends Controller implements LoginWorkerCallback {
     }
 
     /**
-     * This function is a callback of the login worker.  After the worker completes
-     * @param successfulLogin
+     * This function is a callback of the login worker.
+     * @param successfulLogin is a boolean value which indicates whether the login was successful
+     *                        or not.
      */
     public void callbackLogin(Boolean successfulLogin) {
 
@@ -60,6 +62,5 @@ public class LoginController extends Controller implements LoginWorkerCallback {
         }
 
     }
-
 
 }
