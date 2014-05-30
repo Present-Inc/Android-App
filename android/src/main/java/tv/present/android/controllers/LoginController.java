@@ -51,11 +51,12 @@ public class LoginController extends Controller implements LoginWorkerCallback {
         if (successfulLogin) {
             // Move to the main activity
             Intent intent = new Intent(this.fragment.getActivity(), MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             this.fragment.startActivity(intent);
         }
         else {
             // Display an error message in the current activity
-            Toast.makeText(this.fragment.getActivity().getBaseContext(), "Blashhsdf", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.fragment.getActivity().getBaseContext(), "There was a problem with those credentials.  Please try again!", Toast.LENGTH_LONG).show();
         }
 
     }
