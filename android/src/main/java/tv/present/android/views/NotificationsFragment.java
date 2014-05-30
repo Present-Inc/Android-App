@@ -25,7 +25,6 @@ import java.net.URL;
 
 import tv.present.android.R;
 import tv.present.android.controllers.NotificationsController;
-import tv.present.android.presenters.NotificationsPresenter;
 import tv.present.android.util.PAndroidUtils;
 import tv.present.android.util.PLog;
 
@@ -38,7 +37,6 @@ public class NotificationsFragment extends Fragment implements View.OnFocusChang
     private View rootView;
     private TableLayout tableLayout;
     private ImageButton choosePhotoButton;
-    private NotificationsPresenter presenter;
 
     public NotificationsFragment() {
         this.controller = new NotificationsController(this);
