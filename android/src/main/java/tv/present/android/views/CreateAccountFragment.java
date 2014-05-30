@@ -14,11 +14,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import tv.present.android.R;
+import tv.present.android.controllers.CreateAccountController;
+import tv.present.android.interfaces.Controller;
 import tv.present.android.util.PLog;
 
 /**
@@ -28,10 +31,12 @@ public final class CreateAccountFragment extends Fragment implements View.OnFocu
 
     private static final String TAG = "tv.present.android.views.CreateAccountFragment";
     private final int REQUEST_CODE_PROFILE_IMAGE_CAPTURE = 8;
+    private final Controller controller;
 
     ImageButton choosePhotoButton;
 
     public CreateAccountFragment() {
+        this.controller = new CreateAccountController(this);
         /* empty constructor */
     }
 
@@ -78,6 +83,9 @@ public final class CreateAccountFragment extends Fragment implements View.OnFocu
         // Set click listener for the profile photo button
         this.choosePhotoButton = (ImageButton) rootView.findViewById(R.id.selectProfilePictureButton);
         this.choosePhotoButton.setOnClickListener(this);
+
+        Button nextButton = (Button) rootView.findViewById(R.id.createContinueButton);
+        nextButton.setOnClickListener(this);
 
         // Don't initially focus on a field, give it to the RelativeLayout -- do we want this?
         emailAddressField.clearFocus();
@@ -154,12 +162,28 @@ public final class CreateAccountFragment extends Fragment implements View.OnFocu
      */
     public void onClick(View view) {
 
+        View rootView = this.getView();
+
         // Remember: there is only one ImageButton on this view
         if (view instanceof ImageButton) {
             final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (takePictureIntent.resolveActivity(this.getActivity().getPackageManager()) != null) {
                 startActivityForResult(takePictureIntent, REQUEST_CODE_PROFILE_IMAGE_CAPTURE);
             }
+        }
+
+        if (view instanceof Button) {
+
+            // Get all of the data from the view
+            String emailAddress = ((EditText) rootView.findViewById(R.id.createEmailAddressField)).getText().toString();
+            String username = ((EditText) rootView.findViewById(R.id.createUsernameField)).getText().toString();
+            String password = ((EditText) rootView.findViewById(R.id.createPasswordField)).getText().toString();
+            String fullName = ((EditText) rootView.findViewById(R.id.createFullNameField)).getText().toString();
+            String phoneNumber = ((EditText) rootView.findViewById(R.id.createPhoneNumberField)).getText().toString();
+
+            CreateAccountController createAccountController = (CreateAccountController) this.controller;
+            createAccountController.executeCreateAccount(username, password, emailAddress, fullName, phoneNumber);
+
         }
 
     }
