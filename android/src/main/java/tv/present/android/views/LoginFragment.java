@@ -27,7 +27,7 @@ import tv.present.android.util.PLog;
 public final class LoginFragment extends FragmentC implements View.OnFocusChangeListener, View.OnClickListener, View.OnTouchListener {
 
     private static final String TAG = "tv.present.android.views.LoginFragment";
-    private Controller controller;
+    private final Controller controller;
 
     /**
      * Creates a new login fragment with an associated controller.
@@ -176,10 +176,11 @@ public final class LoginFragment extends FragmentC implements View.OnFocusChange
 
             final String text = "Your username was " + username.getText() + " and password was " + password.getText();
 
+            PLog.logDebug(TAG, "Performing login with username " + username.getText().toString() + " and password: " + password.getText().toString());
+
             LoginController loginController = (LoginController) this.controller;
             loginController.executeLogin(username.getText().toString(), password.getText().toString());
 
-            Toast.makeText(this.getActivity().getBaseContext(), text, Toast.LENGTH_LONG).show();
 
         }
         else if (view instanceof TextView) {
