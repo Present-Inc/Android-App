@@ -65,4 +65,5 @@ public final class ApplicationCore implements Serializable {
     public void setUserContext(UserContext userContext) {
         this.userContext = userContext;
     }
+
 }
