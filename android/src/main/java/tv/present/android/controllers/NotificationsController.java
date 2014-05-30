@@ -6,9 +6,10 @@ import java.util.ArrayList;
 
 import tv.present.android.interfaces.Controller;
 import tv.present.android.interfaces.FetchNotificationsWorkerCallback;
+import tv.present.android.util.PLog;
 import tv.present.android.views.NotificationsFragment;
 import tv.present.android.workers.FetchNotificationsWorker;
-import tv.present.models.ResultSetActivities;
+import tv.present.models.PResultSet;
 import tv.present.models.UserActivity;
 
 public class NotificationsController extends Controller implements FetchNotificationsWorkerCallback {
@@ -24,13 +25,13 @@ public class NotificationsController extends Controller implements FetchNotifica
         return this.fragment;
     }
 
-    public void callbackFetchNotifications(ResultSetActivities resultSet) {
+    public void callbackFetchNotifications(PResultSet<UserActivity> resultSet) {
         // Loop through the notifications and update the view here
 
-        if (resultSet.getResults() instanceof ArrayList<?>) {
+        ArrayList<UserActivity> results = resultSet.getResults();
 
-        }
-        ArrayList<UserActivity> results = (ArrayList<UserActivity>)resultSet.getResults();
+        PLog.logError(TAG, "Results array has a size of " + results.size());
+
 
         final int size = results.size();
         for (int i = 0; i < size; i++) {
@@ -47,6 +48,7 @@ public class NotificationsController extends Controller implements FetchNotifica
         params[0] = cursor;
         params[1] = limit;
 
+        PLog.logDebug(TAG, "Starting the notifications worker");
         FetchNotificationsWorker fetchNotificationsWorker = new FetchNotificationsWorker(this);
         fetchNotificationsWorker.execute(params);
 
