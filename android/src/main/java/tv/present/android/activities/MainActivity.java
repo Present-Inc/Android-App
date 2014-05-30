@@ -33,8 +33,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
     // View pager to host the section contents
     ViewPager mViewPager;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +47,6 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
             actionBar.setIcon(R.drawable.trans);
         }
-
 
         // Create the adapter that will return a fragment for each of the
         // primary sections of the activity.
