@@ -6,9 +6,10 @@ import tv.present.android.interfaces.CreateAccountWorkerCallback;
 import tv.present.models.User;
 
 /**
- * Created by kbw28 on 5/29/14.
+ * A working thread that performs account creation on a background thread.  Successful account
+ * creation will automatically log a user in, so this thread will return a UserContext on success.
  */
-public class CreateAccountWorker extends AsyncTask<String, Void, User> {
+public final class CreateAccountWorker extends AsyncTask<String, Void, User> {
 
     private CreateAccountWorkerCallback createAccountWorkerCallback;
 
@@ -22,18 +23,25 @@ public class CreateAccountWorker extends AsyncTask<String, Void, User> {
         // Do nothing
     }
 
+    /**
+     * Performs a user account creation in a background thread.  On successful execution, a
+     * UserContext will automatically be created and returned to the caller.
+     * @param params is a String[] array with the following structure:
+     *               params[0] => username
+     *               params[1] => password
+     *               params[2] => email address
+     * @return a non-null UserContext if the account was created successfully, otherwise null.
+     */
     @Override
     public User doInBackground(String ... params) {
 
-        String username = params[0];
-        String password = params[1];
-        String emailAddress = params[2];
-        String fullName = params[3];
-        String phoneNumber = params[4];
+        // Gather parameters
+        final String username = params[0];
+        final String password = params[1];
+        final String emailAddress = params[2];
 
-        User result = User.add(username, password, emailAddress);
-
-        return result;
+        // Try to create the user
+        return User.add(username, password, emailAddress);
 
     }
 
@@ -44,5 +52,6 @@ public class CreateAccountWorker extends AsyncTask<String, Void, User> {
     public void onPostExecute(User user) {
         this.createAccountWorkerCallback.callbackCreateAccount(user);
     }
+
 
 }
