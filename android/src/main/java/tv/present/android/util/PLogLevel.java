@@ -1,4 +1,4 @@
-package tv.present.android;
+package tv.present.android.util;
 
 /**
  * Specifies the different types of log levels available for the Present application.
