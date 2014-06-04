@@ -2,8 +2,7 @@ package tv.present.android.views;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,17 +17,13 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-
 import tv.present.android.R;
 import tv.present.android.controllers.NotificationsController;
 import tv.present.android.util.PAndroidUtils;
 import tv.present.android.util.PLog;
+import tv.present.android.workers.DownloadImageWorker;
 
-public class NotificationsFragment extends Fragment implements View.OnFocusChangeListener, View.OnClickListener, View.OnTouchListener, View.OnLongClickListener  {
+public class NotificationsFragment extends Fragment implements View.OnFocusChangeListener, View.OnClickListener, View.OnTouchListener, View.OnLongClickListener {
 
     private static final String TAG = "tv.present.android.views.NotificationsListFragment";
 
@@ -177,23 +172,14 @@ public class NotificationsFragment extends Fragment implements View.OnFocusChang
         TableRow tableRow = (TableRow) inflater.inflate(R.layout.tablerow_notification, null, false);
 
         tableRow.setOnClickListener(this);
-        tableRow.setOnLongClickListener(this
-        );
+        tableRow.setOnLongClickListener(this);
         ImageView tableRowHR = (ImageView) inflater.inflate(R.layout.imageview_hr, null, false);
 
         TextView tableRowTextView = (TextView) tableRow.findViewById(R.id.notificationTextView);
         tableRowTextView.setText(message);
 
         CircularImageView circularImageView = (CircularImageView) tableRow.findViewById(R.id.notificationSrcProfile);
-        try {
-            Bitmap bitmap = BitmapFactory.decodeStream((InputStream) new URL(profileImageURL).getContent());
-            circularImageView.setImageBitmap(bitmap);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+            AsyncTask downloadImageworker = new DownloadImageWorker(circularImageView);
         this.tableLayout.addView(tableRow);
         this.tableLayout.addView(tableRowHR);
 
