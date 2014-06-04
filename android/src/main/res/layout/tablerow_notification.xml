@@ -23,13 +23,13 @@
         android:id="@+id/notificationSrcProfile"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/profile_dan"/>
+        />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="Dan is posing a Present: Present 1"
-        android:gravity="center"
+        android:gravity="left|center"
         android:id="@+id/notificationTextView"
         android:layout_marginLeft="10dp"/>
 
