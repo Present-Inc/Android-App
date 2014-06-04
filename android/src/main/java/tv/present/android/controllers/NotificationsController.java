@@ -14,7 +14,7 @@ import tv.present.models.UserActivity;
 
 public class NotificationsController extends Controller implements FetchNotificationsWorkerCallback {
 
-    private static final String TAG = "tv.present.android.controllers.LoginController";
+    private static final String TAG = "tv.present.android.controllers.NotificationsController";
     private final NotificationsFragment fragment;
 
     public NotificationsController(NotificationsFragment fragment) {
@@ -30,12 +30,27 @@ public class NotificationsController extends Controller implements FetchNotifica
 
         ArrayList<UserActivity> results = resultSet.getResults();
 
-        PLog.logError(TAG, "Results array has a size of " + results.size());
+        PLog.logNotice(TAG, "Results array has a size of " + results.size());
 
 
         final int size = results.size();
         for (int i = 0; i < size; i++) {
+            PLog.logNotice(TAG, "Looping through the results " + i);
             UserActivity userActivity = results.get(i);
+            if (userActivity == null) {
+                PLog.logError(TAG, "The user activity " + i + " was null!");
+
+                UserActivity result2 = results.get(i+1);
+                if (result2 == null) {
+                    PLog.logError(TAG, "The user activity " + i+1 + " was also null!");
+                }
+                else {
+                    PLog.logNotice(TAG, "The user activity " + (i+1) + " was not null, however.  In fact " + result2.getSourceUser().getUsername());
+                }
+            }
+            else {
+                PLog.logNotice(TAG, "The user activity " + i + " was not null!");
+            }
             String message = userActivity.getSubject();
             String userProfileImageURL = userActivity.getSourceUser().getProfile().getProfilePictureURL();
             this.fragment.addNotification(userProfileImageURL, message);
