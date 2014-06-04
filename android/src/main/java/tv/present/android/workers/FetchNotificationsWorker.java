@@ -36,12 +36,13 @@ public class FetchNotificationsWorker extends AsyncTask<Integer, Void, PResultSe
         ApplicationCore appCore = ApplicationCore.getInstance();
         UserContext userContext = appCore.getUserContext();
 
-        PResultSet<UserActivity> results = null;
-        if (userContext != null) {
-            results = UserActivity.getActivities(userContext, limit, cursor);
+        PResultSet<UserActivity> resultSet = UserActivity.getActivities(userContext, 10, 0);
+
+        if (resultSet == null ) {
+            PLog.logError(TAG, "LEXMFJ - ResultSet is null!");
         }
 
-        return results;
+        return resultSet;
     }
 
     // Will execute on UI thread:
@@ -49,7 +50,12 @@ public class FetchNotificationsWorker extends AsyncTask<Integer, Void, PResultSe
     //  Advance the UI to the main screen on a successful login
     @Override
     public void onPostExecute(PResultSet<UserActivity> resultSet) {
-        PLog.logDebug(TAG, "The resultSet onPostExecute has size: " + resultSet.getResults().size());
+        if (resultSet == null) {
+            PLog.logDebug(TAG, "The result set is null!");
+        }
+        else {
+            PLog.logDebug(TAG, "The resultSet onPostExecute has size: " + resultSet.getResults().size());
+        }
         this.fetchNotificationsWorkerCallback.callbackFetchNotifications(resultSet);
     }
 
