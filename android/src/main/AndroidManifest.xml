@@ -8,16 +8,16 @@
         android:label="@string/application_name"
         android:theme="@style/PresentTheme" >
         <activity
-            android:name=".activities.LoginActivity"
+            android:name="tv.present.android.activities.LoginActivity"
             android:label="@string/application_name"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".activities.MainActivity"
+            android:name="tv.present.android.activities.MainActivity"
             android:label="@string/application_name" >
         </activity>
         <activity
-            android:name=".activities.DemoActivity"
+            android:name="tv.present.android.activities.DemoActivity"
             android:label="Present Beta" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,8 +26,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.DetailActivity"
+            android:name="tv.present.android.activities.DetailActivity"
             android:label="@string/title_activity_detail" >
+        </activity>
+        <activity
+            android:name="tv.present.android.activities.HLSActivity"
+            android:label="@string/title_activity_hls" >
+        </activity>
+
+        <activity
+            android:name=".controllers.EntryController"
+            android:label="@string/application_name" >
         </activity>
     </application>
 
