@@ -3,7 +3,6 @@ package tv.present.android.controllers;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -21,7 +20,7 @@ import tv.present.android.models.PCallbackResult;
 import tv.present.android.threads.FetchNotificationsThread;
 import tv.present.android.util.PCallbackIdentifiers;
 import tv.present.android.util.PLog;
-import tv.present.models.PUser;
+import tv.present.models.PUserActivity;
 import tv.present.util.PResultSet;
 
 /**
@@ -203,17 +202,36 @@ public class CoreController extends PController implements ActionBar.TabListener
                      * guarantee that we will know what type we are dealing with.
                      */
                     @SuppressWarnings("unchecked")
-                    final PResultSet<PUser> callbackResultSet = (PResultSet<PUser>) callbackData.getResultData();
-                    ArrayList<PUser> arrayResult = callbackResultSet.getResults();
+                    final PResultSet<PUserActivity> callbackResultSet = (PResultSet<PUserActivity>) callbackData.getResultData();
+                    ArrayList<PUserActivity> arrayResult = callbackResultSet.getResults();
 
 
                     // Check to see whether login was successful
                     if (arrayResult != null) {
-                        // Start the main activity if the result is true (ie: the login was
-                        // successful, and the context was stored in the application core).
-                        Intent intent = new Intent(this, CoreController.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        this.startActivity(intent);
+
+                        final int size = arrayResult.size();
+                        for (int i = 0; i < size; i++) {
+                            PLog.logNotice(TAG, "Looping through the results " + i);
+                            PUserActivity userActivity = arrayResult.get(i);
+                            if (userActivity == null) {
+                                PLog.logError(TAG, "The user activity " + i + " was null!");
+
+                                PUserActivity result2 = arrayResult.get(i+1);
+                                if (result2 == null) {
+                                    PLog.logError(TAG, "The user activity " + i+1 + " was also null!");
+                                }
+                                else {
+                                    PLog.logNotice(TAG, "The user activity " + (i+1) + " was not null, however.  In fact " + result2.getSourceUser().getUsername());
+                                }
+                            }
+                            else {
+                                PLog.logNotice(TAG, "The user activity " + i + " was not null!");
+                            }
+                            String message = userActivity.getSubject();
+                            String userProfileImageURL = userActivity.getSourceUser().getProfile().getProfilePictureURL();
+                            this.fragment.addNotification(userProfileImageURL, message);
+                        }
+
                     }
                     else {
                         // Otherwise, display an error message in the current activity.
