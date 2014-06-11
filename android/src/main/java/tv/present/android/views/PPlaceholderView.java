@@ -1,13 +1,14 @@
 package tv.present.android.views;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import tv.present.android.R;
+import tv.present.android.models.PView;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -31,7 +32,13 @@ public class PPlaceholderView extends PView {
         return fragment;
     }
 
-    public PPlaceholderView() {
+    public void onClick(View view) {
+        // do nothing
+    }
+
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        // do nothing
+        return false;
     }
 
     @Override
