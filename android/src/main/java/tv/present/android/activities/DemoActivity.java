@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 
 import tv.present.android.R;
+import tv.present.android.controllers.EntryController;
 
 public final class DemoActivity extends Activity implements View.OnClickListener {
 
@@ -24,8 +25,10 @@ public final class DemoActivity extends Activity implements View.OnClickListener
         // Set button click listeners
         final Button demoButton1 = (Button) this.findViewById(R.id.demo1Button);
         final Button demoButton2 = (Button) this.findViewById(R.id.demo2Button);
+        final Button demoButton3 = (Button) this.findViewById(R.id.demo3Button);
         demoButton1.setOnClickListener(this);
         demoButton2.setOnClickListener(this);
+        demoButton3.setOnClickListener(this);
 
     }
 
@@ -68,11 +71,15 @@ public final class DemoActivity extends Activity implements View.OnClickListener
 
             switch(view.getId()) {
                 case R.id.demo1Button:
-                    intent = new Intent(this, LoginActivity.class);
+                    intent = new Intent(this, EntryController.class);
                     startActivity(intent);
                     break;
                 case R.id.demo2Button:
                     intent = new Intent(this, MainActivity.class);
+                    startActivity(intent);
+                    break;
+                case R.id.demo3Button:
+                    intent = new Intent(this, HLSActivity.class);
                     startActivity(intent);
                     break;
             }
