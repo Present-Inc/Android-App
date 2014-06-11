@@ -1,12 +1,12 @@
 package tv.present.android.controllers;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
 import tv.present.android.activities.MainActivity;
-import tv.present.android.interfaces.Controller;
 import tv.present.android.interfaces.LoginWorkerCallback;
 import tv.present.android.workers.LoginWorker;
 
@@ -14,7 +14,7 @@ import tv.present.android.workers.LoginWorker;
  * The LoginController manages the FragmentLogin view.
  * @author Kyle Weisel (kyle@present.tv)
  */
-public class LoginController extends Controller implements LoginWorkerCallback {
+public class LoginController extends Activity implements LoginWorkerCallback {
 
     private static final String TAG = "tv.present.android.controllers.LoginController";
     private final Fragment fragment;
@@ -34,13 +34,11 @@ public class LoginController extends Controller implements LoginWorkerCallback {
      * @param password is the password String to try.
      */
     public void executeLogin(String username, String password) {
-
         AsyncTask loginWorker = new LoginWorker(this);
         String[] temp = new String[2];
         temp[0] = username;
         temp[1] = password;
         loginWorker.execute(temp);
-
     }
 
     /**
