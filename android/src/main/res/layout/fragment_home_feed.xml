@@ -15,7 +15,16 @@
 
             <TableRow
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent"></TableRow>
+                android:layout_height="fill_parent"
+                android:background="#000000">
+
+                <VideoView android:id="@+id/hlsPlayer"
+                    android:layout_width="fill_parent"
+                    android:layout_height="320dp"
+                    android:layout_gravity="center_horizontal"
+                    />
+
+                </TableRow>
 
             <TableRow
                 android:layout_width="fill_parent"
