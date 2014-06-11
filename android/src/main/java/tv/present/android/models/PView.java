@@ -14,6 +14,11 @@ public abstract class PView extends Fragment implements View.OnTouchListener {
 
     protected PController controller;
 
+    public static PView newInstance(PController controller) {
+
+        return null;
+    }
+
     /**
      * Gets the controller for this fragment.
      * @return
@@ -53,6 +58,8 @@ public abstract class PView extends Fragment implements View.OnTouchListener {
         }
     }
 
-
+    public void setController(PController controller) {
+        this.controller = controller;
+    }
 
 }
