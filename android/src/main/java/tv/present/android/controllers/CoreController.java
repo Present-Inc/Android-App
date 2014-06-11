@@ -231,7 +231,4 @@ public class CoreController extends PController implements ActionBar.TabListener
 
     }
 
-
-
-
 }
