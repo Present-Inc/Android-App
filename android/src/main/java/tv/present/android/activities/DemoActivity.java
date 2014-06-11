@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 
 import tv.present.android.R;
+import tv.present.android.controllers.CoreController;
 import tv.present.android.controllers.EntryController;
 
 public final class DemoActivity extends Activity implements View.OnClickListener {
@@ -75,7 +76,7 @@ public final class DemoActivity extends Activity implements View.OnClickListener
                     startActivity(intent);
                     break;
                 case R.id.demo2Button:
-                    intent = new Intent(this, MainActivity.class);
+                    intent = new Intent(this, CoreController.class);
                     startActivity(intent);
                     break;
                 case R.id.demo3Button:
