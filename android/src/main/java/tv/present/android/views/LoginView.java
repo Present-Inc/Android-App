@@ -17,17 +17,30 @@ import android.widget.Toast;
 
 import tv.present.android.R;
 import tv.present.android.controllers.EntryController;
+import tv.present.android.controllers.PController;
 import tv.present.android.models.PView;
 import tv.present.android.util.PLog;
 
 public final class LoginView extends PView implements View.OnFocusChangeListener, View.OnClickListener {
 
     private static final String TAG = "tv.present.android.views.LoginView";
-    private final EntryController controller;
+
+    /**
+     * Returns a new instance of this fragment for the given section
+     * number.
+     */
+    public static LoginView newInstance(PController controller) {
+        Bundle arguments = new Bundle();
+        arguments.putSerializable("controller", controller);
+        PLog.logDebug(TAG, "newInstance -> the controller put into fragment arguments was " + (controller == null ? "in fact" : "not") + " null");
+        PLog.logDebug(TAG, "newInstance -> the controller got out of the fragment arguments was " + (arguments.get("controller") == null ? "in fact" : "not") + " null");
+        LoginView loginView = new LoginView();
+        loginView.setController(controller);
+        loginView.setArguments(arguments);
+        return loginView;
+    }
 
     public LoginView() {
-        Bundle arguments = this.getArguments();
-        this.controller = (EntryController) arguments.getSerializable("controller");
     }
 
     /**
@@ -139,7 +152,7 @@ public final class LoginView extends PView implements View.OnFocusChangeListener
             final EditText username = (EditText) this.getActivity().findViewById(R.id.usernameField);
             final EditText password = (EditText) this.getActivity().findViewById(R.id.passwordField);
             PLog.logDebug(TAG, "Performing login with username " + username.getText().toString() + " and password: " + password.getText().toString());
-            this.controller.executeLogin(username.getText().toString(), password.getText().toString());
+            ((EntryController)this.controller).executeLogin(username.getText().toString(), password.getText().toString());
 
         }
         else if (view instanceof TextView) {
@@ -148,7 +161,7 @@ public final class LoginView extends PView implements View.OnFocusChangeListener
 
                 // Create a new account activity
                 case R.id.createAccountText :
-                    this.controller.startCreateAccountView();
+                    ((EntryController)this.controller).startCreateAccountView();
                     break;
 
                 // Start the forgot password activity
