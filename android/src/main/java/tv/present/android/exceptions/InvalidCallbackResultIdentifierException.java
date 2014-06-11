@@ -1,10 +1,15 @@
 package tv.present.android.exceptions;
 
 /**
- * The APIRequestPrereqException is generally thrown when the APIConnector has missing, invalid, or uninitialized
- * connection parameters (ie: the connector is not in the proper state to make a connection).
+ * Present Invalid Callback Result Identifier Exception
  *
- * @author Kyle Weisel (kyle@present.tv)
+ * The InvalidCallbackResultIdentifierException is generally thrown when the callback identifier
+ * from a response does not match one of the expected identifiers (ie: the object that implements
+ * the ThreadCallback interface does not check for the right callback identifier).
+ *
+ * June 10, 2014
+ *
+ * @author  Kyle Weisel (kyle@present.tv)
  */
 public class InvalidCallbackResultIdentifierException extends Exception {
 
