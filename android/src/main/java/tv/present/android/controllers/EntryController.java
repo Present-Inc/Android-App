@@ -42,10 +42,7 @@ public final class EntryController extends PController implements ThreadCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         if (savedInstanceState == null) {
-            Bundle arguments = new Bundle();
-            arguments.putSerializable("controller", this);
-            PView loginView = new LoginView();
-            loginView.setArguments(arguments);
+            PView loginView = LoginView.newInstance(this);
             getFragmentManager().beginTransaction().add(R.id.container, loginView).commit();
         }
     }
