@@ -14,12 +14,14 @@ import java.util.ArrayList;
 
 import tv.present.android.R;
 import tv.present.android.adapters.PSectionsPagerAdapter;
+import tv.present.android.adapters.PSectionsPagerAdapterMain;
 import tv.present.android.exceptions.InvalidCallbackResultIdentifierException;
 import tv.present.android.interfaces.ThreadCallback;
 import tv.present.android.models.PCallbackResult;
 import tv.present.android.threads.FetchNotificationsThread;
 import tv.present.android.util.PCallbackIdentifiers;
 import tv.present.android.util.PLog;
+import tv.present.android.views.NotificationsView;
 import tv.present.models.PUserActivity;
 import tv.present.util.PResultSet;
 
@@ -37,20 +39,19 @@ import tv.present.util.PResultSet;
 public class CoreController extends PController implements ActionBar.TabListener, ThreadCallback {
 
     private static final String TAG = "tv.present.android.controllers.CoreController";
-
-    // Provides fragments for each of the sections
-    PSectionsPagerAdapter mSectionsPagerAdapter;
-
-    // View pager to host the section contents
-    ViewPager mViewPager;
+    private PSectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
+    private NotificationsView notificationsView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // This app is not compatible with API levels that require the SupportActionBar, therefore,
-        // we will not use it.
+        /* ==== Suppressing application compatibility warning ====
+         * Reason:  This application only supports API levels that have a proper implementation of
+         * the action bar, and therefore there is no need to use the support action bar.
+         */
         @SuppressLint("AppCompatMethod")
         final ActionBar actionBar = getActionBar();
 
@@ -61,7 +62,7 @@ public class CoreController extends PController implements ActionBar.TabListener
 
         // Create the adapter that will return a fragment for each of the
         // primary sections of the activity.
-        mSectionsPagerAdapter = new PSectionsPagerAdapter(getFragmentManager(), this);
+        mSectionsPagerAdapter = new PSectionsPagerAdapterMain(getFragmentManager(), this);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -229,7 +230,7 @@ public class CoreController extends PController implements ActionBar.TabListener
                             }
                             String message = userActivity.getSubject();
                             String userProfileImageURL = userActivity.getSourceUser().getProfile().getProfilePictureURL();
-                            this.fragment.addNotification(userProfileImageURL, message);
+                            this.notificationsView.addNotification(userProfileImageURL, message);
                         }
 
                     }
@@ -246,6 +247,18 @@ public class CoreController extends PController implements ActionBar.TabListener
             PLog.logError(TAG, "Caught InvalidCallbackResultIdentifierException with message: " + e.getMessage());
         }
 
+    }
+
+    /**
+     * Gets the notifications view that this controller controls.
+     * @return a NotificationsView.
+     */
+    public NotificationsView getNotificationsView() {
+        if (this.notificationsView == null) {
+            PLog.logDebug(TAG, "getNotificationsView() -> A notifications view did not exist.  Creating a new one.");
+            this.notificationsView = NotificationsView.newInstance(this);
+        }
+        return this.notificationsView;
     }
 
 }
