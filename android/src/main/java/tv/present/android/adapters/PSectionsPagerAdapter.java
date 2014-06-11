@@ -1,9 +1,5 @@
 package tv.present.android.adapters;
 
-/**
- * Created by kbw28 on 6/10/14.
- */
-
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -11,12 +7,18 @@ import android.support.v13.app.FragmentPagerAdapter;
 import tv.present.android.R;
 import tv.present.android.controllers.PController;
 import tv.present.android.views.HomeFeedView;
-import tv.present.android.views.NotificationsFragment;
+import tv.present.android.views.NotificationsView;
 import tv.present.android.views.PPlaceholderView;
 
 /**
- * A {@link android.support.v13.app.FragmentPagerAdapter} that returns a fragment corresponding to
- * one of the sections/tabs/pages.
+ * Present Sections Pager Adapter
+ *
+ * This {@link android.support.v13.app.FragmentPagerAdapter} returns a fragment that corresponds
+ * to a given tab.
+ *
+ * June 10, 2014
+ *
+ * @author  Kyle Weisel (kyle@present.tv)
  */
 public class PSectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -40,7 +42,7 @@ public class PSectionsPagerAdapter extends FragmentPagerAdapter {
                 returnValue = HomeFeedView.newInstance(this.controller);
                 break;
             case 1:
-                returnValue = NotificationsFragment.newInstance();
+                returnValue = NotificationsView.newInstance(this.controller);
                 break;
             default:
                 returnValue = PPlaceholderView.newInstance(position + 1);
