@@ -12,7 +12,14 @@ import tv.present.models.PUserContext;
 import tv.present.util.PResultSet;
 
 /**
- * Created by kbw28 on 6/10/14.
+ * Present Fetch Notifications Thread
+ *
+ * This thread is responsible for fetching notifications for the current user context so long as one
+ * exists.  It will call back to a specified ThreadCallback with a PResultSet<PUserActivity>
+ * response.
+ *
+ * June 10, 2014
+ * @author Kyle Weisel (kyle@present.tv)
  */
 public class FetchNotificationsThread extends AsyncTask<Integer, Void, PResultSet<PUserActivity>> {
 
