@@ -28,7 +28,6 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Dan is posing a Present: Present 1"
         android:gravity="left|center"
         android:id="@+id/notificationTextView"
         android:layout_marginLeft="10dp"/>
