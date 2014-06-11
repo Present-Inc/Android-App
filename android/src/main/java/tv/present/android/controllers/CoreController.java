@@ -120,7 +120,6 @@ public class CoreController extends PController implements ActionBar.TabListener
         return newTab;
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
