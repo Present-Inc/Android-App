@@ -3,13 +3,15 @@ package tv.present.android.workers;
 import android.os.AsyncTask;
 
 import tv.present.android.interfaces.CreateAccountWorkerCallback;
-import tv.present.models.User;
+import tv.present.api.PAPIInteraction;
+import tv.present.factories.PObjectFactory;
+import tv.present.models.PUser;
 
 /**
  * A working thread that performs account creation on a background thread.  Successful account
  * creation will automatically log a user in, so this thread will return a UserContext on success.
  */
-public final class CreateAccountWorker extends AsyncTask<String, Void, User> {
+public final class CreateAccountWorker extends AsyncTask<String, Void, PUser> {
 
     private CreateAccountWorkerCallback createAccountWorkerCallback;
 
@@ -33,7 +35,7 @@ public final class CreateAccountWorker extends AsyncTask<String, Void, User> {
      * @return a non-null UserContext if the account was created successfully, otherwise null.
      */
     @Override
-    public User doInBackground(String ... params) {
+    public PUser doInBackground(String ... params) {
 
         // Gather parameters
         final String username = params[0];
@@ -41,7 +43,10 @@ public final class CreateAccountWorker extends AsyncTask<String, Void, User> {
         final String emailAddress = params[2];
 
         // Try to create the user
-        return User.add(username, password, emailAddress);
+        PObjectFactory objectFactory = new PObjectFactory();
+
+        PAPIInteraction apiInteraction = new PAPIInteraction();
+        return apiInteraction.addUser(username, password, emailAddress);
 
     }
 
@@ -49,7 +54,7 @@ public final class CreateAccountWorker extends AsyncTask<String, Void, User> {
     //  Check whether the boolean was true or false
     //  Advance the UI to the main screen on a successful login
     @Override
-    public void onPostExecute(User user) {
+    public void onPostExecute(PUser user) {
         this.createAccountWorkerCallback.callbackCreateAccount(user);
     }
 
