@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import tv.present.android.activities.MainActivity;
 import tv.present.android.interfaces.LoginWorkerCallback;
-import tv.present.android.workers.LoginWorker;
 
 /**
  * The LoginController manages the FragmentLogin view.
