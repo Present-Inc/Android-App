@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import tv.present.android.interfaces.ThreadCallback;
 import tv.present.android.models.ApplicationCore;
 import tv.present.android.models.PCallbackResult;
-import tv.present.android.models.PCallbackResultWrapper;
 import tv.present.android.util.PLog;
 import tv.present.api.PAPIInteraction;
 import tv.present.models.PUserActivity;
@@ -62,7 +61,7 @@ public class FetchNotificationsThread extends AsyncTask<Integer, Void, PResultSe
         else {
             PLog.logDebug(TAG, "The resultSet onPostExecute has size: " + resultSet.getResults().size());
         }
-        this.threadCallback.threadCallback(new PCallbackResultWrapper(new PCallbackResult<PResultSet<PUserActivity>>(this.identifier, resultSet)));
+        this.threadCallback.threadCallback(new PCallbackResult<PResultSet<PUserActivity>>(this.identifier, resultSet));
     }
 
 }
