@@ -18,6 +18,8 @@ import android.widget.Toast;
 import tv.present.android.R;
 import tv.present.android.controllers.CoreController;
 import tv.present.android.controllers.PController;
+import tv.present.android.interfaces.ThreadCallback;
+import tv.present.android.models.PCallbackResult;
 import tv.present.android.models.PView;
 import tv.present.android.util.PAndroidUtils;
 import tv.present.android.util.PLog;
@@ -33,7 +35,7 @@ import tv.present.android.workers.DownloadImageWorker;
  *
  * @author  Kyle Weisel (kyle@present.tv)
  */
-public class NotificationsView extends PView implements View.OnFocusChangeListener, View.OnClickListener, View.OnLongClickListener {
+public class NotificationsView extends PView implements View.OnFocusChangeListener, View.OnClickListener, View.OnLongClickListener, ThreadCallback {
 
     private static final String TAG = "tv.present.android.views.NotificationsView";
     private final CoreController controller;
@@ -174,6 +176,10 @@ public class NotificationsView extends PView implements View.OnFocusChangeListen
         AsyncTask downloadImageworker = new DownloadImageWorker(circularImageView);
         this.tableLayout.addView(tableRow);
         this.tableLayout.addView(tableRowHR);
+
+    }
+
+    public void threadCallback(PCallbackResult callbackData) {
 
     }
 }
