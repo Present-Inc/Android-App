@@ -28,7 +28,7 @@ public class FetchNotificationsThread extends AsyncTask<Integer, Void, PResultSe
     // Inovked on UI before thread is executed
     @Override
     public void onPreExecute() {
-        PLog.logDebug(TAG, "Spinning up the notifications worker");
+        PLog.logDebug(TAG, "Spinning up the notifications thread");
     }
 
     @Override
@@ -41,7 +41,7 @@ public class FetchNotificationsThread extends AsyncTask<Integer, Void, PResultSe
         PUserContext userContext = appCore.getUserContext();
 
         PAPIInteraction apiInteraction = new PAPIInteraction();
-        PResultSet<PUserActivity> resultSet = apiInteraction.getUserActivities(userContext, 10, 0);
+        PResultSet<PUserActivity> resultSet = apiInteraction.getUserActivities(userContext, cursor, limit);
 
         if (resultSet == null ) {
             PLog.logWarning(TAG, "The result set from the API interaction came back null!");
