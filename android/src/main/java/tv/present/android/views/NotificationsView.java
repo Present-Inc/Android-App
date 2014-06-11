@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -25,16 +24,21 @@ import tv.present.android.util.PLog;
 import tv.present.android.workers.DownloadImageWorker;
 
 /**
- * Created by kbw28 on 6/10/14.
+ * Present Notifications View
+ *
+ * The {@link tv.present.android.views.NotificationsView} is the
+ * {@link tv.present.android.models.PView} that displays the user's current list of notifications.
+ *
+ * June 10, 2014
+ *
+ * @author  Kyle Weisel (kyle@present.tv)
  */
 public class NotificationsView extends PView implements View.OnFocusChangeListener, View.OnClickListener, View.OnLongClickListener {
 
-    private static final String TAG = "tv.present.android.views.NotificationsListFragment";
+    private static final String TAG = "tv.present.android.views.NotificationsView";
     private final CoreController controller;
 
-    private View rootView;
     private TableLayout tableLayout;
-    private ImageButton choosePhotoButton;
 
     public NotificationsView() {
         Bundle arguments = this.getArguments();
@@ -45,12 +49,12 @@ public class NotificationsView extends PView implements View.OnFocusChangeListen
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static HomeFeedView newInstance(PController controller) {
+    public static NotificationsView newInstance(PController controller) {
         Bundle arguments = new Bundle();
         arguments.putSerializable("controller", controller);
-        HomeFeedView homeFeedView = new HomeFeedView();
-        homeFeedView.setArguments(arguments);
-        return homeFeedView;
+        NotificationsView notificationsView = new NotificationsView();
+        notificationsView.setArguments(arguments);
+        return notificationsView;
     }
 
     /**
@@ -69,8 +73,8 @@ public class NotificationsView extends PView implements View.OnFocusChangeListen
 
         PLog.logDebug(TAG, "Creating and configuring fragment view.");
 
-        this.rootView = inflater.inflate(R.layout.fragment_notifications, container, false);
-        this.tableLayout = (TableLayout) this.rootView.findViewById(R.id.notificationsTableLayout);
+        View rootView = inflater.inflate(R.layout.fragment_notifications, container, false);
+        this.tableLayout = (TableLayout) rootView.findViewById(R.id.notificationsTableLayout);
 
         // This will be preceeded by a show cached notifications call
         //this.controller.updateNotifications();
@@ -151,10 +155,6 @@ public class NotificationsView extends PView implements View.OnFocusChangeListen
             final EditText field = (EditText) view;
             inputMethodManager.showSoftInput(field, InputMethodManager.SHOW_FORCED);
         }
-    }
-
-    public ImageButton getChoosePhotoButton() {
-        return this.choosePhotoButton;
     }
 
     public void addNotification(String profileImageURL, String message) {
