@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import tv.present.android.interfaces.FetchNotificationsWorkerCallback;
 import tv.present.android.util.PLog;
-import tv.present.android.views.NotificationsFragment;
+import tv.present.android.views.NotificationsView;
 import tv.present.android.workers.FetchNotificationsWorker;
 import tv.present.models.PUserActivity;
 import tv.present.util.PResultSet;
@@ -14,9 +14,9 @@ import tv.present.util.PResultSet;
 public class NotificationsController extends PController implements FetchNotificationsWorkerCallback {
 
     private static final String TAG = "tv.present.android.controllers.NotificationsController";
-    private final NotificationsFragment fragment;
+    private final NotificationsView fragment;
 
-    public NotificationsController(NotificationsFragment fragment) {
+    public NotificationsController(NotificationsView fragment) {
         this.fragment = fragment;
     }
 
