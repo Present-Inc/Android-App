@@ -2,7 +2,7 @@ package tv.present.android.models;
 
 import java.io.Serializable;
 
-import tv.present.models.UserContext;
+import tv.present.models.PUserContext;
 
 /**
  *  Maintains the state of the application.  Most importantly, this class stores the logged in user
@@ -14,7 +14,7 @@ import tv.present.models.UserContext;
 public final class ApplicationCore implements Serializable {
 
     private static volatile ApplicationCore instance;
-    private UserContext userContext;
+    private PUserContext userContext;
 
     /**
      * Gets the one (and only) instance of the application core.
@@ -58,11 +58,11 @@ public final class ApplicationCore implements Serializable {
         this.userContext = null;
     }
 
-    public UserContext getUserContext() {
+    public PUserContext getUserContext() {
         return this.userContext;
     }
 
-    public void setUserContext(UserContext userContext) {
+    public void setUserContext(PUserContext userContext) {
         this.userContext = userContext;
     }
 
