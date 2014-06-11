@@ -4,9 +4,8 @@ import android.os.AsyncTask;
 
 import tv.present.android.interfaces.ThreadCallback;
 import tv.present.android.models.PCallbackResult;
-import tv.present.android.models.PCallbackResultWrapper;
-import tv.present.android.util.PTaskExecutor;
 import tv.present.android.util.PLog;
+import tv.present.android.util.PTaskExecutor;
 import tv.present.api.PAPIInteraction;
 import tv.present.models.PUser;
 
@@ -98,7 +97,7 @@ public final class CreateAccountThread extends AsyncTask<String, Void, Boolean> 
      */
     @Override
     public void onPostExecute(Boolean successfulUpdate) {
-        this.threadCallback.threadCallback(new PCallbackResultWrapper(new PCallbackResult<Boolean>(this.identifier, successfulUpdate)));
+        this.threadCallback.threadCallback(new PCallbackResult<Boolean>(this.identifier, successfulUpdate));
     }
 
 }
