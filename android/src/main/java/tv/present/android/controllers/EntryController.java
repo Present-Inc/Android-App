@@ -102,7 +102,7 @@ public final class EntryController extends PController implements ThreadCallback
     }
 
     public void executeCreateAccount(String username, String password, String emailAddress, String fullName, String phoneNumber) {
-        //
+        // TODO: Implement
     }
 
     public void executeStartForgotPassword() {
@@ -147,7 +147,7 @@ public final class EntryController extends PController implements ThreadCallback
 
                     if (success) {
                         // User was created, now update details
-
+                        // TODO: Implement
                     }
                     else {
                         Toast.makeText(this.getBaseContext(), "Unable to login.  Try again!", Toast.LENGTH_LONG).show();
