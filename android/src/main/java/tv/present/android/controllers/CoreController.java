@@ -18,7 +18,6 @@ import tv.present.android.adapters.PSectionsPagerAdapter;
 import tv.present.android.exceptions.InvalidCallbackResultIdentifierException;
 import tv.present.android.interfaces.ThreadCallback;
 import tv.present.android.models.PCallbackResult;
-import tv.present.android.models.PCallbackResultWrapper;
 import tv.present.android.threads.FetchNotificationsThread;
 import tv.present.android.util.PCallbackIdentifiers;
 import tv.present.android.util.PLog;
@@ -26,7 +25,15 @@ import tv.present.models.PUser;
 import tv.present.util.PResultSet;
 
 /**
- * Created by kbw28 on 6/10/14.
+ * Present Entry Controller Object
+ *
+ * This controller is the entry point for the application.  If there is no user currently
+ * logged in it will launch the login view.  It also handles a few other pre-login tasks
+ * and views.
+ *
+ * June 10, 2014
+ *
+ * @author  Kyle Weisel (kyle@present.tv)
  */
 public class CoreController extends PController implements ActionBar.TabListener, ThreadCallback {
 
@@ -67,7 +74,11 @@ public class CoreController extends PController implements ActionBar.TabListener
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                actionBar.setSelectedNavigationItem(position);
+
+                if (actionBar != null) {
+                    actionBar.setSelectedNavigationItem(position);
+                }
+
             }
         });
 
@@ -79,22 +90,24 @@ public class CoreController extends PController implements ActionBar.TabListener
             // this tab is selected.
             //actionBar.addTab(actionBar.newTab().setIcon(R.drawable.icon_home).setText(mSectionsPagerAdapter.getPageTitle(i)).setTabListener(this));
 
-            switch(i) {
-                case 0:
-                    actionBar.addTab(this.tabCreator(actionBar, R.drawable.icon_home));
-                    break;
-                case 1:
-                    actionBar.addTab(this.tabCreator(actionBar, R.drawable.icon_notifications));
-                    break;
-                case 2:
-                    actionBar.addTab(this.tabCreator(actionBar, R.drawable.icon_discover));
-                    break;
-                case 3:
-                    actionBar.addTab(this.tabCreator(actionBar, R.drawable.icon_profile));
-                    break;
-                default:
-                    PLog.logWarning(TAG, "Reached default case when building tabs, within switch on counter i.");
-                    break;
+            if (actionBar != null) {
+                switch (i) {
+                    case 0:
+                        actionBar.addTab(this.tabCreator(actionBar, R.drawable.icon_home));
+                        break;
+                    case 1:
+                        actionBar.addTab(this.tabCreator(actionBar, R.drawable.icon_notifications));
+                        break;
+                    case 2:
+                        actionBar.addTab(this.tabCreator(actionBar, R.drawable.icon_discover));
+                        break;
+                    case 3:
+                        actionBar.addTab(this.tabCreator(actionBar, R.drawable.icon_profile));
+                        break;
+                    default:
+                        PLog.logWarning(TAG, "Reached default case when building tabs, within switch on counter i.");
+                        break;
+                }
             }
 
         }
@@ -102,10 +115,8 @@ public class CoreController extends PController implements ActionBar.TabListener
 
     private ActionBar.Tab tabCreator(ActionBar actionBar, int resource) {
         ActionBar.Tab newTab = actionBar.newTab();
-        if(newTab != null) {
-            newTab.setIcon(resource);
-            newTab.setTabListener(this);
-        }
+        newTab.setIcon(resource);
+        newTab.setTabListener(this);
         return newTab;
     }
 
@@ -121,10 +132,15 @@ public class CoreController extends PController implements ActionBar.TabListener
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+
+        switch (id) {
+            case R.id.action_settings:
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+
     }
 
     @Override
@@ -133,8 +149,12 @@ public class CoreController extends PController implements ActionBar.TabListener
         // the ViewPager.
         mViewPager.setCurrentItem(tab.getPosition());
 
-        // This app is not compatible with API levels that require the SupportActionBar, therefore,
-        // we will not use it.
+
+        /* ==== Suppressing application compatibility warning ====
+         * Reason:  This application is fundamentally not compatible with API levels that would
+         * require the support action bar by choice.  Therefore, we don't care that we aren't using
+         * the support action bar.
+         */
         @SuppressLint("AppCompatMethod")
         final ActionBar actionBar = getActionBar();
         if (actionBar != null) {
@@ -152,11 +172,8 @@ public class CoreController extends PController implements ActionBar.TabListener
     }
 
     public void executeFetchNotifications(final int cursor, final int limit) {
-        FetchNotificationsThread notificationsThread = new FetchNotificationsThread(PCallbackIdentifiers.FETCH_NOTIFICATIONS, this);
-        int[] temp = new int[2];
-        temp[0] = cursor;
-        temp[1] = limit;
-        notificationsThread.execute(cursor, limit);
+        FetchNotificationsThread fetchNotificationsThread = new FetchNotificationsThread(PCallbackIdentifiers.FETCH_NOTIFICATIONS, this);
+        fetchNotificationsThread.execute(cursor, limit);
     }
 
     /**
@@ -177,15 +194,22 @@ public class CoreController extends PController implements ActionBar.TabListener
 
                 case PCallbackIdentifiers.FETCH_NOTIFICATIONS:
 
-
-                    final PResultSet<?> callbackResult = (PResultSet<PUser>) callbackData.getResultData();
-
-                    final PResultSet rs = callbackResult;
-                    ArrayList<PUser> alpu = rs.getResults();
+                    /* ==== Suppressing unchecked cast warning ====
+                     * Reason:  Since a single interface defines the callback method that all
+                     * threads must use for their callbacks, we must define the type generically in
+                     * the interface.  Therefore the result data contained within the
+                     * PCallbackResult will be unknown at compile-time and therefore can't be
+                     * checked.  We assume that results coming from the API interaction methods are
+                     * correct, and that by switching on the callback identifier here we can
+                     * guarantee that we will know what type we are dealing with.
+                     */
+                    @SuppressWarnings("unchecked")
+                    final PResultSet<PUser> callbackResultSet = (PResultSet<PUser>) callbackData.getResultData();
+                    ArrayList<PUser> arrayResult = callbackResultSet.getResults();
 
 
                     // Check to see whether login was successful
-                    if (callbackResult) {
+                    if (arrayResult != null) {
                         // Start the main activity if the result is true (ie: the login was
                         // successful, and the context was stored in the application core).
                         Intent intent = new Intent(this, CoreController.class);
