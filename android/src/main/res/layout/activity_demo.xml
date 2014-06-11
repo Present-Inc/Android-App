@@ -35,4 +35,14 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="38dp" />
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Launch HLS Activity"
+        android:id="@+id/demo3Button"
+        android:layout_below="@+id/demo2Button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="38dp" />
+
 </RelativeLayout>
