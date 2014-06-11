@@ -3,7 +3,6 @@ package tv.present.android.controllers;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -80,7 +79,7 @@ public final class EntryController extends PController implements ThreadCallback
     }
 
     public void executeLogin(String username, String password) {
-        AsyncTask loginThread = new LoginThread(PCallbackIdentifiers.LOGIN, this);
+        LoginThread loginThread = new LoginThread(PCallbackIdentifiers.LOGIN, this);
         String[] temp = new String[2];
         temp[0] = username;
         temp[1] = password;
