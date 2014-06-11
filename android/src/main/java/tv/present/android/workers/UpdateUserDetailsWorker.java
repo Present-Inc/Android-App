@@ -4,9 +4,9 @@ import android.os.AsyncTask;
 
 import tv.present.android.interfaces.UpdateUserDetailsWorkerCallback;
 import tv.present.android.models.ApplicationCore;
-import tv.present.api.APIClientUtilities;
-import tv.present.models.User;
-import tv.present.models.UserContext;
+import tv.present.api.PAPIInteraction;
+import tv.present.models.PUserContext;
+import tv.present.util.PUtilities;
 
 /**
  * A working thread that performs updates to user details on a background thread.
@@ -37,8 +37,10 @@ public class UpdateUserDetailsWorker extends AsyncTask<String, Void, Boolean> {
         final String phoneNumber = params[6];
 
         ApplicationCore appCore = ApplicationCore.getInstance();
-        UserContext userContext = appCore.getUserContext();
-        boolean retVal = User.updateDetails(userContext, fullName, description, APIClientUtilities.stringToGender(gender), location, websiteURL, emailAddress, phoneNumber);
+        PUserContext userContext = appCore.getUserContext();
+        PAPIInteraction apiInteraction = new PAPIInteraction();
+
+        boolean retVal = apiInteraction.updateUserDetails(userContext, fullName, description, PUtilities.stringToGender(gender), location, websiteURL, emailAddress, phoneNumber);
         // Note: is APIClientUtilities the right place for stringToGender()?
 
         return retVal;
