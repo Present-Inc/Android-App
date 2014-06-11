@@ -2,7 +2,7 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.1"
+    buildToolsVersion "19.1.0"
 
     defaultConfig {
         minSdkVersion 18
@@ -19,11 +19,13 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:19.+'
-    compile 'com.android.support:support-v13:19.+'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile files('libs/tv.present.api-v1.3.jar')
     compile files('libs/Present-API-Client-v1.6.jar')
     compile files('libs/tv.present.api.jar')
     compile files('libs/tv.present.models.jar')
+    compile files('libs/tv.present.common.jar')
+    compile 'com.android.support:support-v4:19.+'
+    compile 'com.android.support:support-v13:19.+'
+    compile 'com.android.support:appcompat-v7:19.+'
 }
