@@ -3,9 +3,6 @@ package tv.present.android.controllers;
 import android.app.Activity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-
-import tv.present.android.interfaces.PViewObserver;
 
 /**
  * Present Controller Abstract Object
@@ -19,16 +16,5 @@ import tv.present.android.interfaces.PViewObserver;
  * @author  Kyle Weisel (kyle@present.tv)
  */
 public abstract class PController extends Activity implements Serializable {
-
-    protected ArrayList<PViewObserver> observingViews;
-
-    /**
-     * Constructs a PController object.
-     */
-    public PController() {
-        this.observingViews = new ArrayList<PViewObserver>();
-    }
-
-
 
 }
