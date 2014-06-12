@@ -38,6 +38,11 @@
             android:name=".controllers.EntryController"
             android:label="@string/application_name" >
         </activity>
+
+        <activity
+            android:name=".controllers.CoreController"
+            android:label="@string/application_name" >
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
