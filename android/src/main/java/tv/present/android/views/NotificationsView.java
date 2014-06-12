@@ -36,13 +36,10 @@ import tv.present.android.workers.DownloadImageWorker;
 public class NotificationsView extends PView implements View.OnFocusChangeListener, View.OnClickListener, View.OnLongClickListener {
 
     private static final String TAG = "tv.present.android.views.NotificationsView";
-    private final CoreController controller;
 
     private TableLayout tableLayout;
 
     public NotificationsView() {
-        Bundle arguments = this.getArguments();
-        this.controller = (CoreController) arguments.getSerializable("controller");
     }
 
     /**
@@ -53,6 +50,7 @@ public class NotificationsView extends PView implements View.OnFocusChangeListen
         Bundle arguments = new Bundle();
         arguments.putSerializable("controller", controller);
         NotificationsView notificationsView = new NotificationsView();
+        notificationsView.setController(controller);
         notificationsView.setArguments(arguments);
         return notificationsView;
     }
@@ -78,7 +76,7 @@ public class NotificationsView extends PView implements View.OnFocusChangeListen
 
         // This will be preceeded by a show cached notifications call
         //this.controller.updateNotifications();
-        this.controller.executeFetchNotifications(0, 20);
+        ((CoreController) this.controller).executeFetchNotifications(0, 20);
 
         return rootView;
 
