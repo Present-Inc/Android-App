@@ -174,7 +174,6 @@ public final class LoginView extends PView implements View.OnFocusChangeListener
             Toast.makeText(this.getActivity().getBaseContext(), text, Toast.LENGTH_LONG).show();
         }
 
-
     }
 
 }
