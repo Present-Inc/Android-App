@@ -25,7 +25,9 @@ public class PTaskExecutor {
         else {
             // Create a new API interaction, and request a user context
             PAPIInteraction apiInteraction = new PAPIInteraction();
+            PLog.logDebug(TAG, "doLogin() -> Trying to get user context with username " + username + " and password " + password);
             userContext = apiInteraction.getUserContext(username, password);
+            PLog.logDebug(TAG, "doLogin() -> After the request the user context is " + (userContext == null ? "null" : "not null") + ".");
         }
 
         // If the userContext came back not null, set it in the app core.
@@ -33,8 +35,10 @@ public class PTaskExecutor {
             appCore.setUserContext(userContext);
             return true;
         }
+        else {
+            return false;
+        }
 
-        return false;
     }
 
     public Boolean doUpdateUserDetails(String fullName, String description, String gender, String location, String websiteURL, String emailAddress, String phoneNumber) {
