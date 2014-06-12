@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 
 import tv.present.android.R;
 import tv.present.android.controllers.EntryController;
+import tv.present.android.controllers.PController;
 import tv.present.android.models.PView;
 import tv.present.android.util.PLog;
 
@@ -30,13 +31,25 @@ public class CreateAccountView extends PView implements View.OnFocusChangeListen
 
     private static final String TAG = "tv.present.android.views.CreateAccountView";
     private final int REQUEST_CODE_PROFILE_IMAGE_CAPTURE = 8;
-    private final EntryController controller;
 
     ImageButton choosePhotoButton;
 
+    /**
+     * Returns a new instance of this fragment for the given section
+     * number.
+     */
+    public static CreateAccountView newInstance(PController controller) {
+        Bundle arguments = new Bundle();
+        arguments.putSerializable("controller", controller);
+        PLog.logDebug(TAG, "newInstance -> the controller put into fragment arguments was " + (controller == null ? "in fact" : "not") + " null");
+        PLog.logDebug(TAG, "newInstance -> the controller got out of the fragment arguments was " + (arguments.get("controller") == null ? "in fact" : "not") + " null");
+        CreateAccountView createAccountView = new CreateAccountView();
+        createAccountView.setController(controller);
+        createAccountView.setArguments(arguments);
+        return createAccountView;
+    }
+
     public CreateAccountView() {
-        Bundle arguments = this.getArguments();
-        this.controller = (EntryController) arguments.getSerializable("controller");
     }
 
     /**
@@ -168,7 +181,7 @@ public class CreateAccountView extends PView implements View.OnFocusChangeListen
             String fullName = ((EditText) rootView.findViewById(R.id.createFullNameField)).getText().toString();
             String phoneNumber = ((EditText) rootView.findViewById(R.id.createPhoneNumberField)).getText().toString();
 
-            this.controller.executeCreateAccount(username, password, emailAddress, fullName, phoneNumber);
+            ((EntryController) this.controller).executeCreateAccount(username, password, emailAddress, fullName, phoneNumber);
         }
 
     }
