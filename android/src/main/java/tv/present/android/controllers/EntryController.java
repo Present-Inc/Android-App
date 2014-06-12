@@ -88,11 +88,7 @@ public final class EntryController extends PController implements ThreadCallback
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         // Create and configure the create account view
-        PView loginView = new CreateAccountView();
-        Bundle arguments = new Bundle();
-        arguments.putSerializable("controller", this);
-        loginView.setArguments(arguments);
-
+        PView loginView = CreateAccountView.newInstance(this);
         fragmentTransaction.replace(R.id.container, loginView);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
@@ -123,8 +119,8 @@ public final class EntryController extends PController implements ThreadCallback
             switch(callbackIdentifier) {
 
                 case PCallbackIdentifiers.LOGIN:
-                    final Boolean callbackResult = (Boolean) callbackData.getResultData();
 
+                    final Boolean callbackResult = (Boolean) callbackData.getResultData();
                     // Check to see whether login was successful
                     if (callbackResult) {
                         // Start the main activity if the result is true (ie: the login was
