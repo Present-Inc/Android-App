@@ -14,11 +14,6 @@ public abstract class PView extends Fragment implements View.OnTouchListener {
 
     protected PController controller;
 
-    public static PView newInstance(PController controller) {
-
-        return null;
-    }
-
     /**
      * Gets the controller for this fragment.
      * @return
