@@ -19,6 +19,11 @@ public abstract class PSectionsPagerAdapter extends FragmentPagerAdapter {
 
     protected final PController controller;
 
+    /**
+     * Constructs a PSectionsPagerAdapter.
+     * @param fragmentManager is a FragmentManager.
+     * @param controller is a PController.
+     */
     public PSectionsPagerAdapter(FragmentManager fragmentManager, PController controller) {
         super(fragmentManager);
         this.controller = controller;
