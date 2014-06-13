@@ -180,6 +180,10 @@ public final class LoginView extends PView implements View.OnFocusChangeListener
 
     }
 
+    /**
+     * Sets the text displayed on the login button.
+     * @param text is the text to be displayed on the button as a String.
+     */
     public void setLoginButtonText(final String text) {
 
         View currentView = this.getView();
@@ -191,6 +195,11 @@ public final class LoginView extends PView implements View.OnFocusChangeListener
 
     }
 
+    /**
+     * Sets the state of the login button.
+     * @param shouldBeEnabled is a boolean that is true if the button should be enabled, or false
+     *                        otherwise
+     */
     public void setLoginButtonEnabled(final boolean shouldBeEnabled) {
 
         View currentView = this.getView();
