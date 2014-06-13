@@ -9,9 +9,7 @@ import tv.present.android.controllers.PController;
 import tv.present.android.views.HomeFeedView;
 import tv.present.android.views.PPlaceholderView;
 
-/**
- * Created by kbw28 on 6/11/14.
- */
+
 public final class PSectionsPagerAdapterMain extends PSectionsPagerAdapter {
 
     public PSectionsPagerAdapterMain(FragmentManager fragmentManager, PController controller) {
