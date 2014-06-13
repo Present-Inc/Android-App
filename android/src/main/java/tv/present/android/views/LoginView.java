@@ -40,7 +40,13 @@ public final class LoginView extends PView implements View.OnFocusChangeListener
         return loginView;
     }
 
+    /**
+     * Constructs a LoginView.  Unfortunately this method has to remain public due to Android
+     * specification, but it should never be used to instantiate this view.  Instead, the
+     * newInstance() method should be called.  Funny things will happen if you don't do it this way.
+     */
     public LoginView() {
+        /* Empty constructor */
     }
 
     /**
