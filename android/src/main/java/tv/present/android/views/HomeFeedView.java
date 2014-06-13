@@ -140,6 +140,15 @@ public class HomeFeedView extends PView implements View.OnFocusChangeListener, V
     }
 
     /**
+     * Handles long clicks.
+     * @param view is a View that was long clicked.
+     * @return a boolean value for which I am unsure of the meaning.
+     */
+    public boolean onLongClick(View view) {
+        return false;
+    }
+
+    /**
      * Handles the callback from another activity that was started for a result.
      * @param requestCode is the integer code of the requesting Activity.
      * @param resultCode is the integer result code from the Activity.
