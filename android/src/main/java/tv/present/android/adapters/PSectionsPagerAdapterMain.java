@@ -21,10 +21,30 @@ import tv.present.android.views.PPlaceholderView;
  */
 public final class PSectionsPagerAdapterMain extends PSectionsPagerAdapter {
 
+    /**
+     * Constructs a PSectionsPagerAdapterMain.
+     * @param fragmentManager is a FragmentManager.
+     * @param controller is a PController.
+     */
     public PSectionsPagerAdapterMain(FragmentManager fragmentManager, PController controller) {
         super(fragmentManager, controller);
     }
 
+    /**
+     * Gets the number of results.
+     * @return the number of results as an integer.
+     */
+    @Override
+    public int getCount() {
+        // Show 4 total pages.
+        return 4;
+    }
+
+    /**
+     * Gets a view for each individual result.
+     * @param position is the tab position as an integer.
+     * @return a Fragment for the tab at position.
+     */
     @Override
     public Fragment getItem(int position) {
 
@@ -46,12 +66,11 @@ public final class PSectionsPagerAdapterMain extends PSectionsPagerAdapter {
         return returnValue;
     }
 
-    @Override
-    public int getCount() {
-        // Show 4 total pages.
-        return 4;
-    }
-
+    /**
+     * Gets the page title for a tab position.
+     * @param position is the tab position as an integer.
+     * @return the page title for the tab at position.
+     */
     @Override
     public CharSequence getPageTitle(int position) {
         switch (position) {
