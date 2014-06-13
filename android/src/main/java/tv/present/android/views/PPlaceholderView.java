@@ -41,6 +41,15 @@ public class PPlaceholderView extends PView {
         return false;
     }
 
+    /**
+     * Handles long clicks.
+     * @param view is a View that was long clicked.
+     * @return a boolean value for which I am unsure of the meaning.
+     */
+    public boolean onLongClick(View view) {
+        return false;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
