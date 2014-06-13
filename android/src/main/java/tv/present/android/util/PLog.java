@@ -20,7 +20,7 @@ import java.util.Date;
  */
 public final class PLog {
 
-    private final String TAG = "tv.present.android.util.PAndroidLogger.java";
+    private final String TAG = "tv.present.android.util.PLog.java";
     private static volatile PLog instance = null;
     private final PLogLevel logLevel;
     private final String logFile;
