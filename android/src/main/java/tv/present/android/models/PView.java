@@ -10,7 +10,7 @@ import android.widget.EditText;
 import tv.present.android.controllers.PController;
 
 
-public abstract class PView extends Fragment implements View.OnTouchListener {
+public abstract class PView extends Fragment implements View.OnClickListener, View.OnLongClickListener, View.OnTouchListener {
 
     protected PController controller;
 
