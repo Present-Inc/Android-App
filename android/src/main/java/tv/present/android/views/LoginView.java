@@ -24,7 +24,6 @@ import tv.present.android.util.PLog;
 public final class LoginView extends PView implements View.OnFocusChangeListener, View.OnClickListener {
 
     private static final String TAG = "tv.present.android.views.LoginView";
-    private View rootView;
 
     /**
      * Returns a new instance of this fragment for the given section
