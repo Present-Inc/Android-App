@@ -13,5 +13,4 @@ import android.widget.BaseAdapter;
  *
  * @author  Kyle Weisel (kyle@present.tv)
  */
-public abstract class PAdapter extends BaseAdapter {
-}
+public abstract class PAdapter extends BaseAdapter { }
