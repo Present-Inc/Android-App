@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import tv.present.android.R;
 import tv.present.android.models.PView;
-import tv.present.android.views.CircularImageView;
+import tv.present.android.util.PLog;
 import tv.present.models.PUserActivity;
 import tv.present.util.PResultSet;
 
@@ -37,6 +37,7 @@ public final class NotificationsAdapter extends PAdapter {
      *                   be loaded into.
      */
     public NotificationsAdapter(Context context, PResultSet<PUserActivity> userActivitiesResultSet, PView parentView) {
+        PLog.logDebug(TAG, "Constructing NotificationsAdapter object...");
         this.layoutInflater = LayoutInflater.from(context);
         this.userActivitiesResultSet = userActivitiesResultSet;
         this.parentView = parentView;
@@ -66,7 +67,7 @@ public final class NotificationsAdapter extends PAdapter {
         PUserActivity userActivity = (PUserActivity) this.getItem(i);
 
         if (view == null) {
-            view = this.layoutInflater.inflate(R.layout.detail_notification, null, false);
+            view = this.layoutInflater.inflate(R.layout.detail_notification, parent, false);
         }
 
         view.setOnClickListener(this.parentView);
@@ -77,8 +78,14 @@ public final class NotificationsAdapter extends PAdapter {
         TextView tableRowTextView = (TextView) view.findViewById(R.id.notificationTextView);
         tableRowTextView.setText(userActivity.getSubject());
 
-        CircularImageView circularImageView = (CircularImageView) view.findViewById(R.id.notificationProfileImage);
-        //AsyncTask downloadImageworker = new DownloadImageWorker(circularImageView);
+        /*
+            Temporarily skipping this for simplicity.
+            -----------------------------------------
+
+            CircularImageView circularImageView = (CircularImageView) view.findViewById(R.id.notificationProfileImage);
+            AsyncTask downloadImageworker = new DownloadImageWorker(circularImageView);
+         */
+
 
         return view;
 
