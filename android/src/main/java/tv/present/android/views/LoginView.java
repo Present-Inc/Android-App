@@ -24,6 +24,7 @@ import tv.present.android.util.PLog;
 public final class LoginView extends PView implements View.OnFocusChangeListener, View.OnClickListener {
 
     private static final String TAG = "tv.present.android.views.LoginView";
+    private View rootView;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -141,6 +142,10 @@ public final class LoginView extends PView implements View.OnFocusChangeListener
 
     }
 
+    public boolean onLongClick(View view) {
+        return false;
+    }
+
     /**
      * Handles clicks on buttons.
      * @param view is the View (Button) that was clicked.
@@ -172,6 +177,17 @@ public final class LoginView extends PView implements View.OnFocusChangeListener
 
             final String text = "We got you covered!";
             Toast.makeText(this.getActivity().getBaseContext(), text, Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    public void setLoginButtonText(final String text) {
+
+        View currentView = this.getView();
+        final Button loginButton;
+        if (currentView != null) {
+            loginButton = (Button) this.getView().findViewById(R.id.loginButton);
+            loginButton.setText(text);
         }
 
     }
