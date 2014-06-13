@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TableLayout;
+import android.widget.ListView;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +20,7 @@ import tv.present.android.controllers.CoreController;
 import tv.present.android.controllers.PController;
 import tv.present.android.models.PView;
 import tv.present.android.util.PAndroidUtils;
+import tv.present.android.util.PKeys;
 import tv.present.android.util.PLog;
 import tv.present.android.workers.DownloadImageWorker;
 
@@ -37,7 +38,7 @@ public class NotificationsView extends PView implements View.OnFocusChangeListen
 
     private static final String TAG = "tv.present.android.views.NotificationsView";
 
-    private TableLayout tableLayout;
+    private ListView listView;
 
     public NotificationsView() {
     }
@@ -48,7 +49,7 @@ public class NotificationsView extends PView implements View.OnFocusChangeListen
      */
     public static NotificationsView newInstance(PController controller) {
         Bundle arguments = new Bundle();
-        arguments.putSerializable("controller", controller);
+        arguments.putSerializable(PKeys.KEY_CONTROLLER, controller);
         NotificationsView notificationsView = new NotificationsView();
         notificationsView.setController(controller);
         notificationsView.setArguments(arguments);
@@ -70,12 +71,14 @@ public class NotificationsView extends PView implements View.OnFocusChangeListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         PLog.logDebug(TAG, "Creating and configuring fragment view.");
+        this.setController((CoreController) this.getArguments().getSerializable(PKeys.KEY_CONTROLLER));
 
-        View rootView = inflater.inflate(R.layout.fragment_notifications, container, false);
-        this.tableLayout = (TableLayout) rootView.findViewById(R.id.notificationsTableLayout);
+        View rootView = inflater.inflate(R.layout.view_notifications, container, false);
+        this.listView = (ListView) rootView.findViewById(R.id.notificationsList);
 
         // This will be preceeded by a show cached notifications call
         //this.controller.updateNotifications();
+        PLog.logDebug(TAG, "onCreateView() -> Just before calling executeFetchNotifications on the controller, the controller is " + (this.controller == null ? "null" : "not null") + ".");
         ((CoreController) this.controller).executeFetchNotifications(0, 20);
 
         return rootView;
@@ -83,7 +86,7 @@ public class NotificationsView extends PView implements View.OnFocusChangeListen
     }
 
     public void addViewToTable(View view) {
-        this.tableLayout.addView(view);
+        //this.tableLayout.addView(view);
     }
 
     /**
@@ -170,8 +173,8 @@ public class NotificationsView extends PView implements View.OnFocusChangeListen
 
         CircularImageView circularImageView = (CircularImageView) tableRow.findViewById(R.id.notificationSrcProfile);
         AsyncTask downloadImageworker = new DownloadImageWorker(circularImageView);
-        this.tableLayout.addView(tableRow);
-        this.tableLayout.addView(tableRowHR);
+        //this.tableLayout.addView(tableRow);
+        //this.tableLayout.addView(tableRowHR);
 
     }
 
