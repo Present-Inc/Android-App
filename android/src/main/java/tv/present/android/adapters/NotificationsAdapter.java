@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import tv.present.android.R;
@@ -14,9 +13,16 @@ import tv.present.models.PUserActivity;
 import tv.present.util.PResultSet;
 
 /**
- * Created by kbw28 on 6/12/14.
+ * Present Notifications Adapter
+ *
+ * This adapter is used to bind data to notification detail views for the notifications section of
+ * the Present application.
+ *
+ * June 13, 2014
+ *
+ * @author  Kyle Weisel (kyle@present.tv)
  */
-public class NotificationsAdapter extends BaseAdapter {
+public class NotificationsAdapter extends PAdapter {
 
     private static final String TAG = "tv.present.android.adapters.NotificationsAdapter";
     private final LayoutInflater layoutInflater;
