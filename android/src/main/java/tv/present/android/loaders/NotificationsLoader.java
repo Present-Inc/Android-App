@@ -1,0 +1,47 @@
+package tv.present.android.loaders;
+
+import android.content.AsyncTaskLoader;
+import android.content.Context;
+import android.os.Bundle;
+
+import tv.present.android.models.ApplicationCore;
+import tv.present.android.util.PKeys;
+import tv.present.android.util.PLog;
+import tv.present.api.PAPIInteraction;
+import tv.present.models.PUserActivity;
+import tv.present.models.PUserContext;
+import tv.present.util.PResultSet;
+
+/**
+ * Created by kbw28 on 6/12/14.
+ */
+public final class NotificationsLoader<T> extends AsyncTaskLoader<T> {
+
+    private static final String TAG = "tv.present.android.loaders.NotificationsLoader";
+    private Bundle arguments;
+
+    public NotificationsLoader(Context context, Bundle args) {
+        super(context);
+        this.arguments = args;
+    }
+
+    @Override
+    public T loadInBackground() {
+
+        final int cursor = arguments.getInt(PKeys.KEY_CURSOR);
+        final int limit = arguments.getInt(PKeys.KEY_LIMIT);
+
+        ApplicationCore appCore = ApplicationCore.getInstance();
+        PUserContext userContext = appCore.getUserContext();
+
+        PAPIInteraction apiInteraction = new PAPIInteraction();
+        PResultSet<PUserActivity> resultSet = apiInteraction.getUserActivities(userContext, cursor, limit);
+
+        if (resultSet == null ) {
+            PLog.logWarning(TAG, "The result set from the API interaction came back null!");
+        }
+
+        return (T) resultSet;
+    }
+
+}
