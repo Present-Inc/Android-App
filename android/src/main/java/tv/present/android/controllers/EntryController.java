@@ -32,6 +32,7 @@ import tv.present.android.views.LoginView;
 public final class EntryController extends PController implements ThreadCallback {
 
     private static final String TAG ="tv.present.android.controllers.EntryController";
+    private LoginView loginView;
 
     /**
      * Creates this view.
@@ -42,7 +43,7 @@ public final class EntryController extends PController implements ThreadCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         if (savedInstanceState == null) {
-            PView loginView = LoginView.newInstance(this);
+            PView loginView = this.getLoginView();
             getFragmentManager().beginTransaction().add(R.id.container, loginView).commit();
         }
     }
@@ -157,6 +158,18 @@ public final class EntryController extends PController implements ThreadCallback
             PLog.logError(TAG, "Caught InvalidCallbackResultIdentifierException with message: " + e.getMessage());
         }
 
+    }
+
+    /**
+     * Gets the home view that this controller controls.
+     * @return a HomeFeedView.
+     */
+    public LoginView getLoginView() {
+        if (this.loginView == null) {
+            PLog.logDebug(TAG, "getLoginView() -> A login view did not exist.  Creating a new one.");
+            this.loginView = LoginView.newInstance(this);
+        }
+        return this.loginView;
     }
 
 }
