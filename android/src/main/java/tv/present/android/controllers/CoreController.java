@@ -3,24 +3,29 @@ package tv.present.android.controllers;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.app.LoaderManager;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
+import android.content.Loader;
 
 import java.util.ArrayList;
 
 import tv.present.android.R;
+import tv.present.android.adapters.NotificationsAdapter;
 import tv.present.android.adapters.PSectionsPagerAdapter;
 import tv.present.android.adapters.PSectionsPagerAdapterMain;
 import tv.present.android.exceptions.InvalidCallbackResultIdentifierException;
 import tv.present.android.interfaces.ThreadCallback;
+import tv.present.android.loaders.NotificationsLoader;
 import tv.present.android.models.PCallbackResult;
 import tv.present.android.threads.FetchNotificationsThread;
 import tv.present.android.util.PCallbackIdentifiers;
 import tv.present.android.util.PLog;
+import tv.present.android.views.HomeFeedView;
 import tv.present.android.views.NotificationsView;
 import tv.present.models.PUserActivity;
 import tv.present.util.PResultSet;
@@ -36,12 +41,15 @@ import tv.present.util.PResultSet;
  *
  * @author  Kyle Weisel (kyle@present.tv)
  */
-public class CoreController extends PController implements ActionBar.TabListener, ThreadCallback {
+public class CoreController extends PController implements ActionBar.TabListener, ThreadCallback, LoaderManager.LoaderCallbacks {
 
     private static final String TAG = "tv.present.android.controllers.CoreController";
     private PSectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private NotificationsView notificationsView;
+    private HomeFeedView homeFeedView;
+
+    private NotificationsAdapter notificationsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,8 +179,11 @@ public class CoreController extends PController implements ActionBar.TabListener
     }
 
     public void executeFetchNotifications(final int cursor, final int limit) {
-        FetchNotificationsThread fetchNotificationsThread = new FetchNotificationsThread(PCallbackIdentifiers.FETCH_NOTIFICATIONS, this);
-        fetchNotificationsThread.execute(cursor, limit);
+        //FetchNotificationsThread fetchNotificationsThread = new FetchNotificationsThread(PCallbackIdentifiers.FETCH_NOTIFICATIONS, this);
+        //fetchNotificationsThread.execute(cursor, limit);
+
+        final NotificationsAdapter notificationsAdapter = new NotificationsAdapter(this, null, this.notificationsView);
+
     }
 
     /**
@@ -250,6 +261,18 @@ public class CoreController extends PController implements ActionBar.TabListener
     }
 
     /**
+     * Gets the home view that this controller controls.
+     * @return a HomeFeedView.
+     */
+    public HomeFeedView getHomeFeedView() {
+        if (this.homeFeedView == null) {
+            PLog.logDebug(TAG, "getNotificationsView() -> A notifications view did not exist.  Creating a new one.");
+            this.homeFeedView = HomeFeedView.newInstance(this);
+        }
+        return this.homeFeedView;
+    }
+
+    /**
      * Gets the notifications view that this controller controls.
      * @return a NotificationsView.
      */
@@ -259,6 +282,11 @@ public class CoreController extends PController implements ActionBar.TabListener
             this.notificationsView = NotificationsView.newInstance(this);
         }
         return this.notificationsView;
+    }
+
+    @Override
+    public Loader<PResultSet<PUserActivity>> onCreateLoader(int id, Bundle args) {
+        return new NotificationsLoader<PResultSet<PUserActivity>>(this, args);
     }
 
 }
