@@ -9,7 +9,16 @@ import tv.present.android.controllers.PController;
 import tv.present.android.views.HomeFeedView;
 import tv.present.android.views.PPlaceholderView;
 
-
+/**
+ * Present MainSections Pager Adapter
+ *
+ * This {@link tv.present.android.adapters.PSectionsPagerAdapter} is the adapter that controls the
+ * creation of views for the main tabbed interface.
+ *
+ * June 10, 2014
+ *
+ * @author  Kyle Weisel (kyle@present.tv)
+ */
 public final class PSectionsPagerAdapterMain extends PSectionsPagerAdapter {
 
     public PSectionsPagerAdapterMain(FragmentManager fragmentManager, PController controller) {
