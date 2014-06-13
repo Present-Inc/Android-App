@@ -80,8 +80,8 @@ public final class DemoActivity extends Activity implements View.OnClickListener
                     startActivity(intent);
                     break;
                 case R.id.demo3Button:
-                    intent = new Intent(this, HLSActivity.class);
-                    startActivity(intent);
+                    //intent = new Intent(this, HLSActivity.class);
+                    //startActivity(intent);
                     break;
             }
 
