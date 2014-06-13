@@ -6,7 +6,6 @@ import android.app.FragmentManager;
 import tv.present.android.R;
 import tv.present.android.controllers.CoreController;
 import tv.present.android.controllers.PController;
-import tv.present.android.views.HomeFeedView;
 import tv.present.android.views.PPlaceholderView;
 
 /**
@@ -53,7 +52,7 @@ public final class PSectionsPagerAdapterMain extends PSectionsPagerAdapter {
         // Switch on the tab position that we need a fragment for.
         switch (position) {
             case 0:
-                returnValue = HomeFeedView.newInstance(this.controller);
+                returnValue = ((CoreController) this.controller).getHomeFeedView();
                 break;
             case 1:
                 returnValue = ((CoreController) this.controller).getNotificationsView();
