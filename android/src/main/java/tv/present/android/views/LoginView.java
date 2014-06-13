@@ -192,4 +192,15 @@ public final class LoginView extends PView implements View.OnFocusChangeListener
 
     }
 
+    public void setLoginButtonEnabled(final boolean shouldBeEnabled) {
+
+        View currentView = this.getView();
+        final Button loginButton;
+        if (currentView != null) {
+            loginButton = (Button) this.getView().findViewById(R.id.loginButton);
+            loginButton.setEnabled(shouldBeEnabled);
+        }
+
+    }
+
 }
