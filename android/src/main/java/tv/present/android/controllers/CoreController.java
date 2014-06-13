@@ -168,10 +168,12 @@ public class CoreController extends PController implements ActionBar.TabListener
 
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+        /* empty */
     }
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+        /* empty */
     }
 
     public void executeFetchNotifications(final int cursor, final int limit) {
@@ -235,8 +237,14 @@ public class CoreController extends PController implements ActionBar.TabListener
                             else {
                                 PLog.logNotice(TAG, "The user activity " + i + " was not null!");
                             }
-                            String message = userActivity.getSubject();
-                            String userProfileImageURL = userActivity.getSourceUser().getProfile().getProfilePictureURL();
+
+                            String message = null, userProfileImageURL = null;
+
+                            if (userActivity != null) {
+                                message = userActivity.getSubject();
+                                userProfileImageURL = userActivity.getSourceUser().getProfile().getProfilePictureURL();
+                            }
+
                             this.notificationsView.addNotification(userProfileImageURL, message);
                         }
 
