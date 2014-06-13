@@ -22,19 +22,30 @@ import tv.present.util.PResultSet;
  *
  * @author  Kyle Weisel (kyle@present.tv)
  */
-public class NotificationsAdapter extends PAdapter {
+public final class NotificationsAdapter extends PAdapter {
 
     private static final String TAG = "tv.present.android.adapters.NotificationsAdapter";
     private final LayoutInflater layoutInflater;
     private PResultSet<PUserActivity> userActivitiesResultSet;
     private PView parentView;
 
+    /**
+     * Constructs a NotificationsAdapter.
+     * @param context is a Context.
+     * @param userActivitiesResultSet is the source PResultSet with type PUserActivity.
+     * @param parentView is the parent that the views provided by the notifications adapter will
+     *                   be loaded into.
+     */
     public NotificationsAdapter(Context context, PResultSet<PUserActivity> userActivitiesResultSet, PView parentView) {
         this.layoutInflater = LayoutInflater.from(context);
         this.userActivitiesResultSet = userActivitiesResultSet;
         this.parentView = parentView;
     }
 
+    /**
+     * Sets the response data.
+     * @param userActivitiesResultSet is a PResultSet of type PUserActivity.
+     */
     public void setData(PResultSet<PUserActivity> userActivitiesResultSet) {
         if (this.userActivitiesResultSet != null) {
             this.userActivitiesResultSet = null;
@@ -43,6 +54,13 @@ public class NotificationsAdapter extends PAdapter {
         notifyDataSetChanged();
     }
 
+    /**
+     * Gets a view for each individual result.
+     * @param i is the result number as an integer.
+     * @param view is an existing PView to add to.
+     * @param parent is the parent View that the product view will be inserted into.
+     * @return a View with data bound.
+     */
     public View getView(int i, View view, ViewGroup parent) {
 
         PUserActivity userActivity = (PUserActivity) this.getItem(i);
@@ -66,16 +84,30 @@ public class NotificationsAdapter extends PAdapter {
 
     }
 
+    /**
+     * Gets the number of results.
+     * @return the number of results as an integer.
+     */
     @Override
     public int getCount() {
         return this.userActivitiesResultSet.getResults().size();
     }
 
+    /**
+     * Gets an object.
+     * @param i is the index of the object to get within the response.
+     * @return the Object at index i.
+     */
     @Override
     public Object getItem(final int i) {
         return this.userActivitiesResultSet.getResults().get(i);
     }
 
+    /**
+     * Gets the id of an item (which is the same as the parameter, so don't call this method).
+     * @param i is an integer.
+     * @return the integer i.
+     */
     @Override
     public long getItemId(final int i) {
         return i;
