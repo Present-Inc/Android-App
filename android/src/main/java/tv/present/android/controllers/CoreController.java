@@ -3,14 +3,12 @@ package tv.present.android.controllers;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
-import android.app.LoaderManager;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
-import android.content.Loader;
 
 import java.util.ArrayList;
 
@@ -20,9 +18,7 @@ import tv.present.android.adapters.PSectionsPagerAdapter;
 import tv.present.android.adapters.PSectionsPagerAdapterMain;
 import tv.present.android.exceptions.InvalidCallbackResultIdentifierException;
 import tv.present.android.interfaces.ThreadCallback;
-import tv.present.android.loaders.NotificationsLoader;
 import tv.present.android.models.PCallbackResult;
-import tv.present.android.threads.FetchNotificationsThread;
 import tv.present.android.util.PCallbackIdentifiers;
 import tv.present.android.util.PLog;
 import tv.present.android.views.HomeFeedView;
@@ -41,7 +37,7 @@ import tv.present.util.PResultSet;
  *
  * @author  Kyle Weisel (kyle@present.tv)
  */
-public class CoreController extends PController implements ActionBar.TabListener, ThreadCallback, LoaderManager.LoaderCallbacks {
+public class CoreController extends PController implements ActionBar.TabListener, ThreadCallback {
 
     private static final String TAG = "tv.present.android.controllers.CoreController";
     private PSectionsPagerAdapter mSectionsPagerAdapter;
@@ -284,9 +280,6 @@ public class CoreController extends PController implements ActionBar.TabListener
         return this.notificationsView;
     }
 
-    @Override
-    public Loader<PResultSet<PUserActivity>> onCreateLoader(int id, Bundle args) {
-        return new NotificationsLoader<PResultSet<PUserActivity>>(this, args);
-    }
+
 
 }
