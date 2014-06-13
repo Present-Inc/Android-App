@@ -147,6 +147,11 @@ public final class LoginView extends PView implements View.OnFocusChangeListener
 
     }
 
+    /**
+     * Handles long clicks.
+     * @param view is a View that was long clicked.
+     * @return a boolean value for which I am unsure of the meaning.
+     */
     public boolean onLongClick(View view) {
         return false;
     }
