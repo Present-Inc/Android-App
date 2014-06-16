@@ -33,6 +33,7 @@ public final class EntryController extends PController implements ThreadCallback
 
     private static final String TAG ="tv.present.android.controllers.EntryController";
     private LoginView loginView;
+    private CreateAccountView createAccountView;
 
     /**
      * Creates this view.
@@ -89,7 +90,7 @@ public final class EntryController extends PController implements ThreadCallback
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         // Create and configure the create account view
-        PView loginView = CreateAccountView.newInstance(this);
+        PView loginView = this.getCreateAccountView();
         fragmentTransaction.replace(R.id.container, loginView);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
@@ -114,16 +115,18 @@ public final class EntryController extends PController implements ThreadCallback
         final int callbackIdentifier = callbackData.getIdentifier();
 
         try {
+
             // Switch on the identifier to determine what action we need to take.  This really only
             // needs to happen if there are multiple callbacks with the same return type being
             // handled by this controller.
             switch(callbackIdentifier) {
 
+                /* ########## LOGIN ACTION ########## */
                 case PCallbackIdentifiers.LOGIN:
 
-                    final Boolean callbackResult = (Boolean) callbackData.getResultData();
+                    final Boolean successfulLogin = (Boolean) callbackData.getResultData();
                     // Check to see whether login was successful
-                    if (callbackResult) {
+                    if (successfulLogin) {
                         // Start the main activity if the result is true (ie: the login was
                         // successful, and the context was stored in the application core).
                         Intent intent = new Intent(this, CoreController.class);
@@ -136,24 +139,26 @@ public final class EntryController extends PController implements ThreadCallback
                     }
                     break;
 
+                /* ########## CREATE ACCOUNT ACTION ########## */
                 case PCallbackIdentifiers.CREATE_ACCOUNT:
-                    final Boolean success = (Boolean) callbackData.getResultData();
 
-                    if (success) {
+                    final Boolean successfulCreation = (Boolean) callbackData.getResultData();
+
+                    if (successfulCreation) {
                         // User was created, now update details
                         // TODO: Implement
                     }
                     else {
                         Toast.makeText(this.getBaseContext(), "Unable to login.  Try again!", Toast.LENGTH_LONG).show();
                     }
-
-
                     break;
 
-
+                /* ########## DEFAULT ACTION ########## */
                 default:
                     throw new InvalidCallbackResultIdentifierException("An incorrect callback identifier was passed back to " + TAG + ".  The identifier was " + callbackIdentifier);
+
             }
+
         } catch (InvalidCallbackResultIdentifierException e) {
             PLog.logError(TAG, "Caught InvalidCallbackResultIdentifierException with message: " + e.getMessage());
         }
@@ -161,8 +166,20 @@ public final class EntryController extends PController implements ThreadCallback
     }
 
     /**
-     * Gets the home view that this controller controls.
-     * @return a HomeFeedView.
+     * Gets the create account view that this controller controls.
+     * @return a CreateAccountView.
+     */
+    public CreateAccountView getCreateAccountView() {
+        if (this.createAccountView == null) {
+            PLog.logDebug(TAG, "getCreateAccountView() -> A create account view did not exist.  Creating a new one.");
+            this.createAccountView = CreateAccountView.newInstance(this);
+        }
+        return this.createAccountView;
+    }
+
+    /**
+     * Gets the login view that this controller controls.
+     * @return a LoginView.
      */
     public LoginView getLoginView() {
         if (this.loginView == null) {
