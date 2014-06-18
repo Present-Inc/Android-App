@@ -62,22 +62,22 @@ public class CodecInputSurface {
     }
 
     /**
-     * Prepares EGL.  We want a GLES 2.0 context and a surface that supports recording.
+     * Prepares EGL 2.0.
      */
     private void eglSetup() {
 
-        PLog.logDebug(TAG, "Creating EGL14 Surface");
+        PLog.logDebug(TAG, "eglSetup() -> creating EGL14 Surface");
 
         this.mEGLDisplay = EGL14.eglGetDisplay(EGL14.EGL_DEFAULT_DISPLAY);
 
         if (this.mEGLDisplay == EGL14.EGL_NO_DISPLAY) {
-            throw new RuntimeException("Unable to get EGL14 display!");
+            throw new RuntimeException("eglSetup() -> Unable to get EGL14 display!");
         }
 
         int[] version = new int[2];
 
         if (!EGL14.eglInitialize(this.mEGLDisplay, version, 0, version, 1)) {
-            throw new RuntimeException("Unable to initialize EGL14");
+            throw new RuntimeException("eglSetup() -> Unable to initialize EGL14");
         }
 
         // Configure EGL for recording and OpenGL ES 2.0.
@@ -94,7 +94,7 @@ public class CodecInputSurface {
         int[] numConfigs = new int[1];
         
         EGL14.eglChooseConfig(this.mEGLDisplay, attribList, 0, configs, 0, configs.length, numConfigs, 0);
-        this.checkEglError("eglCreateContext RGB888+recordable ES2");
+        this.checkEglError("eglSetup() -> eglCreateContext RGB888+recordable ES2");
 
         // Configure context for OpenGL ES 2.0.
         int[] attrib_list = {
@@ -103,21 +103,21 @@ public class CodecInputSurface {
         };
         
         if(mEGLDisplayContext == EGL14.EGL_NO_CONTEXT) {
-            PLog.logError(TAG, "mEGLDisplayContext not set properly");
+            PLog.logError(TAG, "eglSetup() -> mEGLDisplayContext not set properly");
         }
 
         this.mEGLEncodeContext = EGL14.eglCreateContext(mEGLDisplay, configs[0], EGL14.eglGetCurrentContext(), attrib_list, 0);
         this.checkEglError("eglCreateContext");
 
-        // Create a window surface, and attach it to the Surface we received.
+        // Create a window surface and attach it to the Surface we received.
         this.mEGLSurface = EGL14.eglCreateWindowSurface(this.mEGLDisplay, configs[0], this.mSurface, this.surfaceAttribs, 0);
         this.checkEglError("eglCreateWindowSurface");
 
     }
 
     /**
-     * Discards all resources held by this class, notably the EGL context.  Also releases the
-     * Surface that was passed to our constructor.
+     * Discards all resources held by this class, most notably the EGL context.  Also releases the
+     * Surface that was passed to the constructor.
      */
     public void release() {
 
@@ -137,16 +137,22 @@ public class CodecInputSurface {
 
     }
 
+    /**
+     * Makes the current member EGLDisplayContext current.
+     */
     public void makeDisplayContextCurrent(){
         this.makeCurrent(mEGLDisplayContext);
     }
 
+    /**
+     * Makes the current MEGLEncodeContext current.
+     */
     public void makeEncodeContextCurrent(){
         this.makeCurrent(this.mEGLEncodeContext);
     }
 
     /**
-     * Makes our EGL context and surface current.
+     * Makes the EGLDisplay and EGLSurface current.
      */
     private void makeCurrent(final EGLContext context) {
         EGL14.eglMakeCurrent(this.mEGLDisplay, this.mEGLSurface, this.mEGLSurface, context);
@@ -154,7 +160,7 @@ public class CodecInputSurface {
     }
 
     /**
-     * Calls eglSwapBuffers.  Use this to "publish" the current frame.
+     * Calls eglSwapBuffers.  This is the method that will "publish" the current frame.
      */
     public boolean swapBuffers() {
         final boolean result = EGL14.eglSwapBuffers(mEGLDisplay, mEGLSurface);
@@ -164,19 +170,22 @@ public class CodecInputSurface {
 
     /**
      * Sends the presentation time stamp to EGL.  Time is expressed in nanoseconds.
+     * @param nsecs is the presentation time in nanoseconds.
      */
-    public void setPresentationTime(long nsecs) {
+    public void setPresentationTime(final long nsecs) {
         EGLExt.eglPresentationTimeANDROID(mEGLDisplay, mEGLSurface, nsecs);
         this.checkEglError("eglPresentationTimeANDROID");
     }
 
     /**
-     * Checks for EGL errors.  Throws an exception if one is found.
+     * Checks if there is an EGL error and will throw a Runtime exception if one is found.
+     * @param message is the message to pass to the runtime exception that will be thrown on error.
      */
-    private void checkEglError(String msg) {
+    private void checkEglError(String message) {
         int error;
         if ((error = EGL14.eglGetError()) != EGL14.EGL_SUCCESS) {
-            throw new RuntimeException(msg + ": EGL error: 0x" + Integer.toHexString(error));
+            throw new RuntimeException(message + ": EGL error: 0x" + Integer.toHexString(error));
         }
     }
+
 }
