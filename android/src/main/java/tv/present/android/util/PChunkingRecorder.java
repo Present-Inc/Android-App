@@ -41,6 +41,10 @@ public final class PChunkingRecorder {
     
     // Audio Settings
     private static final String AUDIO_MIME_TYPE = "audio/mp4a-latm";
+    private static final int AUDIO_SAMPLE_RATE = 44100;
+    private static final int AUDIO_SAMPLES_PER_FRAME = 1024;
+    private static final int AUDIO_CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_MONO;
+    private static final int AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
     
     // Video settings
     private static final int VIDEO_HEIGHT = 480;
@@ -57,50 +61,52 @@ public final class PChunkingRecorder {
     private CodecInputSurface codecInputSurface;
     private MediaMuxerWrapper muxerWrapper1;
     private MediaMuxerWrapper muxerWrapper2;
+    private SurfaceTextureManager surfaceTextureManager;
     private TrackInfo audioTrackInfo;
     private TrackInfo videoTrackInfo;
 
     // Camera
-    private Camera mCamera;
-
-    private SurfaceTextureManager mStManager;
-    // allocate one of these up front so we don't need to do it every time
-    private MediaCodec.BufferInfo mVideoBufferInfo;
-    private MediaCodec.BufferInfo mAudioBufferInfo;
-    // The following formats are fed to MediaCodec.configure
-    private MediaFormat mVideoFormat;
-    private MediaFormat mAudioFormat;
-    // The following are returned when encoder VIDEO_OUTPUT_FORMAT_CHANGED signaled
-    private MediaFormat mVideoOutputFormat;
-    private MediaFormat mAudioOutputFormat;
-
-    // recording state
-    private int leadingChunk = 1;
-    long startWhen;
-    int frameCount = 0;
-    boolean eosSentToAudioEncoder = false;
-    boolean audioEosRequested = false;
-    boolean eosSentToVideoEncoder = false;
-    boolean fullStopReceived = false;
-    boolean fullStopPerformed = false;
-
-    // debug state
-    int totalFrameCount = 0;
-    long startTime;
+    private Camera camera;
 
     // Audio
-    public static final int SAMPLE_RATE = 44100;
-    public static final int SAMPLES_PER_FRAME = 1024; // AAC
-    public static final int CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_MONO;
-    public static final int AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT;
     private AudioRecord audioRecord;
     private long lastEncodedAudioTimeStamp = 0;
 
-    private Context context;
+    // Audio/video buffering
+    private MediaCodec.BufferInfo videoBufferInfo;
+    private MediaCodec.BufferInfo audioBufferInfo;
+    
+    // Audio/video formats
+    private MediaFormat videoFormat;
+    private MediaFormat audioFormat;
+    private MediaFormat videoOutputFormat;
+    private MediaFormat audioOutputFormat;
 
+    // Markers & IDs
+    private int leadingChunk = 1;
+    private long startWhen = 0;
+    private int frameCount = 0;
+    
+    // Control booleans
+    private boolean audioEosRequested = false;
+    private boolean eosSentToAudioEncoder = false;
+    private boolean eosSentToVideoEncoder = false;
+    private boolean fullStopPerformed = false;
+    private boolean fullStopReceived = false;
     private boolean firstFrameReady;
     private boolean eosReceived;
 
+    // Debug values
+    private int totalFrameCount = 0;
+    private long startTime;
+    private long endTime;
+
+    private Context context;
+
+    /**
+     * Constructs a PChunkingRecorder.
+     * @param context is a Context to create the recorder with.
+     */
     public PChunkingRecorder(Context context){
         this.context = context;
         this.firstFrameReady = false;
@@ -137,8 +143,8 @@ public final class PChunkingRecorder {
             if (TRACE) Trace.endSection();
             startWhen = System.nanoTime();
 
-            mCamera.startPreview();
-            SurfaceTexture st = mStManager.getSurfaceTexture();
+            camera.startPreview();
+            SurfaceTexture st = surfaceTextureManager.getSurfaceTexture();
             eosReceived = false;
 
             while (!(fullStopReceived && eosSentToVideoEncoder)) {
@@ -149,7 +155,7 @@ public final class PChunkingRecorder {
                 audioEosRequested = eosReceived;  // test
                 synchronized (videoTrackInfo.muxerWrapper.sync){
                     if (TRACE) Trace.beginSection("drainVideo");
-                    drainEncoder(videoEncoder, mVideoBufferInfo, videoTrackInfo, eosReceived || fullStopReceived);
+                    drainEncoder(videoEncoder, videoBufferInfo, videoTrackInfo, eosReceived || fullStopReceived);
                     if (TRACE) Trace.endSection();
                 }
                 if (fullStopReceived){
@@ -164,10 +170,10 @@ public final class PChunkingRecorder {
                 // passing the GLSurfaceView's EGLContext as eglCreateContext()'s share_context
                 // argument.
                 if (TRACE) Trace.beginSection("awaitImage");
-                mStManager.awaitNewImage();
+                surfaceTextureManager.awaitNewImage();
                 if (TRACE) Trace.endSection();
                 if (TRACE) Trace.beginSection("drawImage");
-                mStManager.drawImage();
+                surfaceTextureManager.drawImage();
                 if (TRACE) Trace.endSection();
 
 
@@ -226,15 +232,15 @@ public final class PChunkingRecorder {
     }
 
     private void setupAudioRecord(){
-        int min_buffer_size = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL_CONFIG, AUDIO_FORMAT);
-        int buffer_size = SAMPLES_PER_FRAME * 10;
+        int min_buffer_size = AudioRecord.getMinBufferSize(AUDIO_SAMPLE_RATE, AUDIO_CHANNEL_CONFIG, AUDIO_FORMAT);
+        int buffer_size = AUDIO_SAMPLES_PER_FRAME * 10;
         if (buffer_size < min_buffer_size)
-            buffer_size = ((min_buffer_size / SAMPLES_PER_FRAME) + 1) * SAMPLES_PER_FRAME * 2;
+            buffer_size = ((min_buffer_size / AUDIO_SAMPLES_PER_FRAME) + 1) * AUDIO_SAMPLES_PER_FRAME * 2;
 
         audioRecord = new AudioRecord(
                 MediaRecorder.AudioSource.MIC,       // source
-                SAMPLE_RATE,                         // sample rate, hz
-                CHANNEL_CONFIG,                      // channels
+                AUDIO_SAMPLE_RATE,                         // sample rate, hz
+                AUDIO_CHANNEL_CONFIG,                      // channels
                 AUDIO_FORMAT,                        // audio format
                 buffer_size);                        // buffer size (bytes)
     }
@@ -266,7 +272,7 @@ public final class PChunkingRecorder {
 
                         synchronized (audioTrackInfo.muxerWrapper.sync){
                             if (TRACE) Trace.beginSection("drainAudio");
-                            drainEncoder(audioEncoder, mAudioBufferInfo, audioTrackInfo, audioEosRequestedCopy || fullStopReceived);
+                            drainEncoder(audioEncoder, audioBufferInfo, audioTrackInfo, audioEosRequestedCopy || fullStopReceived);
                             if (TRACE) Trace.endSection();
                         }
 
@@ -296,8 +302,8 @@ public final class PChunkingRecorder {
                 ByteBuffer inputBuffer = inputBuffers[inputBufferIndex];
                 inputBuffer.clear();
                 long presentationTimeNs = System.nanoTime();
-                int inputLength =  audioRecord.read(inputBuffer, SAMPLES_PER_FRAME );
-                presentationTimeNs -= (inputLength / SAMPLE_RATE ) / 1000000000;
+                int inputLength =  audioRecord.read(inputBuffer, AUDIO_SAMPLES_PER_FRAME );
+                presentationTimeNs -= (inputLength / AUDIO_SAMPLE_RATE ) / 1000000000;
                 if(inputLength == AudioRecord.ERROR_INVALID_OPERATION)
                     Log.e(TAG, "Audio read error");
 
@@ -348,7 +354,7 @@ public final class PChunkingRecorder {
     }
 
     /**
-     * Configures Camera for video capture.  Sets mCamera.
+     * Configures Camera for video capture.  Sets camera.
      * <p/>
      * Opens a Camera and sets parameters.  Does not start preview.
      */
@@ -360,31 +366,31 @@ public final class PChunkingRecorder {
         Camera.CameraInfo info = new Camera.CameraInfo();
 
         // Try to find a front-facing camera (e.g. for videoconferencing).
-        int numCameras = Camera.getNumberOfCameras();
-        for (int i = 0; i < numCameras; i++) {
+        int nucameras = Camera.getNumberOfCameras();
+        for (int i = 0; i < nucameras; i++) {
             Camera.getCameraInfo(i, info);
             if (info.facing == cameraType) {
-                mCamera = Camera.open(i);
+                camera = Camera.open(i);
                 break;
             }
         }
-        if (mCamera == null && cameraType == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+        if (camera == null && cameraType == Camera.CameraInfo.CAMERA_FACING_FRONT) {
             PLog.logDebug(TAG, "No front-facing camera found; opening default");
-            mCamera = Camera.open();    // opens first back-facing camera
+            camera = Camera.open();    // opens first back-facing camera
         }
-        if (mCamera == null) {
+        if (camera == null) {
             throw new RuntimeException("Unable to open camera");
         }
 
-        Camera.Parameters parms = mCamera.getParameters();
+        Camera.Parameters parms = camera.getParameters();
         List<int[]> fpsRanges = parms.getSupportedPreviewFpsRange();
         int[] maxFpsRange = fpsRanges.get(fpsRanges.size() - 1);
         parms.setPreviewFpsRange(maxFpsRange[0], maxFpsRange[1]);
 
         choosePreviewSize(parms, encWidth, encHeight);
         // leave the frame rate set to default
-        mCamera.setParameters(parms);
-        mCamera.setDisplayOrientation(90);
+        camera.setParameters(parms);
+        camera.setDisplayOrientation(90);
 
         Camera.Size size = parms.getPreviewSize();
         PLog.logDebug(TAG, "Camera preview size is " + size.width + "x" + size.height);
@@ -395,24 +401,24 @@ public final class PChunkingRecorder {
      */
     private void releaseCamera() {
         if (VERBOSE) PLog.logDebug(TAG, "releasing camera");
-        if (mCamera != null) {
-            mCamera.stopPreview();
-            mCamera.release();
-            mCamera = null;
+        if (camera != null) {
+            camera.stopPreview();
+            camera.release();
+            camera = null;
         }
     }
 
     /**
-     * Configures SurfaceTexture for camera preview.  Initializes mStManager, and sets the
+     * Configures SurfaceTexture for camera preview.  Initializes surfaceTextureManager, and sets the
      * associated SurfaceTexture as the Camera's "preview texture".
      * <p/>
      * Configure the EGL surface that will be used for output before calling here.
      */
     private void prepareSurfaceTexture() {
-        mStManager = new SurfaceTextureManager();
-        SurfaceTexture st = mStManager.getSurfaceTexture();
+        surfaceTextureManager = new SurfaceTextureManager();
+        SurfaceTexture st = surfaceTextureManager.getSurfaceTexture();
         try {
-            mCamera.setPreviewTexture(st);
+            camera.setPreviewTexture(st);
         } catch (IOException ioe) {
             throw new RuntimeException("setPreviewTexture failed", ioe);
         }
@@ -422,33 +428,33 @@ public final class PChunkingRecorder {
      * Releases the SurfaceTexture.
      */
     private void releaseSurfaceTexture() {
-        if (mStManager != null) {
-            mStManager.release();
-            mStManager = null;
+        if (surfaceTextureManager != null) {
+            surfaceTextureManager.release();
+            surfaceTextureManager = null;
         }
     }
 
     /**
      * Configures encoder and muxer state, and prepares the input Surface.  Initializes
-     * videoEncoder, muxerWrapper1, codecInputSurface, mVideoBufferInfo, videoTrackInfo, and mMuxerStarted.
+     * videoEncoder, muxerWrapper1, codecInputSurface, videoBufferInfo, videoTrackInfo, and mMuxerStarted.
      */
     private void prepareEncoder(int width, int height, int bitRate) {
         eosSentToAudioEncoder = false;
         eosSentToVideoEncoder = false;
         fullStopReceived = false;
-        mVideoBufferInfo = new MediaCodec.BufferInfo();
+        videoBufferInfo = new MediaCodec.BufferInfo();
         videoTrackInfo = new TrackInfo();
 
-        mVideoFormat = MediaFormat.createVideoFormat(VIDEO_MIME_TYPE, width, height);
+        videoFormat = MediaFormat.createVideoFormat(VIDEO_MIME_TYPE, width, height);
 
         // Set some properties.  Failing to specify some of these can cause the MediaCodec
         // configure() call to throw an unhelpful exception.
-        mVideoFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT,
+        videoFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT,
                 MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
-        mVideoFormat.setInteger(MediaFormat.KEY_BIT_RATE, bitRate);
-        mVideoFormat.setInteger(MediaFormat.KEY_FRAME_RATE, VIDEO_FRAME_RATE);
-        mVideoFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, VIDEO_IFRAME_INTERVAL);
-        if (VERBOSE) PLog.logDebug(TAG, "format: " + mVideoFormat);
+        videoFormat.setInteger(MediaFormat.KEY_BIT_RATE, bitRate);
+        videoFormat.setInteger(MediaFormat.KEY_FRAME_RATE, VIDEO_FRAME_RATE);
+        videoFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, VIDEO_IFRAME_INTERVAL);
+        if (VERBOSE) PLog.logDebug(TAG, "format: " + videoFormat);
 
         // Create a MediaCodec encoder, and configure it with our format.  Get a Surface
         // we can use for input and wrap it with a class that handles the EGL work.
@@ -458,23 +464,23 @@ public final class PChunkingRecorder {
         // "display" EGL context is created, then modify the eglCreateContext call to
         // take eglGetCurrentContext() as the share_context argument.
         videoEncoder = MediaCodec.createEncoderByType(VIDEO_MIME_TYPE);
-        videoEncoder.configure(mVideoFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
+        videoEncoder.configure(videoFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
         codecInputSurface = new CodecInputSurface(videoEncoder.createInputSurface());
         videoEncoder.start();
 
-        mAudioBufferInfo = new MediaCodec.BufferInfo();
+        audioBufferInfo = new MediaCodec.BufferInfo();
         audioTrackInfo = new TrackInfo();
 
-        mAudioFormat = new MediaFormat();
-        mAudioFormat.setString(MediaFormat.KEY_MIME, AUDIO_MIME_TYPE);
-        mAudioFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC);
-        mAudioFormat.setInteger(MediaFormat.KEY_SAMPLE_RATE, 44100);
-        mAudioFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
-        mAudioFormat.setInteger(MediaFormat.KEY_BIT_RATE, 128000);
-        mAudioFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 16384);
+        audioFormat = new MediaFormat();
+        audioFormat.setString(MediaFormat.KEY_MIME, AUDIO_MIME_TYPE);
+        audioFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC);
+        audioFormat.setInteger(MediaFormat.KEY_SAMPLE_RATE, 44100);
+        audioFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
+        audioFormat.setInteger(MediaFormat.KEY_BIT_RATE, 128000);
+        audioFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 16384);
 
         audioEncoder = MediaCodec.createEncoderByType(AUDIO_MIME_TYPE);
-        audioEncoder.configure(mAudioFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
+        audioEncoder.configure(audioFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
         audioEncoder.start();
 
         // Output filename.  Ideally this would use Context.getFilesDir() rather than a
@@ -533,11 +539,11 @@ public final class PChunkingRecorder {
     private void chunkVideoEncoder(){
         stopAndReleaseVideoEncoder();
         // Start Encoder
-        mVideoBufferInfo = new MediaCodec.BufferInfo();
+        videoBufferInfo = new MediaCodec.BufferInfo();
         //videoTrackInfo = new TrackInfo();
         advanceVideoMediaMuxer();
         videoEncoder = MediaCodec.createEncoderByType(VIDEO_MIME_TYPE);
-        videoEncoder.configure(mVideoFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
+        videoEncoder.configure(videoFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
         codecInputSurface.updateSurface(videoEncoder.createInputSurface());
         videoEncoder.start();
         codecInputSurface.makeEncodeContextCurrent();
@@ -560,11 +566,11 @@ public final class PChunkingRecorder {
                 videoTrackInfo.muxerWrapper = muxerWrapper1;
                 // testing: can we start next muxer immediately given MediaCodec.getOutputFormat() values?
             }
-            if(mVideoOutputFormat != null && mAudioOutputFormat != null){
-                videoTrackInfo.muxerWrapper.addTrack(mVideoOutputFormat);
-                videoTrackInfo.muxerWrapper.addTrack(mAudioOutputFormat);
+            if(videoOutputFormat != null && audioOutputFormat != null){
+                videoTrackInfo.muxerWrapper.addTrack(videoOutputFormat);
+                videoTrackInfo.muxerWrapper.addTrack(audioOutputFormat);
             }else{
-                Log.e(TAG, "mVideoOutputFormat or mAudioOutputFormat is null!");
+                Log.e(TAG, "videoOutputFormat or audioOutputFormat is null!");
             }
         }else{
             // if encoders are separate, finalize this muxer, and switch to others
@@ -581,11 +587,11 @@ public final class PChunkingRecorder {
         stopAndReleaseAudioEncoder();
 
         // Start Encoder
-        mAudioBufferInfo = new MediaCodec.BufferInfo();
+        audioBufferInfo = new MediaCodec.BufferInfo();
         //videoTrackInfo = new TrackInfo();
         advanceAudioMediaMuxer();
         audioEncoder = MediaCodec.createEncoderByType(AUDIO_MIME_TYPE);
-        audioEncoder.configure(mAudioFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
+        audioEncoder.configure(audioFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
         audioEncoder.start();
     }
 
@@ -602,11 +608,11 @@ public final class PChunkingRecorder {
             }else if(videoMuxer == muxerWrapper2){
                 audioTrackInfo.muxerWrapper = muxerWrapper1;
             }
-            if(mVideoOutputFormat != null && mAudioOutputFormat != null){
-                audioTrackInfo.muxerWrapper.addTrack(mVideoOutputFormat);
-                audioTrackInfo.muxerWrapper.addTrack(mAudioOutputFormat);
+            if(videoOutputFormat != null && audioOutputFormat != null){
+                audioTrackInfo.muxerWrapper.addTrack(videoOutputFormat);
+                audioTrackInfo.muxerWrapper.addTrack(audioOutputFormat);
             }else{
-                Log.e(TAG, "mVideoOutputFormat or mAudioOutputFormat is null!");
+                Log.e(TAG, "videoOutputFormat or audioOutputFormat is null!");
             }
         }else{
             // if encoders are separate, finalize this muxer, and switch to others
@@ -683,9 +689,9 @@ public final class PChunkingRecorder {
                 }else{
                     MediaFormat newFormat = encoder.getOutputFormat();
                     if(encoder == videoEncoder)
-                        mVideoOutputFormat = newFormat;
+                        videoOutputFormat = newFormat;
                     else if(encoder == audioEncoder)
-                        mAudioOutputFormat = newFormat;
+                        audioOutputFormat = newFormat;
 
                     // now that we have the Magic Goodies, start the muxer
                     trackInfo.index = muxerWrapper.addTrack(newFormat);
