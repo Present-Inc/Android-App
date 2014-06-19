@@ -38,6 +38,7 @@ public final class PChunkingRecorder {
     
     // Multimedia Settings
     private static final long MULTIMEDIA_CHUNK_DURATION_SEC = 10;
+    private final int FRAMES_PER_CHUNK = (int) MULTIMEDIA_CHUNK_DURATION_SEC * VIDEO_FRAME_RATE;
     
     // Audio Settings
     private static final String AUDIO_MIME_TYPE = "audio/mp4a-latm";
@@ -53,6 +54,7 @@ public final class PChunkingRecorder {
     private static final String VIDEO_MIME_TYPE = "video/avc";
     private static final int VIDEO_OUTPUT_FORMAT = MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4;
     private static final int VIDEO_WIDTH = 480;
+    private static final int VIDEO_ENCODER_BIT_RATE = 1000000;
 
     // Display Surface
     private GLSurfaceView displaySurface;
@@ -107,119 +109,114 @@ public final class PChunkingRecorder {
      * Constructs a PChunkingRecorder.
      * @param context is a Context to create the recorder with.
      */
-    public PChunkingRecorder(Context context){
+    public PChunkingRecorder(Context context) {
         this.context = context;
         this.firstFrameReady = false;
         this.eosReceived = false;
     }
 
-    public void setDisplaySurface(GLSurfaceView displaySurface){
+    public void setDisplaySurface(GLSurfaceView displaySurface) {
         this.displaySurface = displaySurface;
     }
 
-    public void setDisplayEGLContext(EGLContext context){
+    public void setDisplayEGLContext(EGLContext context) {
         this.codecInputSurface.mEGLDisplayContext = context;
     }
 
-    
+    /**
+     * Starts the recording process.
+     */
+    public void startRecording() {
 
-    public void startRecording(String outputDir){
-        
-        int encBitRate = 1000000;      // bps
-        int framesPerChunk = (int) MULTIMEDIA_CHUNK_DURATION_SEC * VIDEO_FRAME_RATE;
-        PLog.logDebug(TAG, VIDEO_MIME_TYPE + " output " + VIDEO_WIDTH + "x" + VIDEO_HEIGHT + " @" + encBitRate);
+        PLog.logDebug(TAG, "startRecording() -> " + VIDEO_MIME_TYPE + " output " + VIDEO_WIDTH + "x" + VIDEO_HEIGHT + " @" + VIDEO_ENCODER_BIT_RATE);
 
         try {
-            if (TRACE) Trace.beginSection("prepare");
-            prepareCamera(VIDEO_WIDTH, VIDEO_HEIGHT, Camera.CameraInfo.CAMERA_FACING_BACK);
-            prepareEncoder(VIDEO_WIDTH, VIDEO_HEIGHT, encBitRate);
-            codecInputSurface.makeEncodeContextCurrent();
-            prepareSurfaceTexture();
-            setupAudioRecord();
-            if (TRACE) Trace.endSection();
+            this.prepareCamera(VIDEO_WIDTH, VIDEO_HEIGHT, Camera.CameraInfo.CAMERA_FACING_BACK);
+            this.prepareEncoder(VIDEO_WIDTH, VIDEO_HEIGHT, VIDEO_ENCODER_BIT_RATE);
+            this.codecInputSurface.makeEncodeContextCurrent();
+            this.prepareSurfaceTexture();
+            this.setupAudioRecord();
+            this.startAudioRecord();
+            this.startWhen = System.nanoTime();
+            this.camera.startPreview();
+            SurfaceTexture surfaceTexture = this.surfaceTextureManager.getSurfaceTexture();
+            this.eosReceived = false;
 
-            if (TRACE) Trace.beginSection("startMediaRecorder");
-            startAudioRecord();
-            if (TRACE) Trace.endSection();
-            startWhen = System.nanoTime();
+            // Feed any pending encoder output to the muxer and chunk the media if necessary.
+            while (!(this.fullStopReceived && this.eosSentToVideoEncoder)) {
 
-            camera.startPreview();
-            SurfaceTexture st = surfaceTextureManager.getSurfaceTexture();
-            eosReceived = false;
+                this.eosReceived = ((this.frameCount % FRAMES_PER_CHUNK) == 0 && this.frameCount != 0);
 
-            while (!(fullStopReceived && eosSentToVideoEncoder)) {
-                // Feed any pending encoder output into the muxer.
-                // Chunk encoding
-                eosReceived = ((frameCount % framesPerChunk) == 0 && frameCount != 0);
-                if (eosReceived) PLog.logDebug(TAG, "Chunkpoint on frame " + frameCount);
-                audioEosRequested = eosReceived;  // test
-                synchronized (videoTrackInfo.muxerWrapper.sync){
-                    if (TRACE) Trace.beginSection("drainVideo");
-                    drainEncoder(videoEncoder, videoBufferInfo, videoTrackInfo, eosReceived || fullStopReceived);
-                    if (TRACE) Trace.endSection();
+                if (this.eosReceived) {
+                    PLog.logDebug(TAG, "Chunkpoint on frame " + this.frameCount);
                 }
-                if (fullStopReceived){
+
+                this.audioEosRequested = this.eosReceived;
+
+                // Drain the video from the encoder
+                synchronized (videoTrackInfo.muxerWrapper.sync) {
+                    drainEncoder(this.videoEncoder, this.videoBufferInfo, this.videoTrackInfo, (this.eosReceived || this.fullStopReceived));
+                }
+
+                // Jump out of the while loop when a full stop is requested.
+                if (this.fullStopReceived) {
                     break;
                 }
-                frameCount++;
-                totalFrameCount++;
+
+                // Update frame count and total frame count
+                this.frameCount++;
+                this.totalFrameCount++;
 
                 // Acquire a new frame of input, and render it to the Surface.  If we had a
                 // GLSurfaceView we could switch EGL contexts and call drawImage() a second
                 // time to render it on screen.  The texture can be shared between contexts by
                 // passing the GLSurfaceView's EGLContext as eglCreateContext()'s share_context
                 // argument.
-                if (TRACE) Trace.beginSection("awaitImage");
-                surfaceTextureManager.awaitNewImage();
-                if (TRACE) Trace.endSection();
-                if (TRACE) Trace.beginSection("drawImage");
-                surfaceTextureManager.drawImage();
-                if (TRACE) Trace.endSection();
-
+                this.surfaceTextureManager.awaitNewImage();
+                this.surfaceTextureManager.drawImage();
 
                 // Set the presentation time stamp from the SurfaceTexture's time stamp.  This
                 // will be used by MediaMuxer to set the PTS in the video.
-                codecInputSurface.setPresentationTime(st.getTimestamp() - startWhen);
+                this.codecInputSurface.setPresentationTime(surfaceTexture.getTimestamp() - startWhen);
 
                 // Submit it to the encoder.  The eglSwapBuffers call will block if the input
                 // is full, which would be bad if it stayed full until we dequeued an output
                 // buffer (which we can't do, since we're stuck here).  So long as we fully drain
                 // the encoder before supplying additional input, the system guarantees that we
                 // can supply another frame without blocking.
-                if (VERBOSE) PLog.logDebug(TAG, "sending frame to encoder");
-                if (TRACE) Trace.beginSection("swapBuffers");
-                codecInputSurface.swapBuffers();
-                if (TRACE) Trace.endSection();
-                if (!firstFrameReady) startTime = System.nanoTime();
-                firstFrameReady = true;
+                PLog.logDebug(TAG, "startRecording() -> sending frame to encoder.");
+                this.codecInputSurface.swapBuffers();
 
-                /*
-                if (TRACE) Trace.beginSection("sendAudio");
-                sendAudioToEncoder(false);
-                if (TRACE) Trace.endSection();
-                */
+                if (! this.firstFrameReady) {
+                    startTime = System.nanoTime();
+                    this.firstFrameReady = true;
+                }
+
             }
-            PLog.logDebug(TAG, "Exiting video encode loop");
 
-        } catch (Exception e){
-            Log.e(TAG, "Encoding loop exception!");
+            PLog.logDebug(TAG, "startRecording() -> Exiting video encode loop.");
+
+        } catch (Exception e) {
+            PLog.logError(TAG, "Encoding loop exception!");
             e.printStackTrace();
-        } finally {
         }
+
     }
 
-    public void stopRecording(){
-        PLog.logDebug(TAG, "stopRecording");
-        fullStopReceived = true;
-        //if (useMediaRecorder) mMediaRecorderWrapper.stopRecording();
-        double recordingDurationSec = (System.nanoTime() - startTime) / 1000000000.0;
-        PLog.logDebug(TAG, "Recorded " + recordingDurationSec + " s. Expected " + (VIDEO_FRAME_RATE * recordingDurationSec) + " frames. Got " + totalFrameCount + " for " + (totalFrameCount / recordingDurationSec) + " fps");
+    /**
+     * Stops the recording process.
+     */
+    public void stopRecording() {
+        PLog.logDebug(TAG, "stopRecording() -> Method called.");
+        this.fullStopReceived = true;
+        final double recordingDurationSec = (System.nanoTime() - startTime) / 1000000000.0;
+        PLog.logDebug(TAG, "Recorded " + recordingDurationSec + " seconds. Expected " + (VIDEO_FRAME_RATE * recordingDurationSec) + " frames. Got " + totalFrameCount + " for " + (totalFrameCount / recordingDurationSec) + " fps");
     }
 
     /**
      * Called internally to finalize HQ and last chunk
      */
-    public void _stopRecording(){
+    private void _stopRecording() {
         fullStopPerformed = true;
         //mMediaRecorderWrapper.stopRecording();
         releaseCamera();
@@ -231,7 +228,7 @@ public final class PChunkingRecorder {
         }
     }
 
-    private void setupAudioRecord(){
+    private void setupAudioRecord() {
         int min_buffer_size = AudioRecord.getMinBufferSize(AUDIO_SAMPLE_RATE, AUDIO_CHANNEL_CONFIG, AUDIO_FORMAT);
         int buffer_size = AUDIO_SAMPLES_PER_FRAME * 10;
         if (buffer_size < min_buffer_size)
@@ -245,32 +242,32 @@ public final class PChunkingRecorder {
                 buffer_size);                        // buffer size (bytes)
     }
 
-    private void startAudioRecord(){
-        if(audioRecord != null){
+    private void startAudioRecord() {
+        if(audioRecord != null) {
 
-            new Thread(new Runnable(){
+            new Thread(new Runnable() {
 
                 @Override
                 public void run() {
                     audioRecord.startRecording();
                     boolean audioEosRequestedCopy = false;
-                    while(true){
+                    while(true) {
 
                         if(!firstFrameReady)
                             continue;
                         audioEosRequestedCopy = audioEosRequested; // make sure audioEosRequested doesn't change value mid loop
-                        if (audioEosRequestedCopy || fullStopReceived){ // TODO post eosReceived message with Handler?
+                        if (audioEosRequestedCopy || fullStopReceived) { // TODO post eosReceived message with Handler?
                             PLog.logDebug(TAG, "Audio loop caught audioEosRequested / fullStopReceived " + audioEosRequestedCopy + " " + fullStopReceived);
                             if (TRACE) Trace.beginSection("sendAudio");
                             sendAudioToEncoder(true);
                             if (TRACE) Trace.endSection();
                         }
-                        if (fullStopReceived){
+                        if (fullStopReceived) {
                             PLog.logDebug(TAG, "Stopping AudioRecord");
                             audioRecord.stop();
                         }
 
-                        synchronized (audioTrackInfo.muxerWrapper.sync){
+                        synchronized (audioTrackInfo.muxerWrapper.sync) {
                             if (TRACE) Trace.beginSection("drainAudio");
                             drainEncoder(audioEncoder, audioBufferInfo, audioTrackInfo, audioEosRequestedCopy || fullStopReceived);
                             if (TRACE) Trace.endSection();
@@ -278,7 +275,7 @@ public final class PChunkingRecorder {
 
                         if (audioEosRequestedCopy) audioEosRequested = false;
 
-                        if (!fullStopReceived){
+                        if (!fullStopReceived) {
                             if (TRACE) Trace.beginSection("sendAudio");
                             sendAudioToEncoder(false);
                             if (TRACE) Trace.endSection();
@@ -439,22 +436,21 @@ public final class PChunkingRecorder {
      * videoEncoder, muxerWrapper1, codecInputSurface, videoBufferInfo, videoTrackInfo, and mMuxerStarted.
      */
     private void prepareEncoder(int width, int height, int bitRate) {
-        eosSentToAudioEncoder = false;
-        eosSentToVideoEncoder = false;
-        fullStopReceived = false;
-        videoBufferInfo = new MediaCodec.BufferInfo();
-        videoTrackInfo = new TrackInfo();
+        this.eosSentToAudioEncoder = false;
+        this.eosSentToVideoEncoder = false;
+        this.fullStopReceived = false;
+        this.videoBufferInfo = new MediaCodec.BufferInfo();
+        this.videoTrackInfo = new TrackInfo();
 
-        videoFormat = MediaFormat.createVideoFormat(VIDEO_MIME_TYPE, width, height);
+        this.videoFormat = MediaFormat.createVideoFormat(VIDEO_MIME_TYPE, width, height);
 
         // Set some properties.  Failing to specify some of these can cause the MediaCodec
         // configure() call to throw an unhelpful exception.
-        videoFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT,
-                MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
-        videoFormat.setInteger(MediaFormat.KEY_BIT_RATE, bitRate);
-        videoFormat.setInteger(MediaFormat.KEY_FRAME_RATE, VIDEO_FRAME_RATE);
-        videoFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, VIDEO_IFRAME_INTERVAL);
-        if (VERBOSE) PLog.logDebug(TAG, "format: " + videoFormat);
+        this.videoFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
+        this.videoFormat.setInteger(MediaFormat.KEY_BIT_RATE, bitRate);
+        this.videoFormat.setInteger(MediaFormat.KEY_FRAME_RATE, VIDEO_FRAME_RATE);
+        this.videoFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, VIDEO_IFRAME_INTERVAL);
+        PLog.logDebug(TAG, "prepareEncoder() -> Format: " + videoFormat);
 
         // Create a MediaCodec encoder, and configure it with our format.  Get a Surface
         // we can use for input and wrap it with a class that handles the EGL work.
@@ -463,25 +459,25 @@ public final class PChunkingRecorder {
         // you will likely want to defer instantiation of CodeccodecInputSurface until after the
         // "display" EGL context is created, then modify the eglCreateContext call to
         // take eglGetCurrentContext() as the share_context argument.
-        videoEncoder = MediaCodec.createEncoderByType(VIDEO_MIME_TYPE);
-        videoEncoder.configure(videoFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
-        codecInputSurface = new CodecInputSurface(videoEncoder.createInputSurface());
-        videoEncoder.start();
+        this.videoEncoder = MediaCodec.createEncoderByType(VIDEO_MIME_TYPE);
+        this.videoEncoder.configure(videoFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
+        this.codecInputSurface = new CodecInputSurface(videoEncoder.createInputSurface());
+        this.videoEncoder.start();
 
-        audioBufferInfo = new MediaCodec.BufferInfo();
-        audioTrackInfo = new TrackInfo();
+        this.audioBufferInfo = new MediaCodec.BufferInfo();
+        this.audioTrackInfo = new TrackInfo();
 
-        audioFormat = new MediaFormat();
-        audioFormat.setString(MediaFormat.KEY_MIME, AUDIO_MIME_TYPE);
-        audioFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC);
-        audioFormat.setInteger(MediaFormat.KEY_SAMPLE_RATE, 44100);
-        audioFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
-        audioFormat.setInteger(MediaFormat.KEY_BIT_RATE, 128000);
-        audioFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 16384);
+        this.audioFormat = new MediaFormat();
+        this.audioFormat.setString(MediaFormat.KEY_MIME, AUDIO_MIME_TYPE);
+        this.audioFormat.setInteger(MediaFormat.KEY_AAC_PROFILE, MediaCodecInfo.CodecProfileLevel.AACObjectLC);
+        this.audioFormat.setInteger(MediaFormat.KEY_SAMPLE_RATE, AUDIO_SAMPLE_RATE);
+        this.audioFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, 1);
+        this.audioFormat.setInteger(MediaFormat.KEY_BIT_RATE, 128000);
+        this.audioFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 16384);
 
-        audioEncoder = MediaCodec.createEncoderByType(AUDIO_MIME_TYPE);
-        audioEncoder.configure(audioFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
-        audioEncoder.start();
+        this.audioEncoder = MediaCodec.createEncoderByType(AUDIO_MIME_TYPE);
+        this.audioEncoder.configure(audioFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
+        this.audioEncoder.start();
 
         // Output filename.  Ideally this would use Context.getFilesDir() rather than a
         // hard-coded output directory.
@@ -496,127 +492,133 @@ public final class PChunkingRecorder {
         // We're not actually interested in multiplexing audio.  We just want to convert
         // the raw H.264 elementary stream we get from MediaCodec into a .mp4 file.
         //resetMediaMuxer(outputPath);
-        muxerWrapper1 = new MediaMuxerWrapper(VIDEO_OUTPUT_FORMAT, leadingChunk);
-        muxerWrapper2 = new MediaMuxerWrapper(VIDEO_OUTPUT_FORMAT, leadingChunk + 1); // prepared for next chunk
+        this.muxerWrapper1 = new MediaMuxerWrapper(VIDEO_OUTPUT_FORMAT, leadingChunk);
+        this.muxerWrapper2 = new MediaMuxerWrapper(VIDEO_OUTPUT_FORMAT, leadingChunk + 1); // prepared for next chunk
 
 
-        videoTrackInfo.index = -1;
-        videoTrackInfo.muxerWrapper = muxerWrapper1;
-        audioTrackInfo.index = -1;
-        audioTrackInfo.muxerWrapper = muxerWrapper1;
+        this.videoTrackInfo.index = -1;
+        this.videoTrackInfo.muxerWrapper = muxerWrapper1;
+        this.audioTrackInfo.index = -1;
+        this.audioTrackInfo.muxerWrapper = muxerWrapper1;
     }
 
-    private void stopAndReleaseVideoEncoder(){
-        eosSentToVideoEncoder = false;
-        frameCount = 0;
-        if (videoEncoder != null) {
-            videoEncoder.stop();
-            videoEncoder.release();
-            videoEncoder = null;
+    private void stopAndReleaseVideoEncoder() {
+        this.eosSentToVideoEncoder = false;
+        this.frameCount = 0;
+        if (this.videoEncoder != null) {
+            this.videoEncoder.stop();
+            this.videoEncoder.release();
+            this.videoEncoder = null;
         }
     }
 
 
-    private void stopAndReleaseAudioEncoder(){
-        lastEncodedAudioTimeStamp = 0;
-        eosSentToAudioEncoder = false;
+    private void stopAndReleaseAudioEncoder() {
+        this.lastEncodedAudioTimeStamp = 0;
+        this.eosSentToAudioEncoder = false;
 
-        if (audioEncoder != null) {
-            audioEncoder.stop();
-            audioEncoder.release();
-            audioEncoder = null;
+        if (this.audioEncoder != null) {
+            this.audioEncoder.stop();
+            this.audioEncoder.release();
+            this.audioEncoder = null;
         }
     }
 
-    private void stopAndReleaseEncoders(){
-        stopAndReleaseVideoEncoder();
-        stopAndReleaseAudioEncoder();
+    private void stopAndReleaseEncoders() {
+        this.stopAndReleaseVideoEncoder();
+        this.stopAndReleaseAudioEncoder();
     }
 
     /**
      * This can be called within drainEncoder, when the end of stream is reached
      */
-    private void chunkVideoEncoder(){
-        stopAndReleaseVideoEncoder();
+    private void chunkVideoEncoder() {
+        this.stopAndReleaseVideoEncoder();
         // Start Encoder
-        videoBufferInfo = new MediaCodec.BufferInfo();
+        this.videoBufferInfo = new MediaCodec.BufferInfo();
         //videoTrackInfo = new TrackInfo();
-        advanceVideoMediaMuxer();
-        videoEncoder = MediaCodec.createEncoderByType(VIDEO_MIME_TYPE);
-        videoEncoder.configure(videoFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
-        codecInputSurface.updateSurface(videoEncoder.createInputSurface());
-        videoEncoder.start();
-        codecInputSurface.makeEncodeContextCurrent();
+        this.advanceVideoMediaMuxer();
+        this.videoEncoder = MediaCodec.createEncoderByType(VIDEO_MIME_TYPE);
+        this.videoEncoder.configure(videoFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
+        this.codecInputSurface.updateSurface(videoEncoder.createInputSurface());
+        this.videoEncoder.start();
+        this.codecInputSurface.makeEncodeContextCurrent();
     }
 
-    private void advanceVideoMediaMuxer(){
-        MediaMuxerWrapper videoMuxer = (videoTrackInfo.muxerWrapper == muxerWrapper1) ? muxerWrapper1 : muxerWrapper2;
-        MediaMuxerWrapper audioMuxer = (audioTrackInfo.muxerWrapper == muxerWrapper1) ? muxerWrapper1 : muxerWrapper2;
-        PLog.logDebug("advanceVideo", "video on " + ((videoTrackInfo.muxerWrapper == muxerWrapper1) ? "muxer1" : "muxer2"));
-        if(videoMuxer == audioMuxer){
-            // if both encoders are on same muxer, switch to other muxer
-            leadingChunk++;
-            if(videoMuxer == muxerWrapper1){
+    private void advanceVideoMediaMuxer() {
+
+        MediaMuxerWrapper videoMuxer = (this.videoTrackInfo.muxerWrapper == this.muxerWrapper1) ? this.muxerWrapper1 : this.muxerWrapper2;
+        MediaMuxerWrapper audioMuxer = (this.audioTrackInfo.muxerWrapper == this.muxerWrapper1) ? this.muxerWrapper1 : this.muxerWrapper2;
+
+        PLog.logDebug("advanceVideoMediaMuxer() -> AdvanceVideo", "video on " + ((videoTrackInfo.muxerWrapper == muxerWrapper1) ? "muxer1" : "muxer2"));
+
+        // If both encoders are on same muxer, switch to other muxer.
+        if(videoMuxer == audioMuxer) {
+            this.leadingChunk++;
+            if(videoMuxer == this.muxerWrapper1) {
                 PLog.logDebug("advanceVideo", "encoders on same muxer. swapping.");
-                videoTrackInfo.muxerWrapper = muxerWrapper2;
+                this.videoTrackInfo.muxerWrapper = this.muxerWrapper2;
                 // testing: can we start next muxer immediately given MediaCodec.getOutputFormat() values?
 
-            }else if(videoMuxer == muxerWrapper2){
+            } else if(videoMuxer == this.muxerWrapper2) {
                 PLog.logDebug("advanceVideo", "encoders on same muxer. swapping.");
-                videoTrackInfo.muxerWrapper = muxerWrapper1;
+                this.videoTrackInfo.muxerWrapper = this.muxerWrapper1;
                 // testing: can we start next muxer immediately given MediaCodec.getOutputFormat() values?
             }
-            if(videoOutputFormat != null && audioOutputFormat != null){
-                videoTrackInfo.muxerWrapper.addTrack(videoOutputFormat);
-                videoTrackInfo.muxerWrapper.addTrack(audioOutputFormat);
-            }else{
+
+            if(this.videoOutputFormat != null && this.audioOutputFormat != null) {
+                this.videoTrackInfo.muxerWrapper.addTrack(this.videoOutputFormat);
+                this.videoTrackInfo.muxerWrapper.addTrack(this.audioOutputFormat);
+            }
+            else{
                 Log.e(TAG, "videoOutputFormat or audioOutputFormat is null!");
             }
-        }else{
+
+        } else {
             // if encoders are separate, finalize this muxer, and switch to others
             PLog.logDebug("advanceVideo", "encoders on diff muxers. restarting");
-            videoTrackInfo.muxerWrapper.restart(VIDEO_OUTPUT_FORMAT, leadingChunk + 1); // prepare muxer for next chunk, but don't alter leadingChunk
-            videoTrackInfo.muxerWrapper = audioTrackInfo.muxerWrapper;
+            this.videoTrackInfo.muxerWrapper.restart(VIDEO_OUTPUT_FORMAT, this.leadingChunk + 1); // prepare muxer for next chunk, but don't alter leadingChunk
+            this.videoTrackInfo.muxerWrapper = this.audioTrackInfo.muxerWrapper;
         }
     }
 
     /**
      * This can be called within drainEncoder, when the end of stream is reached
      */
-    private void chunkAudioEncoder(){
-        stopAndReleaseAudioEncoder();
-
-        // Start Encoder
-        audioBufferInfo = new MediaCodec.BufferInfo();
-        //videoTrackInfo = new TrackInfo();
-        advanceAudioMediaMuxer();
-        audioEncoder = MediaCodec.createEncoderByType(AUDIO_MIME_TYPE);
-        audioEncoder.configure(audioFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
-        audioEncoder.start();
+    private void chunkAudioEncoder() {
+        // Start the encoder
+        this.stopAndReleaseAudioEncoder();
+        this.audioBufferInfo = new MediaCodec.BufferInfo();
+        this.advanceAudioMediaMuxer();
+        this.audioEncoder = MediaCodec.createEncoderByType(AUDIO_MIME_TYPE);
+        this.audioEncoder.configure(audioFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
+        this.audioEncoder.start();
     }
 
-    private void advanceAudioMediaMuxer(){
-        MediaMuxerWrapper videoMuxer = (videoTrackInfo.muxerWrapper == muxerWrapper1) ? muxerWrapper1 : muxerWrapper2;
-        MediaMuxerWrapper audioMuxer = (audioTrackInfo.muxerWrapper == muxerWrapper1) ? muxerWrapper1 : muxerWrapper2;
-        PLog.logDebug("advanceAudio", "audio on " + ((audioTrackInfo.muxerWrapper == muxerWrapper1) ? "muxer1" : "muxer2"));
-        if(videoMuxer == audioMuxer){
+    private void advanceAudioMediaMuxer() {
+
+        MediaMuxerWrapper videoMuxer = (this.videoTrackInfo.muxerWrapper == this.muxerWrapper1) ? this.muxerWrapper1 : this.muxerWrapper2;
+        MediaMuxerWrapper audioMuxer = (this.audioTrackInfo.muxerWrapper == this.muxerWrapper1) ? this.muxerWrapper1 : this.muxerWrapper2;
+        PLog.logDebug("advanceAudioMediaMuxer() -> advanceAudio", "audio on " + ((this.audioTrackInfo.muxerWrapper == this.muxerWrapper1) ? "muxer1" : "muxer2"));
+
+        if (videoMuxer == audioMuxer) {
             // If both encoders are on same muxer, switch to other muxer
             PLog.logDebug("advanceAudio", "encoders on same muxer. swapping.");
-            leadingChunk++;
-            if(videoMuxer == muxerWrapper1){
-                audioTrackInfo.muxerWrapper = muxerWrapper2;
-            }else if(videoMuxer == muxerWrapper2){
-                audioTrackInfo.muxerWrapper = muxerWrapper1;
+            this.leadingChunk++;
+            if(videoMuxer == this.muxerWrapper1) {
+                this.audioTrackInfo.muxerWrapper = this.muxerWrapper2;
+            }else if(videoMuxer == this.muxerWrapper2) {
+                this.audioTrackInfo.muxerWrapper = this.muxerWrapper1;
             }
-            if(videoOutputFormat != null && audioOutputFormat != null){
-                audioTrackInfo.muxerWrapper.addTrack(videoOutputFormat);
-                audioTrackInfo.muxerWrapper.addTrack(audioOutputFormat);
+            if(videoOutputFormat != null && audioOutputFormat != null) {
+                this.audioTrackInfo.muxerWrapper.addTrack(this.videoOutputFormat);
+                this.audioTrackInfo.muxerWrapper.addTrack(this.audioOutputFormat);
             }else{
-                Log.e(TAG, "videoOutputFormat or audioOutputFormat is null!");
+                PLog.logError(TAG, "advanceAudioMediaMuxer() -> videoOutputFormat or audioOutputFormat is null!");
             }
-        }else{
+        } else {
             // if encoders are separate, finalize this muxer, and switch to others
-            PLog.logDebug("advanceAudio", "encoders on diff muxers. restarting");
+            PLog.logDebug(TAG, "advanceAudioMediaMuxer() -> Encoders on diff muxers. Restarting");
             audioTrackInfo.muxerWrapper.restart(VIDEO_OUTPUT_FORMAT, leadingChunk + 1); // prepare muxer for next chunk, but don't alter leadingChunk
             audioTrackInfo.muxerWrapper = videoTrackInfo.muxerWrapper;
         }
@@ -629,13 +631,13 @@ public final class PChunkingRecorder {
         if (VERBOSE) PLog.logDebug(TAG, "releasing encoder objects");
         stopAndReleaseEncoders();
         if (muxerWrapper1 != null) {
-            synchronized (muxerWrapper1.sync){
+            synchronized (muxerWrapper1.sync) {
                 muxerWrapper1.stop();
                 muxerWrapper1 = null;
             }
         }
         if (muxerWrapper2 != null) {
-            synchronized (muxerWrapper2.sync){
+            synchronized (muxerWrapper2.sync) {
                 muxerWrapper2.stop();
                 muxerWrapper2 = null;
             }
@@ -726,12 +728,12 @@ public final class PChunkingRecorder {
                         // adjust the ByteBuffer values to match BufferInfo (not needed?)
                         encodedData.position(bufferInfo.offset);
                         encodedData.limit(bufferInfo.offset + bufferInfo.size);
-                        if(encoder == audioEncoder){
+                        if(encoder == audioEncoder) {
                             if(bufferInfo.presentationTimeUs < lastEncodedAudioTimeStamp)
                                 bufferInfo.presentationTimeUs = lastEncodedAudioTimeStamp += 23219; // Magical AAC encoded frame time
                             lastEncodedAudioTimeStamp = bufferInfo.presentationTimeUs;
                         }
-                        if(bufferInfo.presentationTimeUs < 0){
+                        if(bufferInfo.presentationTimeUs < 0) {
                             bufferInfo.presentationTimeUs = 0;
                         }
                         muxerWrapper.writeSampleDataToMuxer(trackInfo.index, encodedData, bufferInfo);
@@ -750,13 +752,13 @@ public final class PChunkingRecorder {
                     } else {
                         muxerWrapper.finishTrack();
                         if (VERBOSE) PLog.logDebug(TAG, "end of " + ((encoder == videoEncoder) ? " video" : " audio") + " stream reached. ");
-                        if(!fullStopReceived){
-                            if(encoder == videoEncoder){
+                        if(!fullStopReceived) {
+                            if(encoder == videoEncoder) {
                                 PLog.logDebug(TAG, "Chunking video encoder");
                                 if (TRACE) Trace.beginSection("chunkVideoEncoder");
                                 chunkVideoEncoder();
                                 if (TRACE) Trace.endSection();
-                            }else if(encoder == audioEncoder){
+                            }else if(encoder == audioEncoder) {
                                 PLog.logDebug(TAG, "Chunking audio encoder");
                                 if (TRACE) Trace.beginSection("chunkAudioEncoder");
                                 chunkAudioEncoder();
@@ -765,10 +767,10 @@ public final class PChunkingRecorder {
                                 Log.e(TAG, "Unknown encoder passed to drainEncoder!");
                         }else{
 
-                            if(encoder == videoEncoder){
+                            if(encoder == videoEncoder) {
                                 PLog.logDebug(TAG, "Stopping and releasing video encoder");
                                 stopAndReleaseVideoEncoder();
-                            } else if(encoder == audioEncoder){
+                            } else if(encoder == audioEncoder) {
                                 PLog.logDebug(TAG, "Stopping and releasing audio encoder");
                                 this.stopAndReleaseAudioEncoder();
                             }
