@@ -14,12 +14,12 @@ import android.graphics.SurfaceTexture;
  * @author Kyle Weisel (kyle@present.tv)
  *
  */
-public class SurfaceTextureManager implements SurfaceTexture.OnFrameAvailableListener {
+public final class SurfaceTextureManager implements SurfaceTexture.OnFrameAvailableListener {
 
     private static final String TAG = "tv.present.android.util.SurfaceTextureManager";
+    private final Object frameSyncObject = new Object();
     private SurfaceTexture surfaceTexture;
     private SurfaceTextureRenderer textureRenderer;
-    private Object frameSyncObject = new Object();
     private boolean frameAvailable;
 
     /**
@@ -37,41 +37,10 @@ public class SurfaceTextureManager implements SurfaceTexture.OnFrameAvailableLis
     }
 
     /**
-     * Releases the SurfaceTexture and the SurfaceTextureRenderer.
-     */
-    public void release() {
-
-        // TODO: Determine why this throws a bunch of warnings.
-        // This line causes a bunch of warnings to be thrown that look like this:
-        //  --> W BufferQueue: [unnamed-3997-2] cancelBuffer: BufferQueue has been abandoned!
-        //
-        // surfaceTexture.release();
-
-        this.textureRenderer = null;
-        this.surfaceTexture = null;
-    }
-
-    /**
-     * Gets the surface texture.
-     * @return the SurfaceTexture object.
-     */
-    public SurfaceTexture getSurfaceTexture() {
-        return surfaceTexture;
-    }
-
-    /**
-     * Changes the fragment shader value.
-     * @param fragmentShader a new String value for the fragment shader.
-     */
-    public void changeFragmentShader(String fragmentShader) {
-        textureRenderer.changeFragmentShader(fragmentShader);
-    }
-
-    /**
      * Latches the next buffer into the texture.  This must be called from the thread that created
      * the OutputSurface object.
      */
-    public void awaitNewImage() {
+    public final void awaitNewImage() {
 
         final int TIMEOUT_MS = 4500;
 
@@ -101,14 +70,45 @@ public class SurfaceTextureManager implements SurfaceTexture.OnFrameAvailableLis
         // Latch the data.
         this.textureRenderer.checkGlError("Before updateTexImage");
         this.surfaceTexture.updateTexImage();
-        
+
+    }
+
+    /**
+     * Changes the fragment shader value.
+     * @param fragmentShader a new String value for the fragment shader.
+     */
+    public final void changeFragmentShader(final String fragmentShader) {
+        textureRenderer.changeFragmentShader(fragmentShader);
     }
 
     /**
      * Draws the data from SurfaceTexture onto the current EGL surface.
      */
-    public void drawImage() {
+    public final void drawImage() {
         this.textureRenderer.drawFrame(this.surfaceTexture);
+    }
+
+    /**
+     * Gets the surface texture.
+     * @return the SurfaceTexture object.
+     */
+    public final SurfaceTexture getSurfaceTexture() {
+        return surfaceTexture;
+    }
+
+    /**
+     * Releases the SurfaceTexture and the SurfaceTextureRenderer.
+     */
+    public final void release() {
+
+        // TODO: Determine why this throws a bunch of warnings.
+        // This line causes a bunch of warnings to be thrown that look like this:
+        //  --> W BufferQueue: [unnamed-3997-2] cancelBuffer: BufferQueue has been abandoned!
+        //
+        // surfaceTexture.release();
+
+        this.textureRenderer = null;
+        this.surfaceTexture = null;
     }
 
     /**
@@ -116,7 +116,7 @@ public class SurfaceTextureManager implements SurfaceTexture.OnFrameAvailableLis
      * @param surfaceTexture is a surfaceTexture that has the frame available.
      */
     @Override
-    public void onFrameAvailable(SurfaceTexture surfaceTexture) {
+    public final void onFrameAvailable(final SurfaceTexture surfaceTexture) {
 
         PLog.logDebug(TAG, "onNewFrameAvailable() -> New frame is now available.");
 
