@@ -1,6 +1,6 @@
 package tv.present.android.threads;
 
-import tv.present.android.util.PChunkingRecorder;
+import tv.present.android.mediacore.PChunkingRecorder;
 import tv.present.android.util.PLog;
 
 /**
