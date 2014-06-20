@@ -3,7 +3,7 @@ package tv.present.android.workers;
 import android.os.AsyncTask;
 
 import tv.present.android.interfaces.UpdateUserDetailsWorkerCallback;
-import tv.present.android.models.ApplicationCore;
+import tv.present.android.models.PApplicationCore;
 import tv.present.api.PAPIInteraction;
 import tv.present.models.PUserContext;
 import tv.present.util.PUtilities;
@@ -36,7 +36,7 @@ public class UpdateUserDetailsWorker extends AsyncTask<String, Void, Boolean> {
         final String emailAddress = params[5];
         final String phoneNumber = params[6];
 
-        ApplicationCore appCore = ApplicationCore.getInstance();
+        PApplicationCore appCore = PApplicationCore.getInstance();
         PUserContext userContext = appCore.getUserContext();
         PAPIInteraction apiInteraction = new PAPIInteraction();
 
