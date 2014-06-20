@@ -11,11 +11,11 @@ import tv.present.util.PUtilities;
 /**
  * A working thread that performs updates to user details on a background thread.
  */
-public class UpdateUserDetailsWorker extends AsyncTask<String, Void, Boolean> {
+public class PUpdateUserDetailsWorker extends AsyncTask<String, Void, Boolean> {
 
     private UpdateUserDetailsWorkerCallback updateUserDetailsWorkerCallback;
 
-    public UpdateUserDetailsWorker(UpdateUserDetailsWorkerCallback callback) {
+    public PUpdateUserDetailsWorker(UpdateUserDetailsWorkerCallback callback) {
         this.updateUserDetailsWorkerCallback = callback;
     }
 
