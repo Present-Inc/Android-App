@@ -19,7 +19,7 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import tv.present.android.R;
-import tv.present.android.controllers.EntryController;
+import tv.present.android.controllers.PEntryController;
 import tv.present.android.controllers.PController;
 import tv.present.android.models.PView;
 import tv.present.android.util.PLog;
@@ -181,7 +181,7 @@ public class PCreateAccountView extends PView implements View.OnFocusChangeListe
             String fullName = ((EditText) rootView.findViewById(R.id.createFullNameField)).getText().toString();
             String phoneNumber = ((EditText) rootView.findViewById(R.id.createPhoneNumberField)).getText().toString();
 
-            ((EntryController) this.controller).executeCreateAccount(username, password, emailAddress, fullName, phoneNumber);
+            ((PEntryController) this.controller).executeCreateAccount(username, password, emailAddress, fullName, phoneNumber);
         }
 
     }
