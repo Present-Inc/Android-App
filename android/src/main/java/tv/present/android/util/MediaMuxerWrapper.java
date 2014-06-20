@@ -158,7 +158,7 @@ public final class MediaMuxerWrapper {
     /**
      * Starts the muxer.
      */
-    private final void start() {
+    private void start() {
         this.muxer.start();
         this.started = true;
     }
