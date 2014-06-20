@@ -15,7 +15,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import tv.present.android.R;
-import tv.present.android.adapters.NotificationsAdapter;
+import tv.present.android.adapters.PNotificationsAdapter;
 import tv.present.android.adapters.PSectionsPagerAdapter;
 import tv.present.android.adapters.PSectionsPagerAdapterMain;
 import tv.present.android.exceptions.InvalidCallbackResultIdentifierException;
@@ -48,7 +48,7 @@ public class CoreController extends PController implements ActionBar.TabListener
     private NotificationsView notificationsView;
     private HomeFeedView homeFeedView;
 
-    private NotificationsAdapter notificationsAdapter;
+    private PNotificationsAdapter notificationsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,7 +181,7 @@ public class CoreController extends PController implements ActionBar.TabListener
 
     public void executeFetchNotifications(final int cursor, final int limit) {
 
-        final NotificationsAdapter notificationsAdapter = new NotificationsAdapter(this, null, this.notificationsView);
+        final PNotificationsAdapter notificationsAdapter = new PNotificationsAdapter(this, null, this.notificationsView);
         final Bundle params = new Bundle();
         params.putInt(PKeys.KEY_CURSOR, cursor);
         params.putInt(PKeys.KEY_LIMIT, limit);
