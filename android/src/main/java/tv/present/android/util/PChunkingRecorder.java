@@ -846,7 +846,7 @@ public final class PChunkingRecorder {
                     // Check if the muxer has all of its tracks added, or break out of the loop if 
                     // not.  We want to allow both encoders to send output format changed before 
                     // attempting to write samples to it.
-                    if (!muxerWrapper.allTracksAdded()) {
+                    if (!muxerWrapper.isAllTracksAdded()) {
                         break;
                     }
                     
