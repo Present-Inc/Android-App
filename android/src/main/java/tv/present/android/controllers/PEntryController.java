@@ -29,7 +29,7 @@ import tv.present.android.views.PLoginView;
  * @author Kyle Weisel (kyle@present.tv)
  *
  */
-public final class EntryController extends PController implements ThreadCallback {
+public final class PEntryController extends PController implements ThreadCallback {
 
     private static final String TAG ="tv.present.android.controllers.EntryController";
     private PLoginView loginView;
