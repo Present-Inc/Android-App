@@ -22,10 +22,10 @@ public final class MediaMuxerWrapper {
     private static final String TAG = "tv.present.android.util.MediaMuxerWrapper";
     private static int TOTAL_NUM_TRACKS = 2;
 
+    // TODO: Consider making the chunk integer a private member.
     private MediaMuxer muxer;
     private PChunkingRecorder chunkingRecorder;
     private boolean started;
-    private int chunk;
     private int numTracksAdded = 0;
     private int numTracksFinished = 0;
 
@@ -38,7 +38,6 @@ public final class MediaMuxerWrapper {
      * @param chunk is the integer chunk number that this muxer will be processing.
      */
     public MediaMuxerWrapper(final PChunkingRecorder chunkingRecorder, final int format, final int chunk) {
-        this.chunk = chunk;
         this.started = false;
         this.chunkingRecorder = chunkingRecorder;
         this.restart(format, chunk);
@@ -54,8 +53,7 @@ public final class MediaMuxerWrapper {
         final int trackIndex = muxer.addTrack(format);
         if(this.numTracksAdded == TOTAL_NUM_TRACKS) {
             PLog.logDebug(TAG, "All tracks added, starting " + ((this == chunkingRecorder.getMuxerWrapper1()) ? "muxer1" : "muxer2") + "!");
-            this.muxer.start();
-            this.started = true;
+            this.start();
         }
         return trackIndex;
     }
@@ -104,7 +102,7 @@ public final class MediaMuxerWrapper {
     public final void restart(final int format, final int chunk) {
         this.stop();
         try {
-            this.muxer = new MediaMuxer(outputPathForChunk(chunk), format);
+            this.muxer = new MediaMuxer(this.outputPathForChunk(chunk), format);
         } catch (IOException e) {
             throw new RuntimeException("MediaMuxer creation failed", e);
         }
@@ -130,7 +128,6 @@ public final class MediaMuxerWrapper {
             this.muxer.release();
             this.muxer = null;
             this.started = false;
-            this.chunk = 0;
             this.numTracksAdded = 0;
             this.numTracksFinished = 0;
 
@@ -156,6 +153,14 @@ public final class MediaMuxerWrapper {
      */
     private String outputPathForChunk(final int chunkNumber) {
         return PAndroidGlobals.TEMP_DIRECTORY + "cache" + chunkNumber + ".mp4";
+    }
+
+    /**
+     * Starts the muxer.
+     */
+    private final void start() {
+        this.muxer.start();
+        this.started = true;
     }
 
 }
