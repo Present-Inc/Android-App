@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import tv.present.android.R;
-import tv.present.android.controllers.EntryController;
+import tv.present.android.controllers.PEntryController;
 import tv.present.android.controllers.PController;
 import tv.present.android.models.PView;
 import tv.present.android.util.PLog;
@@ -167,7 +167,7 @@ public final class PLoginView extends PView implements View.OnFocusChangeListene
             final EditText username = (EditText) this.getActivity().findViewById(R.id.usernameField);
             final EditText password = (EditText) this.getActivity().findViewById(R.id.passwordField);
             PLog.logDebug(TAG, "Performing login with username " + username.getText().toString() + " and password: " + password.getText().toString());
-            ((EntryController)this.controller).executeLogin(username.getText().toString(), password.getText().toString());
+            ((PEntryController)this.controller).executeLogin(username.getText().toString(), password.getText().toString());
 
         }
         else if (view instanceof TextView) {
@@ -176,7 +176,7 @@ public final class PLoginView extends PView implements View.OnFocusChangeListene
 
                 // Create a new account activity
                 case R.id.createAccountText :
-                    ((EntryController)this.controller).startCreateAccountView();
+                    ((PEntryController)this.controller).startCreateAccountView();
                     break;
 
                 // Start the forgot password activity
