@@ -22,7 +22,7 @@ import tv.present.android.models.PView;
 import tv.present.android.util.PAndroidUtils;
 import tv.present.android.util.PKeys;
 import tv.present.android.util.PLog;
-import tv.present.android.workers.DownloadImageWorker;
+import tv.present.android.workers.PDownloadImageWorker;
 
 /**
  * Present Notifications View
@@ -172,7 +172,7 @@ public class PNotificationsView extends PView implements View.OnFocusChangeListe
         tableRowTextView.setText(message);
 
         PCircularImageView circularImageView = (PCircularImageView) tableRow.findViewById(R.id.notificationSrcProfile);
-        AsyncTask downloadImageworker = new DownloadImageWorker(circularImageView);
+        AsyncTask downloadImageworker = new PDownloadImageWorker(circularImageView);
         //this.tableLayout.addView(tableRow);
         //this.tableLayout.addView(tableRowHR);
 

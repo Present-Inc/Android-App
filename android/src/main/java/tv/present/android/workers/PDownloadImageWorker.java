@@ -16,12 +16,12 @@ import tv.present.android.util.PLog;
 /**
  * Created by kbw28 on 5/29/14.
  */
-public class DownloadImageWorker extends AsyncTask<String, Void, Bitmap> {
+public class PDownloadImageWorker extends AsyncTask<String, Void, Bitmap> {
 
     private static final String TAG = "tv.present.android.workers.DownloadImageWorker";
     private ImageView target;
 
-    public DownloadImageWorker(ImageView targetView) {
+    public PDownloadImageWorker(ImageView targetView) {
         this.target = targetView;
 
     }
