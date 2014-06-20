@@ -20,7 +20,7 @@ import tv.present.android.util.PLog;
  * @author Kyle Weisel (kyle@present.tv)
  *
  */
-public final class MediaMuxerWrapper {
+public final class PMuxerWrapper {
 
     private static final String TAG = "tv.present.android.recorder.MediaMuxerWrapper";
     private static int TOTAL_NUM_TRACKS = 2;
@@ -40,7 +40,7 @@ public final class MediaMuxerWrapper {
      * @param format is the integer valued format that the muxer should operate with.
      * @param chunk is the integer chunk number that this muxer will be processing.
      */
-    public MediaMuxerWrapper(final PChunkingRecorder chunkingRecorder, final int format, final int chunk) {
+    public PMuxerWrapper(final PChunkingRecorder chunkingRecorder, final int format, final int chunk) {
         this.started = false;
         this.chunkingRecorder = chunkingRecorder;
         this.restart(format, chunk);
