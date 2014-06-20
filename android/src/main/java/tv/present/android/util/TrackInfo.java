@@ -9,7 +9,7 @@ package tv.present.android.util;
  * @author Kyle Weisel (kyle@present.tv)
  *
  */
-public class TrackInfo {
+public final class TrackInfo {
     public int index = 0;
     public MediaMuxerWrapper muxerWrapper;
 }
