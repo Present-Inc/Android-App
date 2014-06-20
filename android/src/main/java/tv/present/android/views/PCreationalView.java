@@ -132,7 +132,7 @@ public class PCreationalView extends PView {
     }
 
     public void requestGLViewRender() {
-        PLog.logDebug(TAG, "Requesting render on the GLView.")
+        PLog.logDebug(TAG, "Requesting render on the GLView.");
         this.glSurfaceView.requestRender();
     }
 
