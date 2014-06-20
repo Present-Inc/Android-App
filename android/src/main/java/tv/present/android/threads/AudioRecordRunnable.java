@@ -12,10 +12,10 @@ import tv.present.android.util.PLog;
  * @author Kyle Weisel (kyle@present.tv)
  *
  */
-public class AudioRecordRunnable implements Runnable {
+public final class AudioRecordRunnable implements Runnable {
 
     private static final String TAG = "tv.present.android.threads.AudioRecordRunnable";
-    private PChunkingRecorder chunkingRecorder;
+    private final PChunkingRecorder chunkingRecorder;
 
     /**
      * Constructs an AudioRecordThread.
@@ -30,7 +30,7 @@ public class AudioRecordRunnable implements Runnable {
      * This method is called when the thread is started.
      */
     @Override
-    public void run() {
+    public final void run() {
 
         this.chunkingRecorder.getAudioRecord().startRecording();
         boolean audioEosRequestedCopy, fullStopReceivedCopy;
