@@ -12,7 +12,8 @@ import tv.present.android.controllers.PController;
 /**
  * Present Abstract View Object
  *
- * This is an abstract view object that all Present views will inherit from.
+ * This is an abstract view object that all Present views will inherit from.  All views will have
+ * to implement an OnClickListener, OnLongClickListener, and OnTouchListener.
  *
  * June 20, 2014
  *
