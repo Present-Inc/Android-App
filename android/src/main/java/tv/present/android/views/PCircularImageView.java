@@ -11,7 +11,7 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 
-public class CircularImageView extends ImageView {
+public class PCircularImageView extends ImageView {
 
     private int borderWidth = 5;
     private int viewWidth;
@@ -21,17 +21,17 @@ public class CircularImageView extends ImageView {
     private Paint paintBorder;
     private BitmapShader shader;
 
-    public CircularImageView(Context context) {
+    public PCircularImageView(Context context) {
         super(context);
         setup();
     }
 
-    public CircularImageView(Context context, AttributeSet attrs) {
+    public PCircularImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setup();
     }
 
-    public CircularImageView(Context context, AttributeSet attrs, int defStyle) {
+    public PCircularImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         setup();
     }
