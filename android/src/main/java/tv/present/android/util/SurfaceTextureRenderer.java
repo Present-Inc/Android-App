@@ -18,7 +18,7 @@ import java.nio.FloatBuffer;
  * @author Kyle Weisel (kyle@present.tv)
  *
  */
-public class SurfaceTextureRenderer {
+public final class SurfaceTextureRenderer {
 
     private static final String TAG = "tv.present.android.util.SurfaceTextureRenderer";
 
@@ -82,7 +82,7 @@ public class SurfaceTextureRenderer {
      * Gets the Id of the texture.
      * @return
      */
-    public int getTextureId() {
+    public final int getTextureId() {
         return this.mTextureID;
     }
 
@@ -90,7 +90,7 @@ public class SurfaceTextureRenderer {
      * Draws a frame to a SurfaceTexture.
      * @param surfaceTexture is the SurfaceTexture to draw the frame to.
      */
-    public void drawFrame(SurfaceTexture surfaceTexture) {
+    public final void drawFrame(SurfaceTexture surfaceTexture) {
 
         this.checkGlError("onDrawFrame() start");
         surfaceTexture.getTransformMatrix(mSTMatrix);
@@ -130,7 +130,7 @@ public class SurfaceTextureRenderer {
      * Initializes GL state.  This method should be called after the EGL surface has been created
      * and made current.
      */
-    public void surfaceCreated() {
+    public final void surfaceCreated() {
 
         this.mProgram = createProgram(VERTEX_SHADER, FRAGMENT_SHADER);
 
@@ -184,7 +184,7 @@ public class SurfaceTextureRenderer {
     /**
      * Replaces the fragment shader.  Pass in null to resetWithChunk to default.
      */
-    public void changeFragmentShader(String fragmentShader) {
+    public final void changeFragmentShader(String fragmentShader) {
 
         if (fragmentShader == null) {
             fragmentShader = FRAGMENT_SHADER;
@@ -232,7 +232,7 @@ public class SurfaceTextureRenderer {
      * @param fragmentSource is a String.
      * @return an integer.
      */
-    private int createProgram(String vertexSource, String fragmentSource) {
+    private final int createProgram(String vertexSource, String fragmentSource) {
 
         int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexSource);
 
@@ -277,7 +277,7 @@ public class SurfaceTextureRenderer {
      *                  logging purposes.
      * @throws RuntimeException when there is any error.
      */
-    public void checkGlError(final String operation) throws RuntimeException {
+    public final void checkGlError(final String operation) throws RuntimeException {
         final int error = GLES20.glGetError();
         if (error != GLES20.GL_NO_ERROR) {
             PLog.logError(TAG, operation + ": glError " + error);
