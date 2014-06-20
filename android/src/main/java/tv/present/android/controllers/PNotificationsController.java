@@ -11,12 +11,12 @@ import tv.present.android.workers.FetchNotificationsWorker;
 import tv.present.models.PUserActivity;
 import tv.present.util.PResultSet;
 
-public class NotificationsController extends PController implements FetchNotificationsWorkerCallback {
+public class PNotificationsController extends PController implements FetchNotificationsWorkerCallback {
 
     private static final String TAG = "tv.present.android.controllers.NotificationsController";
     private final PNotificationsView fragment;
 
-    public NotificationsController(PNotificationsView fragment) {
+    public PNotificationsController(PNotificationsView fragment) {
         this.fragment = fragment;
     }
 
