@@ -8,12 +8,7 @@
         android:label="@string/application_name"
         android:theme="@style/PresentTheme" >
         <activity
-            android:name="tv.present.android.activities.LoginActivity"
-            android:label="@string/application_name"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="tv.present.android.activities.MainActivity"
+            android:name="tv.present.android.controllers.PCreationalController"
             android:label="@string/application_name" >
         </activity>
         <activity
@@ -24,14 +19,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name="tv.present.android.activities.DetailActivity"
-            android:label="@string/title_activity_detail" >
-        </activity>
-        <activity
-            android:name="tv.present.android.activities.HLSActivity"
-            android:label="@string/title_activity_hls" >
         </activity>
 
         <activity
