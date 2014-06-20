@@ -22,7 +22,7 @@ import tv.present.util.PResultSet;
  *
  * @author  Kyle Weisel (kyle@present.tv)
  */
-public final class NotificationsAdapter extends PAdapter {
+public final class PNotificationsAdapter extends PAdapter {
 
     private static final String TAG = "tv.present.android.adapters.NotificationsAdapter";
     private final LayoutInflater layoutInflater;
@@ -36,7 +36,7 @@ public final class NotificationsAdapter extends PAdapter {
      * @param parentView is the parent that the views provided by the notifications adapter will
      *                   be loaded into.
      */
-    public NotificationsAdapter(Context context, PResultSet<PUserActivity> userActivitiesResultSet, PView parentView) {
+    public PNotificationsAdapter(Context context, PResultSet<PUserActivity> userActivitiesResultSet, PView parentView) {
         PLog.logDebug(TAG, "Constructing NotificationsAdapter object...");
         this.layoutInflater = LayoutInflater.from(context);
         this.userActivitiesResultSet = userActivitiesResultSet;
