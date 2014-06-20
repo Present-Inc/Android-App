@@ -18,7 +18,7 @@ import java.nio.ByteBuffer;
 import java.util.List;
 
 import tv.present.android.threads.PAudioRecordRunnable;
-import tv.present.android.util.CodecInputSurface;
+import tv.present.android.util.PCodecInputSurface;
 import tv.present.android.util.PAndroidGlobals;
 import tv.present.android.util.PLog;
 
@@ -82,7 +82,7 @@ public final class PChunkingRecorder {
     private GLSurfaceView displaySurface;
     private MediaCodec videoEncoder;
     private MediaCodec audioEncoder;
-    private CodecInputSurface codecInputSurface;
+    private PCodecInputSurface codecInputSurface;
     private PMuxerWrapper muxerWrapper1;
     private PMuxerWrapper muxerWrapper2;
     private PSurfaceTextureManager surfaceTextureManager;
@@ -562,7 +562,7 @@ public final class PChunkingRecorder {
          */
         this.videoEncoder = MediaCodec.createEncoderByType(VIDEO_MIME_TYPE);
         this.videoEncoder.configure(videoFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
-        this.codecInputSurface = new CodecInputSurface(videoEncoder.createInputSurface());
+        this.codecInputSurface = new PCodecInputSurface(videoEncoder.createInputSurface());
         this.videoEncoder.start();
 
         this.audioBufferInfo = new MediaCodec.BufferInfo();
