@@ -3,7 +3,7 @@ package tv.present.android.loaders;
 import android.content.Context;
 import android.os.Bundle;
 
-import tv.present.android.models.ApplicationCore;
+import tv.present.android.models.PApplicationCore;
 import tv.present.android.util.PKeys;
 import tv.present.android.util.PLog;
 import tv.present.api.PAPIInteraction;
@@ -11,12 +11,12 @@ import tv.present.models.PUserActivity;
 import tv.present.models.PUserContext;
 import tv.present.util.PResultSet;
 
-public final class NotificationsLoader<T> extends PLoader<T> {
+public final class PNotificationsLoader<T> extends PLoader<T> {
 
     private static final String TAG = "tv.present.android.loaders.NotificationsLoader";
     private Bundle arguments;
 
-    public NotificationsLoader(Context context, Bundle args) {
+    public PNotificationsLoader(Context context, Bundle args) {
         super(context);
         this.arguments = args;
     }
@@ -27,7 +27,7 @@ public final class NotificationsLoader<T> extends PLoader<T> {
         final int cursor = arguments.getInt(PKeys.KEY_CURSOR);
         final int limit = arguments.getInt(PKeys.KEY_LIMIT);
 
-        ApplicationCore appCore = ApplicationCore.getInstance();
+        PApplicationCore appCore = PApplicationCore.getInstance();
         PUserContext userContext = appCore.getUserContext();
 
         PAPIInteraction apiInteraction = new PAPIInteraction();
