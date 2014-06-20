@@ -20,7 +20,7 @@ import tv.present.android.util.PLog;
  * @author Kyle Weisel (kyle@present.tv)
  *
  */
-public final class SurfaceTextureRenderer {
+public final class PSurfaceTextureRenderer {
 
     private static final String TAG = "tv.present.android.recorder.SurfaceTextureRenderer";
 
@@ -74,7 +74,7 @@ public final class SurfaceTextureRenderer {
     /**
      * Constructs a SurfaceTextureRenderer object.
      */
-    public SurfaceTextureRenderer() {
+    public PSurfaceTextureRenderer() {
         this.mTriangleVertices = ByteBuffer.allocateDirect(this.mTriangleVerticesData.length * FLOAT_SIZE_BYTES).order(ByteOrder.nativeOrder()).asFloatBuffer();
         this.mTriangleVertices.put(this.mTriangleVerticesData).position(0);
         Matrix.setIdentityM(this.mSTMatrix, 0);
