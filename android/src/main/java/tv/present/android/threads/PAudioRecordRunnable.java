@@ -12,7 +12,7 @@ import tv.present.android.util.PLog;
  * @author Kyle Weisel (kyle@present.tv)
  *
  */
-public final class AudioRecordRunnable implements Runnable {
+public final class PAudioRecordRunnable implements Runnable {
 
     private static final String TAG = "tv.present.android.threads.AudioRecordRunnable";
     private final PChunkingRecorder chunkingRecorder;
@@ -22,7 +22,7 @@ public final class AudioRecordRunnable implements Runnable {
      * @param chunkingRecorder is a PChunkingRecorder (which is probably a reference to the object
      *                         that created this thread)
      */
-    public AudioRecordRunnable(final PChunkingRecorder chunkingRecorder) {
+    public PAudioRecordRunnable(final PChunkingRecorder chunkingRecorder) {
         this.chunkingRecorder = chunkingRecorder;
     }
 
