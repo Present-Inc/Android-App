@@ -80,7 +80,7 @@ public class PAspectFrameLayout extends FrameLayout {
                     initialWidth = (int) (initialHeight * targetAspect);
                 }
 
-                PLog.logDebug(TAG, "New size = " + initialWidth + "x" + initialHeight + " + padding " + horizontalPadding + "x" + verticalPadding);
+                // PLog.logDebug(TAG, "New size = " + initialWidth + "x" + initialHeight + " + padding " + horizontalPadding + "x" + verticalPadding);
                 initialWidth += horizontalPadding;
                 initialHeight += verticalPadding;
                 widthSpec = MeasureSpec.makeMeasureSpec(initialWidth, MeasureSpec.EXACTLY);
