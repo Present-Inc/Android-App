@@ -21,7 +21,7 @@ import android.view.Surface;
  * June 18, 2014
  * @author Kyle Weisel (kyle@present.tv)
  */
-public class CodecInputSurface {
+public class PCodecInputSurface {
 
     public EGLContext mEGLDisplayContext = EGL14.EGL_NO_CONTEXT;
 
@@ -39,7 +39,7 @@ public class CodecInputSurface {
      * Constructs a CodecInputSurface object from a raw Surface object.
      * @param surface is a Surface object to use when creating the CodecInputSurface.
      */
-    public CodecInputSurface(Surface surface) {
+    public PCodecInputSurface(Surface surface) {
         if (surface != null) {
             this.mSurface = surface;
             this.eglSetup();
