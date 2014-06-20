@@ -13,7 +13,7 @@ import tv.present.android.exceptions.InvalidCallbackResultIdentifierException;
 import tv.present.android.interfaces.ThreadCallback;
 import tv.present.android.models.PCallbackResult;
 import tv.present.android.models.PView;
-import tv.present.android.threads.LoginThread;
+import tv.present.android.threads.PLoginThread;
 import tv.present.android.util.PCallbackIdentifiers;
 import tv.present.android.util.PLog;
 import tv.present.android.views.CreateAccountView;
@@ -78,7 +78,7 @@ public final class EntryController extends PController implements ThreadCallback
     }
 
     public void executeLogin(String username, String password) {
-        LoginThread loginThread = new LoginThread(PCallbackIdentifiers.LOGIN, this);
+        PLoginThread loginThread = new PLoginThread(PCallbackIdentifiers.LOGIN, this);
         String[] temp = new String[2];
         temp[0] = username;
         temp[1] = password;
