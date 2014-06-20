@@ -29,6 +29,12 @@ import tv.present.android.threads.AudioRecordRunnable;
  * @author Kyle Weisel (kyle@present.tv)
  *
  */
+
+/* ==== Suppressing unused member warning ====
+ * Reason:  All of the unused member variables or methods are there for future reference or to
+ * enable future extensibility.  Unused member warnings are not dangerous.
+ */
+@SuppressWarnings("unused")
 public final class PChunkingRecorder {
 
     public static final int NANOSECS_PER_SEC = 1000000000;
@@ -64,6 +70,12 @@ public final class PChunkingRecorder {
     private static final int VIDEO_ENCODER_BIT_RATE = 1000000;
 
     // Display Surface
+    /* ==== Suppressing field can be local warning ====
+     * Reason:  The GLSurfaceView displaySurface can be local but remains a member variable for
+     * future reference or to enable future extensibility.  Unused member warnings are not
+     * dangerous.
+     */
+    @SuppressWarnings("FieldCanBeLocal")
     private GLSurfaceView displaySurface;
     private MediaCodec videoEncoder;
     private MediaCodec audioEncoder;
@@ -783,7 +795,7 @@ public final class PChunkingRecorder {
         // If the end of stream boolean is true, and we are dealing with the video encoder, signal
         // EOS to the video encoder and set the local signal boolean to true.
         if (endOfStream && encoder == videoEncoder) {
-            PLog.logDebug(TAG, "drainEncoder() -> Sending EOS to " + ((encoder == videoEncoder) ? "video" : "audio") + " encoder.");
+            PLog.logDebug(TAG, "drainEncoder() -> Sending EOS to video encoder.");
             encoder.signalEndOfInputStream();
             this.eosSentToVideoEncoder = true;
         }
