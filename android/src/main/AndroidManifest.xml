@@ -35,7 +35,7 @@
         </activity>
 
         <activity
-            android:name=".controllers.EntryController"
+            android:name=".controllers.PEntryController"
             android:label="@string/application_name" >
         </activity>
 
