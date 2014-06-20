@@ -13,12 +13,12 @@ import tv.present.util.PResultSet;
 /**
  * Created by kbw28 on 6/5/14.
  */
-public class FetchHomeFeedWorker extends AsyncTask<Integer, Void, PResultSet<PVideo>> {
+public class PFetchHomeFeedWorker extends AsyncTask<Integer, Void, PResultSet<PVideo>> {
 
     private static final String TAG = "tv.present.android.workers.HomeFeedWorker";
     private FetchHomeFeedWorkerCallback fetchHomeFeedWorkerCallback;
 
-    public FetchHomeFeedWorker(FetchHomeFeedWorkerCallback callback) {
+    public PFetchHomeFeedWorker(FetchHomeFeedWorkerCallback callback) {
         this.fetchHomeFeedWorkerCallback = callback;
     }
 
