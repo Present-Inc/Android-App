@@ -30,11 +30,10 @@ import tv.present.models.PUserActivity;
 import tv.present.util.PResultSet;
 
 /**
- * Present Entry Controller Object
+ * Present Core Controller Object
  *
- * This controller is the entry point for the application.  If there is no user currently
- * logged in it will launch the login view.  It also handles a few other pre-login tasks
- * and views.
+ * This controller is the core controller of the application.  It is responsible for handling the
+ * "main" views, such as watching and exploring Presents.
  *
  * June 10, 2014
  *
