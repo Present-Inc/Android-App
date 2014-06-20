@@ -1,16 +1,25 @@
 package tv.present.android.views;
 
 import android.content.Context;
+import android.graphics.SurfaceTexture;
+import android.hardware.Camera;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.io.IOException;
+
 import tv.present.android.R;
 import tv.present.android.controllers.PController;
 import tv.present.android.controllers.PEntryController;
+import tv.present.android.mediacore.PCameraHandler;
+import tv.present.android.mediacore.PCameraSurfaceRenderer;
 import tv.present.android.models.PView;
 import tv.present.android.util.PLog;
 
@@ -20,6 +29,12 @@ import tv.present.android.util.PLog;
 public class PCreationalView extends PView {
 
     private static final String TAG = "tv.present.android.views.PCreationalView";
+
+    private Camera camera;
+    private GLSurfaceView glSurfaceView;
+    private PCameraSurfaceRenderer cameraSurfaceRenderer;
+    private PCameraHandler cameraHandler;
+    private boolean isRecording;
 
     /**
      * Returns a new instance of this view.
@@ -36,6 +51,24 @@ public class PCreationalView extends PView {
 
         return creationalView;
 
+    }
+
+    /**
+     * Inflates and prepares this fragment view.  Within this method, the root layout element is
+     * given focus so that the username field doesn't steal it.  OnFocusChange listeners are also
+     * registered to both the username and password fields to toggle the keyboard when a field gains
+     * or loses focus.
+     * @param inflater is the LayoutInflater to use to inflate this layout.
+     * @param container is a ViewGroup container that will display this inflated layout.
+     * @param savedInstanceState is a Bundle of data that represents a previous instance state to
+     *                           restore this view to.
+     * @return a View that is the LoginFragment.
+     */
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        PLog.logDebug(TAG, "onCreateView() -> Creating and configuring fragment view.");
+        View rootView = inflater.inflate(R.layout.fragment_create_present, container, false);
+        return rootView;
     }
 
     /**
@@ -87,6 +120,20 @@ public class PCreationalView extends PView {
      */
     public boolean onLongClick(View view) {
         return false;
+    }
+
+    public void setCameraPreviewSurfaceTexture(SurfaceTexture surfaceTexture) {
+        try {
+            this.camera.setPreviewTexture(surfaceTexture);
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void requestGLViewRender() {
+        PLog.logDebug(TAG, "Requesting render on the GLView.")
+        this.glSurfaceView.requestRender();
     }
 
 }
