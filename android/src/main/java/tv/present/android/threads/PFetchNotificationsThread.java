@@ -21,13 +21,13 @@ import tv.present.util.PResultSet;
  * June 10, 2014
  * @author Kyle Weisel (kyle@present.tv)
  */
-public class FetchNotificationsThread extends AsyncTask<Integer, Void, PResultSet<PUserActivity>> {
+public class PFetchNotificationsThread extends AsyncTask<Integer, Void, PResultSet<PUserActivity>> {
 
     private static final String TAG = "tv.present.android.threads.FetchNotificationsThread";
     private final int identifier;
     private final ThreadCallback threadCallback;
 
-    public FetchNotificationsThread(final int identifier, final ThreadCallback callback) {
+    public PFetchNotificationsThread(final int identifier, final ThreadCallback callback) {
         this.identifier = identifier;
         this.threadCallback = callback;
     }
