@@ -23,7 +23,7 @@ import android.view.Surface;
  */
 public class CodecInputSurface {
 
-    public static EGLContext mEGLDisplayContext = EGL14.EGL_NO_CONTEXT;
+    public EGLContext mEGLDisplayContext = EGL14.EGL_NO_CONTEXT;
 
     private static final String TAG = "tv.present.android.util.CodecInputSurface";
     private static final int EGL_RECORDABLE_ANDROID = 0x3142;
