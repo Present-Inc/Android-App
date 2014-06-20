@@ -27,7 +27,7 @@ import tv.present.android.util.PLog;
 /**
  * Created by kbw28 on 6/10/14.
  */
-public class CreateAccountView extends PView implements View.OnFocusChangeListener, View.OnClickListener {
+public class PCreateAccountView extends PView implements View.OnFocusChangeListener, View.OnClickListener {
 
     private static final String TAG = "tv.present.android.views.CreateAccountView";
     private final int REQUEST_CODE_PROFILE_IMAGE_CAPTURE = 8;
@@ -38,18 +38,18 @@ public class CreateAccountView extends PView implements View.OnFocusChangeListen
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static CreateAccountView newInstance(PController controller) {
+    public static PCreateAccountView newInstance(PController controller) {
         Bundle arguments = new Bundle();
         arguments.putSerializable("controller", controller);
         PLog.logDebug(TAG, "newInstance -> the controller put into fragment arguments was " + (controller == null ? "in fact" : "not") + " null");
         PLog.logDebug(TAG, "newInstance -> the controller got out of the fragment arguments was " + (arguments.get("controller") == null ? "in fact" : "not") + " null");
-        CreateAccountView createAccountView = new CreateAccountView();
+        PCreateAccountView createAccountView = new PCreateAccountView();
         createAccountView.setController(controller);
         createAccountView.setArguments(arguments);
         return createAccountView;
     }
 
-    public CreateAccountView() {
+    public PCreateAccountView() {
     }
 
     /**
