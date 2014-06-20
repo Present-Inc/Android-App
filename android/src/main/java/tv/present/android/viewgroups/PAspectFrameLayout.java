@@ -42,7 +42,7 @@ public class PAspectFrameLayout extends FrameLayout {
     @Override
     protected void onMeasure (int widthSpec, int heightSpec) {
 
-        PLog.logDebug(TAG, "onMeasure -> Target: " + this.targetAspect + " with height = " + MeasureSpec.toString(heightSpec) + " and width = " + MeasureSpec.toString(widthSpec) + ".");
+//        PLog.logDebug(TAG, "onMeasure -> Target: " + this.targetAspect + " with height = " + MeasureSpec.toString(heightSpec) + " and width = " + MeasureSpec.toString(widthSpec) + ".");
 
         // Check if the target aspect ratio is less than 0.  If it is, we can conclude that it was
         // never actually set.
