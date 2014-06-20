@@ -1,6 +1,6 @@
 package tv.present.android.util;
 
-import tv.present.android.models.ApplicationCore;
+import tv.present.android.models.PApplicationCore;
 import tv.present.api.PAPIInteraction;
 import tv.present.models.PUserContext;
 import tv.present.util.PUtilities;
@@ -14,7 +14,7 @@ public class PTaskExecutor {
 
     public Boolean doLogin(String username, String password) {
 
-        ApplicationCore appCore = ApplicationCore.getInstance();
+        PApplicationCore appCore = PApplicationCore.getInstance();
         PUserContext userContext;
 
         // Check if for some reason we have a user context
@@ -43,7 +43,7 @@ public class PTaskExecutor {
 
     public Boolean doUpdateUserDetails(String fullName, String description, String gender, String location, String websiteURL, String emailAddress, String phoneNumber) {
 
-        ApplicationCore appCore = ApplicationCore.getInstance();
+        PApplicationCore appCore = PApplicationCore.getInstance();
         PUserContext userContext = appCore.getUserContext();
         PAPIInteraction apiInteraction = new PAPIInteraction();
 
