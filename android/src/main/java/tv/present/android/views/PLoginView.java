@@ -21,7 +21,7 @@ import tv.present.android.controllers.PController;
 import tv.present.android.models.PView;
 import tv.present.android.util.PLog;
 
-public final class LoginView extends PView implements View.OnFocusChangeListener, View.OnClickListener {
+public final class PLoginView extends PView implements View.OnFocusChangeListener, View.OnClickListener {
 
     private static final String TAG = "tv.present.android.views.LoginView";
 
@@ -29,12 +29,12 @@ public final class LoginView extends PView implements View.OnFocusChangeListener
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static LoginView newInstance(PController controller) {
+    public static PLoginView newInstance(PController controller) {
         Bundle arguments = new Bundle();
         arguments.putSerializable("controller", controller);
         PLog.logDebug(TAG, "newInstance -> the controller put into fragment arguments was " + (controller == null ? "in fact" : "not") + " null");
         PLog.logDebug(TAG, "newInstance -> the controller got out of the fragment arguments was " + (arguments.get("controller") == null ? "in fact" : "not") + " null");
-        LoginView loginView = new LoginView();
+        PLoginView loginView = new PLoginView();
         loginView.setController(controller);
         loginView.setArguments(arguments);
         return loginView;
@@ -45,7 +45,7 @@ public final class LoginView extends PView implements View.OnFocusChangeListener
      * specification, but it should never be used to instantiate this view.  Instead, the
      * newInstance() method should be called.  Funny things will happen if you don't do it this way.
      */
-    public LoginView() {
+    public PLoginView() {
         /* Empty constructor */
     }
 
