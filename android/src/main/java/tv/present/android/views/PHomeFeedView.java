@@ -22,14 +22,14 @@ import tv.present.android.util.PLog;
 /**
  * Created by kbw28 on 6/10/14.
  */
-public class HomeFeedView extends PView implements View.OnFocusChangeListener, View.OnClickListener {
+public class PHomeFeedView extends PView implements View.OnFocusChangeListener, View.OnClickListener {
 
     private static final String TAG = "tv.present.android.views.HomeFeedView";
     private final int REQUEST_CODE_PROFILE_IMAGE_CAPTURE = 8;
 
     ImageButton choosePhotoButton;
 
-    public HomeFeedView() {
+    public PHomeFeedView() {
         /* empty constructor */
     }
 
@@ -37,10 +37,10 @@ public class HomeFeedView extends PView implements View.OnFocusChangeListener, V
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static HomeFeedView newInstance(PController controller) {
+    public static PHomeFeedView newInstance(PController controller) {
         Bundle arguments = new Bundle();
         arguments.putSerializable("controller", controller);
-        HomeFeedView homeFeedView = new HomeFeedView();
+        PHomeFeedView homeFeedView = new PHomeFeedView();
         homeFeedView.setArguments(arguments);
         return homeFeedView;
     }
