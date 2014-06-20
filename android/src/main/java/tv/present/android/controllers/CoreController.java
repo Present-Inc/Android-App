@@ -24,8 +24,8 @@ import tv.present.android.models.PCallbackResult;
 import tv.present.android.util.PCallbackIdentifiers;
 import tv.present.android.util.PKeys;
 import tv.present.android.util.PLog;
-import tv.present.android.views.HomeFeedView;
-import tv.present.android.views.NotificationsView;
+import tv.present.android.views.PHomeFeedView;
+import tv.present.android.views.PNotificationsView;
 import tv.present.models.PUserActivity;
 import tv.present.util.PResultSet;
 
@@ -45,8 +45,8 @@ public class CoreController extends PController implements ActionBar.TabListener
     private static final String TAG = "tv.present.android.controllers.CoreController";
     private PSectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-    private NotificationsView notificationsView;
-    private HomeFeedView homeFeedView;
+    private PNotificationsView notificationsView;
+    private PHomeFeedView homeFeedView;
 
     private PNotificationsAdapter notificationsAdapter;
 
@@ -273,10 +273,10 @@ public class CoreController extends PController implements ActionBar.TabListener
      * Gets the home view that this controller controls.
      * @return a HomeFeedView.
      */
-    public HomeFeedView getHomeFeedView() {
+    public PHomeFeedView getHomeFeedView() {
         if (this.homeFeedView == null) {
             PLog.logDebug(TAG, "getNotificationsView() -> A notifications view did not exist.  Creating a new one.");
-            this.homeFeedView = HomeFeedView.newInstance(this);
+            this.homeFeedView = PHomeFeedView.newInstance(this);
         }
         return this.homeFeedView;
     }
@@ -285,10 +285,10 @@ public class CoreController extends PController implements ActionBar.TabListener
      * Gets the notifications view that this controller controls.
      * @return a NotificationsView.
      */
-    public NotificationsView getNotificationsView() {
+    public PNotificationsView getNotificationsView() {
         if (this.notificationsView == null) {
             PLog.logDebug(TAG, "getNotificationsView() -> A notifications view did not exist.  Creating a new one.");
-            this.notificationsView = NotificationsView.newInstance(this);
+            this.notificationsView = PNotificationsView.newInstance(this);
         }
         return this.notificationsView;
     }
