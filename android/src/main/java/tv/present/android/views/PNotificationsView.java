@@ -27,30 +27,30 @@ import tv.present.android.workers.DownloadImageWorker;
 /**
  * Present Notifications View
  *
- * The {@link tv.present.android.views.NotificationsView} is the
+ * The {@link PNotificationsView} is the
  * {@link tv.present.android.models.PView} that displays the user's current list of notifications.
  *
  * June 10, 2014
  *
  * @author  Kyle Weisel (kyle@present.tv)
  */
-public class NotificationsView extends PView implements View.OnFocusChangeListener, View.OnClickListener, View.OnLongClickListener {
+public class PNotificationsView extends PView implements View.OnFocusChangeListener, View.OnClickListener, View.OnLongClickListener {
 
     private static final String TAG = "tv.present.android.views.NotificationsView";
 
     private ListView listView;
 
-    public NotificationsView() {
+    public PNotificationsView() {
     }
 
     /**
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static NotificationsView newInstance(PController controller) {
+    public static PNotificationsView newInstance(PController controller) {
         Bundle arguments = new Bundle();
         arguments.putSerializable(PKeys.KEY_CONTROLLER, controller);
-        NotificationsView notificationsView = new NotificationsView();
+        PNotificationsView notificationsView = new PNotificationsView();
         notificationsView.setController(controller);
         notificationsView.setArguments(arguments);
         return notificationsView;
@@ -171,7 +171,7 @@ public class NotificationsView extends PView implements View.OnFocusChangeListen
         TextView tableRowTextView = (TextView) tableRow.findViewById(R.id.notificationTextView);
         tableRowTextView.setText(message);
 
-        CircularImageView circularImageView = (CircularImageView) tableRow.findViewById(R.id.notificationSrcProfile);
+        PCircularImageView circularImageView = (PCircularImageView) tableRow.findViewById(R.id.notificationSrcProfile);
         AsyncTask downloadImageworker = new DownloadImageWorker(circularImageView);
         //this.tableLayout.addView(tableRow);
         //this.tableLayout.addView(tableRowHR);
