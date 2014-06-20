@@ -13,12 +13,12 @@ import tv.present.util.PResultSet;
 /**
  * Created by kbw28 on 5/29/14.
  */
-public class FetchNotificationsWorker extends AsyncTask<Integer, Void, PResultSet<PUserActivity>> {
+public class PFetchNotificationsWorker extends AsyncTask<Integer, Void, PResultSet<PUserActivity>> {
 
     private static final String TAG = "tv.present.android.workers.FetchNotificationsWorker";
     private FetchNotificationsWorkerCallback fetchNotificationsWorkerCallback;
 
-    public FetchNotificationsWorker(FetchNotificationsWorkerCallback callback) {
+    public PFetchNotificationsWorker(FetchNotificationsWorkerCallback callback) {
         this.fetchNotificationsWorkerCallback = callback;
     }
 
