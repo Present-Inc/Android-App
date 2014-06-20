@@ -1,5 +1,7 @@
 package tv.present.android.controllers;
 
+import android.graphics.SurfaceTexture;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,10 +21,12 @@ import tv.present.android.views.PCreationalView;
  * @author Kyle Weisel (kyle@present.tv)
  *
  */
-public class PCreationalController extends PController {
+public class PCreationalController extends PController implements SurfaceTexture.OnFrameAvailableListener {
 
     private static final String TAG ="tv.present.android.controllers.PCreationalController";
     private PCreationalView creationalView;
+
+    private Camera camera;
 
     /**
      * Creates this view.
@@ -31,11 +35,14 @@ public class PCreationalController extends PController {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_creation);
+
+        // If we aren't resuming an instance, get a creational view and add it.
         if (savedInstanceState == null) {
             PView creationalView = this.getCreationalView();
             getFragmentManager().beginTransaction().add(R.id.container, creationalView).commit();
         }
+
     }
 
     /**
@@ -77,6 +84,20 @@ public class PCreationalController extends PController {
         }
 
         return this.creationalView;
+    }
+
+    /**
+     * Connects the SurfaceTexture to the Camera preview output, and starts the preview.
+     */
+    private void handleSetSurfaceTexture(SurfaceTexture surfaceTexture) {
+        surfaceTexture.setOnFrameAvailableListener(this);
+        this.creationalView.setCameraPreviewSurfaceTexture(surfaceTexture);
+        this.camera.startPreview();
+    }
+
+    public void onFrameAvailable(SurfaceTexture surfaceTexture) {
+        PLog.logDebug(TAG, "Frame is available for the surface texture.");
+        this.creationalView.requestGLViewRender();
     }
 
 }
