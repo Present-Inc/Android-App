@@ -309,5 +309,4 @@ public class PCoreController extends PController implements ActionBar.TabListene
 
     }
 
-
 }
