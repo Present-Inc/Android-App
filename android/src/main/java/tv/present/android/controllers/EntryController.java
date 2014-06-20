@@ -129,7 +129,7 @@ public final class EntryController extends PController implements ThreadCallback
                     if (successfulLogin) {
                         // Start the main activity if the result is true (ie: the login was
                         // successful, and the context was stored in the application core).
-                        Intent intent = new Intent(this, CoreController.class);
+                        Intent intent = new Intent(this, PCoreController.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         this.startActivity(intent);
                     }
