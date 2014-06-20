@@ -11,26 +11,26 @@ import tv.present.models.PUserContext;
  *  @author  Kyle Weisel (kyle@present.tv)
  *
  */
-public final class ApplicationCore implements Serializable {
+public final class PApplicationCore implements Serializable {
 
-    private static volatile ApplicationCore instance;
+    private static volatile PApplicationCore instance;
     private PUserContext userContext;
 
     /**
      * Gets the one (and only) instance of the application core.
      * @return  the ApplicationCore object.
      */
-    public static ApplicationCore getInstance() {
+    public static PApplicationCore getInstance() {
 
-        if(ApplicationCore.instance == null) {
-            synchronized(ApplicationCore.class) {
-                if (ApplicationCore.instance == null) {
-                    ApplicationCore.instance = new ApplicationCore();
+        if(PApplicationCore.instance == null) {
+            synchronized(PApplicationCore.class) {
+                if (PApplicationCore.instance == null) {
+                    PApplicationCore.instance = new PApplicationCore();
                 }
             }
         }
 
-        return ApplicationCore.instance;
+        return PApplicationCore.instance;
     }
 
     /**
@@ -54,7 +54,7 @@ public final class ApplicationCore implements Serializable {
      * Instantiates the ApplicationModel.  This constructor is private, and therefore this object
      * needs to be acquired through the public static getInstance() method.
      */
-    private ApplicationCore() {
+    private PApplicationCore() {
         this.userContext = null;
     }
 
