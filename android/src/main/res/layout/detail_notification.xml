@@ -15,7 +15,7 @@
     android:focusableInTouchMode="true"
     android:longClickable="true">
 
-    <tv.present.android.views.CircularImageView
+    <tv.present.android.views.PCircularImageView
         android:id="@+id/notificationProfileImage"
         android:layout_width="40dp"
         android:layout_height="40dp"
