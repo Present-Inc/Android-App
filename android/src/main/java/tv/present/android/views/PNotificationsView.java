@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import tv.present.android.R;
-import tv.present.android.controllers.CoreController;
+import tv.present.android.controllers.PCoreController;
 import tv.present.android.controllers.PController;
 import tv.present.android.models.PView;
 import tv.present.android.util.PAndroidUtils;
@@ -71,7 +71,7 @@ public class PNotificationsView extends PView implements View.OnFocusChangeListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         PLog.logDebug(TAG, "Creating and configuring fragment view.");
-        this.setController((CoreController) this.getArguments().getSerializable(PKeys.KEY_CONTROLLER));
+        this.setController((PCoreController) this.getArguments().getSerializable(PKeys.KEY_CONTROLLER));
 
         View rootView = inflater.inflate(R.layout.view_notifications, container, false);
         this.listView = (ListView) rootView.findViewById(R.id.notificationsList);
@@ -79,7 +79,7 @@ public class PNotificationsView extends PView implements View.OnFocusChangeListe
         // This will be preceeded by a show cached notifications call
         //this.controller.updateNotifications();
         PLog.logDebug(TAG, "onCreateView() -> Just before calling executeFetchNotifications on the controller, the controller is " + (this.controller == null ? "null" : "not null") + ".");
-        ((CoreController) this.controller).executeFetchNotifications(0, 20);
+        ((PCoreController) this.controller).executeFetchNotifications(0, 20);
 
         return rootView;
 
