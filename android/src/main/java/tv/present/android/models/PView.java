@@ -9,13 +9,28 @@ import android.widget.EditText;
 
 import tv.present.android.controllers.PController;
 
-
+/**
+ * Present Abstract View Object
+ *
+ * This is an abstract view object that all Present views will inherit from.
+ *
+ * June 20, 2014
+ *
+ * @author  Kyle Weisel (kyle@present.tv)
+ */
 public abstract class PView extends Fragment implements View.OnClickListener, View.OnLongClickListener, View.OnTouchListener {
 
     protected PController controller;
 
     /**
-     * Gets the controller for this fragment.
+     * Constructs a PView object.
+     */
+    public PView() {
+        /* Empty constructor */
+    }
+
+    /**
+     * Gets the controller for this view (fragment).
      * @return
      */
     public PController getController() {
@@ -53,6 +68,10 @@ public abstract class PView extends Fragment implements View.OnClickListener, Vi
         }
     }
 
+    /**
+     * Sets the controller for this view (fragment).
+     * @param controller is the PController to set as the controller for this view.
+     */
     public void setController(PController controller) {
         this.controller = controller;
     }
