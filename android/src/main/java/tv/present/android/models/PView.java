@@ -32,7 +32,7 @@ public abstract class PView extends Fragment implements View.OnClickListener, Vi
 
     /**
      * Gets the controller for this view (fragment).
-     * @return
+     * @return the PController that controls this view.
      */
     public PController getController() {
         return this.controller;
