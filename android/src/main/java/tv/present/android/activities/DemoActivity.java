@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import tv.present.android.R;
 import tv.present.android.controllers.PCoreController;
+import tv.present.android.controllers.PCreationalController;
 import tv.present.android.controllers.PEntryController;
 
 public final class DemoActivity extends Activity implements View.OnClickListener {
@@ -76,8 +77,8 @@ public final class DemoActivity extends Activity implements View.OnClickListener
                     startActivity(intent);
                     break;
                 case R.id.demo3Button:
-                    //intent = new Intent(this, HLSActivity.class);
-                    //startActivity(intent);
+                    intent = new Intent(this, PCreationalController.class);
+                    startActivity(intent);
                     break;
             }
 
