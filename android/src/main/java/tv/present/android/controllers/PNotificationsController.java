@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import tv.present.android.interfaces.FetchNotificationsWorkerCallback;
 import tv.present.android.util.PLog;
 import tv.present.android.views.PNotificationsView;
-import tv.present.android.workers.FetchNotificationsWorker;
+import tv.present.android.workers.PFetchNotificationsWorker;
 import tv.present.models.PUserActivity;
 import tv.present.util.PResultSet;
 
@@ -63,7 +63,7 @@ public class PNotificationsController extends PController implements FetchNotifi
         params[1] = limit;
 
         PLog.logDebug(TAG, "Starting the notifications worker");
-        FetchNotificationsWorker fetchNotificationsWorker = new FetchNotificationsWorker(this);
+        PFetchNotificationsWorker fetchNotificationsWorker = new PFetchNotificationsWorker(this);
         fetchNotificationsWorker.execute(params);
 
     }
