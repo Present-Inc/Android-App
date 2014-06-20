@@ -15,6 +15,4 @@ import java.io.Serializable;
  *
  * @author  Kyle Weisel (kyle@present.tv)
  */
-public abstract class PController extends Activity implements Serializable {
-
-}
+public abstract class PController extends Activity implements Serializable { }
