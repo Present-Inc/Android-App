@@ -9,7 +9,7 @@ package tv.present.android.mediacore;
  * @author Kyle Weisel (kyle@present.tv)
  *
  */
-public final class TrackInfo {
+public final class PMediaTrackInfo {
     public int index = 0;
-    public MediaMuxerWrapper muxerWrapper;
+    public PMuxerWrapper muxerWrapper;
 }
