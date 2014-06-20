@@ -20,7 +20,7 @@ import tv.present.models.PUser;
  * @author Kyle Weisel (kyle@present.tv)
  *
  */
-public final class CreateAccountThread extends AsyncTask<String, Void, Boolean> {
+public final class PCreateAccountThread extends AsyncTask<String, Void, Boolean> {
 
     private static final String TAG = "tv.present.android.threads.CreateAccountThread";
     private final int identifier;
@@ -32,7 +32,7 @@ public final class CreateAccountThread extends AsyncTask<String, Void, Boolean> 
      * @param callback is a class an implementor of the ThreadCallback interface that will recieve
      *                 the results of this request.
      */
-    public CreateAccountThread(final int identifier, final ThreadCallback callback) {
+    public PCreateAccountThread(final int identifier, final ThreadCallback callback) {
         this.identifier = identifier;
         this.threadCallback = callback;
     }
