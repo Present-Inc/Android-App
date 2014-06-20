@@ -1,6 +1,5 @@
 package tv.present.android.loaders;
 
-import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -12,10 +11,7 @@ import tv.present.models.PUserActivity;
 import tv.present.models.PUserContext;
 import tv.present.util.PResultSet;
 
-/**
- * Created by kbw28 on 6/12/14.
- */
-public final class NotificationsLoader<T> extends AsyncTaskLoader<T> {
+public final class NotificationsLoader<T> extends PLoader<T> {
 
     private static final String TAG = "tv.present.android.loaders.NotificationsLoader";
     private Bundle arguments;
