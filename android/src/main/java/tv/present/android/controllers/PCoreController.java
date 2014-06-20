@@ -40,7 +40,7 @@ import tv.present.util.PResultSet;
  *
  * @author  Kyle Weisel (kyle@present.tv)
  */
-public class CoreController extends PController implements ActionBar.TabListener, ThreadCallback, LoaderManager.LoaderCallbacks<PResultSet> {
+public class PCoreController extends PController implements ActionBar.TabListener, ThreadCallback, LoaderManager.LoaderCallbacks<PResultSet> {
 
     private static final String TAG = "tv.present.android.controllers.CoreController";
     private PSectionsPagerAdapter mSectionsPagerAdapter;
