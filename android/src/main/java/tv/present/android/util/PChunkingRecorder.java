@@ -142,6 +142,14 @@ public final class PChunkingRecorder {
         return this.audioEncoder;
     }
 
+    public MediaMuxerWrapper getMuxerWrapper1() {
+        return this.muxerWrapper1;
+    }
+
+    public MediaMuxerWrapper getMuxerWrapper2() {
+        return this.muxerWrapper2;
+    }
+
     public MediaCodec.BufferInfo getAudioBufferInfo() {
         return this.audioBufferInfo;
     }
@@ -566,8 +574,8 @@ public final class PChunkingRecorder {
          * because the MediaFormat has not yet been discovered.  This will bo obtained from the
          * MediaCodec after it has started spitting out data.
          */
-        this.muxerWrapper1 = new MediaMuxerWrapper(VIDEO_OUTPUT_FORMAT, leadingChunk);
-        this.muxerWrapper2 = new MediaMuxerWrapper(VIDEO_OUTPUT_FORMAT, leadingChunk + 1); // prepared for next chunk
+        this.muxerWrapper1 = new MediaMuxerWrapper(this, VIDEO_OUTPUT_FORMAT, leadingChunk);
+        this.muxerWrapper2 = new MediaMuxerWrapper(this, VIDEO_OUTPUT_FORMAT, leadingChunk + 1); // prepared for next chunk
 
         // Add the MuxerWrappers to the TrackInfo data
         this.videoTrackInfo.index = -1;
