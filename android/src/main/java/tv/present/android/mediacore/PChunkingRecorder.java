@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
 
-import tv.present.android.threads.AudioRecordRunnable;
+import tv.present.android.threads.PAudioRecordRunnable;
 import tv.present.android.util.CodecInputSurface;
 import tv.present.android.util.PAndroidGlobals;
 import tv.present.android.util.PLog;
@@ -328,7 +328,7 @@ public final class PChunkingRecorder {
         // Check to make sure the AudioRecord object is not null
         if (this.audioRecord != null) {
 
-            final AudioRecordRunnable audioRecordRunnable = new AudioRecordRunnable(this);
+            final PAudioRecordRunnable audioRecordRunnable = new PAudioRecordRunnable(this);
             final Thread audioRecordThread = new Thread(audioRecordRunnable);
 
             audioRecordThread.start();
