@@ -11,11 +11,11 @@ import tv.present.models.PUser;
  * A working thread that performs account creation on a background thread.  Successful account
  * creation will automatically log a user in, so this thread will return a UserContext on success.
  */
-public final class CreateAccountWorker extends AsyncTask<String, Void, PUser> {
+public final class PCreateAccountWorker extends AsyncTask<String, Void, PUser> {
 
     private CreateAccountWorkerCallback createAccountWorkerCallback;
 
-    public CreateAccountWorker(CreateAccountWorkerCallback callback) {
+    public PCreateAccountWorker(CreateAccountWorkerCallback callback) {
         this.createAccountWorkerCallback = callback;
     }
 
