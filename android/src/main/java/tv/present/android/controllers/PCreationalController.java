@@ -89,7 +89,7 @@ public class PCreationalController extends PController implements SurfaceTexture
     /**
      * Connects the SurfaceTexture to the Camera preview output, and starts the preview.
      */
-    private void handleSetSurfaceTexture(SurfaceTexture surfaceTexture) {
+    public void handleSetSurfaceTexture(SurfaceTexture surfaceTexture) {
         surfaceTexture.setOnFrameAvailableListener(this);
         this.creationalView.setCameraPreviewSurfaceTexture(surfaceTexture);
         this.camera.startPreview();
