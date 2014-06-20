@@ -19,7 +19,7 @@
         android:id="@+id/notificationSrcProfile"
         android:src="@drawable/profile_dan" />-->
 
-    <tv.present.android.views.CircularImageView
+    <tv.present.android.views.PCircularImageView
         android:id="@+id/notificationSrcProfile"
         android:layout_width="40dp"
         android:layout_height="40dp"
