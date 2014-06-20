@@ -20,7 +20,7 @@
     <tv.present.android.viewgroups.PAspectFrameLayout
         android:id="@+id/createPresentPreviewAFL"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="480dp"
         android:layout_below="@id/createPresentRecordButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
