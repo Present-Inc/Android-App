@@ -16,8 +16,8 @@ import tv.present.android.models.PView;
 import tv.present.android.threads.PLoginThread;
 import tv.present.android.util.PCallbackIdentifiers;
 import tv.present.android.util.PLog;
-import tv.present.android.views.CreateAccountView;
-import tv.present.android.views.LoginView;
+import tv.present.android.views.PCreateAccountView;
+import tv.present.android.views.PLoginView;
 
 /**
  * Present Entry Controller Object
@@ -32,8 +32,8 @@ import tv.present.android.views.LoginView;
 public final class EntryController extends PController implements ThreadCallback {
 
     private static final String TAG ="tv.present.android.controllers.EntryController";
-    private LoginView loginView;
-    private CreateAccountView createAccountView;
+    private PLoginView loginView;
+    private PCreateAccountView createAccountView;
 
     /**
      * Creates this view.
@@ -169,10 +169,10 @@ public final class EntryController extends PController implements ThreadCallback
      * Gets the create account view that this controller controls.
      * @return a CreateAccountView.
      */
-    public CreateAccountView getCreateAccountView() {
+    public PCreateAccountView getCreateAccountView() {
         if (this.createAccountView == null) {
             PLog.logDebug(TAG, "getCreateAccountView() -> A create account view did not exist.  Creating a new one.");
-            this.createAccountView = CreateAccountView.newInstance(this);
+            this.createAccountView = PCreateAccountView.newInstance(this);
         }
         return this.createAccountView;
     }
@@ -181,10 +181,10 @@ public final class EntryController extends PController implements ThreadCallback
      * Gets the login view that this controller controls.
      * @return a LoginView.
      */
-    public LoginView getLoginView() {
+    public PLoginView getLoginView() {
         if (this.loginView == null) {
             PLog.logDebug(TAG, "getLoginView() -> A login view did not exist.  Creating a new one.");
-            this.loginView = LoginView.newInstance(this);
+            this.loginView = PLoginView.newInstance(this);
         }
         return this.loginView;
     }
