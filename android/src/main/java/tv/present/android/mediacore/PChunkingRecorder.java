@@ -83,11 +83,11 @@ public final class PChunkingRecorder {
     private MediaCodec videoEncoder;
     private MediaCodec audioEncoder;
     private CodecInputSurface codecInputSurface;
-    private MediaMuxerWrapper muxerWrapper1;
-    private MediaMuxerWrapper muxerWrapper2;
-    private SurfaceTextureManager surfaceTextureManager;
-    private TrackInfo audioTrackInfo;
-    private TrackInfo videoTrackInfo;
+    private PMuxerWrapper muxerWrapper1;
+    private PMuxerWrapper muxerWrapper2;
+    private PSurfaceTextureManager surfaceTextureManager;
+    private PMediaTrackInfo audioTrackInfo;
+    private PMediaTrackInfo videoTrackInfo;
 
     // Camera
     private Camera camera;
@@ -149,7 +149,7 @@ public final class PChunkingRecorder {
         return this.fullStopReceived;
     }
 
-    public TrackInfo getAudioTrackInfo() {
+    public PMediaTrackInfo getAudioTrackInfo() {
         return this.audioTrackInfo;
     }
 
@@ -157,11 +157,11 @@ public final class PChunkingRecorder {
         return this.audioEncoder;
     }
 
-    public MediaMuxerWrapper getMuxerWrapper1() {
+    public PMuxerWrapper getMuxerWrapper1() {
         return this.muxerWrapper1;
     }
 
-    public MediaMuxerWrapper getMuxerWrapper2() {
+    public PMuxerWrapper getMuxerWrapper2() {
         return this.muxerWrapper2;
     }
 
@@ -501,7 +501,7 @@ public final class PChunkingRecorder {
      * SurfaceTexture that is returned from this method is then set as the camera preview texture.
      */
     private void prepareSurfaceTexture() {
-        this.surfaceTextureManager = new SurfaceTextureManager();
+        this.surfaceTextureManager = new PSurfaceTextureManager();
         SurfaceTexture surfaceTexture = this.surfaceTextureManager.getSurfaceTexture();
         try {
             this.camera.setPreviewTexture(surfaceTexture);
@@ -540,7 +540,7 @@ public final class PChunkingRecorder {
         this.eosSentToVideoEncoder = false;
         this.fullStopReceived = false;
         this.videoBufferInfo = new MediaCodec.BufferInfo();
-        this.videoTrackInfo = new TrackInfo();
+        this.videoTrackInfo = new PMediaTrackInfo();
         this.videoFormat = MediaFormat.createVideoFormat(VIDEO_MIME_TYPE, width, height);
         // Make sure that all of these properties are properly set.  Failure to do so will cause the
         // MediaCodec to throw an unhelpful exception.
@@ -566,7 +566,7 @@ public final class PChunkingRecorder {
         this.videoEncoder.start();
 
         this.audioBufferInfo = new MediaCodec.BufferInfo();
-        this.audioTrackInfo = new TrackInfo();
+        this.audioTrackInfo = new PMediaTrackInfo();
 
         this.audioFormat = new MediaFormat();
         this.audioFormat.setString(MediaFormat.KEY_MIME, AUDIO_MIME_TYPE);
@@ -589,8 +589,8 @@ public final class PChunkingRecorder {
          * because the MediaFormat has not yet been discovered.  This will bo obtained from the
          * MediaCodec after it has started spitting out data.
          */
-        this.muxerWrapper1 = new MediaMuxerWrapper(this, VIDEO_OUTPUT_FORMAT, leadingChunk);
-        this.muxerWrapper2 = new MediaMuxerWrapper(this, VIDEO_OUTPUT_FORMAT, leadingChunk + 1); // prepared for next chunk
+        this.muxerWrapper1 = new PMuxerWrapper(this, VIDEO_OUTPUT_FORMAT, leadingChunk);
+        this.muxerWrapper2 = new PMuxerWrapper(this, VIDEO_OUTPUT_FORMAT, leadingChunk + 1); // prepared for next chunk
 
         // Add the MuxerWrappers to the TrackInfo data
         this.videoTrackInfo.index = -1;
@@ -658,8 +658,8 @@ public final class PChunkingRecorder {
      */
     private void advanceVideoMediaMuxer() {
 
-        MediaMuxerWrapper videoMuxer = (this.videoTrackInfo.muxerWrapper ==this.muxerWrapper1) ? this.muxerWrapper1 : this.muxerWrapper2;
-        MediaMuxerWrapper audioMuxer = (this.audioTrackInfo.muxerWrapper == this.muxerWrapper1) ? this.muxerWrapper1 : this.muxerWrapper2;
+        PMuxerWrapper videoMuxer = (this.videoTrackInfo.muxerWrapper ==this.muxerWrapper1) ? this.muxerWrapper1 : this.muxerWrapper2;
+        PMuxerWrapper audioMuxer = (this.audioTrackInfo.muxerWrapper == this.muxerWrapper1) ? this.muxerWrapper1 : this.muxerWrapper2;
 
         PLog.logDebug(TAG, "advanceVideoMediaMuxer() -> Video on " + ((videoTrackInfo.muxerWrapper == muxerWrapper1) ? "muxer1" : "muxer2"));
 
@@ -721,8 +721,8 @@ public final class PChunkingRecorder {
      */
     private void advanceAudioMediaMuxer() {
 
-        MediaMuxerWrapper videoMuxer = (this.videoTrackInfo.muxerWrapper == this.muxerWrapper1) ? this.muxerWrapper1 : this.muxerWrapper2;
-        MediaMuxerWrapper audioMuxer = (this.audioTrackInfo.muxerWrapper == this.muxerWrapper1) ? this.muxerWrapper1 : this.muxerWrapper2;
+        PMuxerWrapper videoMuxer = (this.videoTrackInfo.muxerWrapper == this.muxerWrapper1) ? this.muxerWrapper1 : this.muxerWrapper2;
+        PMuxerWrapper audioMuxer = (this.audioTrackInfo.muxerWrapper == this.muxerWrapper1) ? this.muxerWrapper1 : this.muxerWrapper2;
 
         PLog.logDebug(TAG, "advanceVideoMediaMuxer() -> Audio on " + ((this.audioTrackInfo.muxerWrapper == this.muxerWrapper1) ? "muxer1" : "muxer2"));
 
@@ -788,10 +788,10 @@ public final class PChunkingRecorder {
      * @param trackInfo is TrackInfo data regarding the stream we are about to mux.
      * @param endOfStream is a boolean indicating the end of the stream.
      */
-    public void drainEncoder(MediaCodec encoder, MediaCodec.BufferInfo bufferInfo, TrackInfo trackInfo, boolean endOfStream) {
+    public void drainEncoder(MediaCodec encoder, MediaCodec.BufferInfo bufferInfo, PMediaTrackInfo trackInfo, boolean endOfStream) {
 
         final int TIMEOUT_USEC = 100;
-        final MediaMuxerWrapper muxerWrapper = trackInfo.muxerWrapper;
+        final PMuxerWrapper muxerWrapper = trackInfo.muxerWrapper;
 
         PLog.logDebug(TAG, "drainEncoder() -> " + ((encoder == videoEncoder) ? "Video" : "Audio") + "Encoder(" + endOfStream + ").");
 
