@@ -3,7 +3,7 @@ package tv.present.android.threads;
 import android.os.AsyncTask;
 
 import tv.present.android.interfaces.ThreadCallback;
-import tv.present.android.models.ApplicationCore;
+import tv.present.android.models.PApplicationCore;
 import tv.present.android.models.PCallbackResult;
 import tv.present.android.util.PLog;
 import tv.present.api.PAPIInteraction;
@@ -44,7 +44,7 @@ public class FetchNotificationsThread extends AsyncTask<Integer, Void, PResultSe
         final int cursor = params[0];
         final int limit = params[1];
 
-        ApplicationCore appCore = ApplicationCore.getInstance();
+        PApplicationCore appCore = PApplicationCore.getInstance();
         PUserContext userContext = appCore.getUserContext();
 
         PAPIInteraction apiInteraction = new PAPIInteraction();
