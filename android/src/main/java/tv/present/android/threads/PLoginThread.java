@@ -10,12 +10,12 @@ import tv.present.android.util.PTaskExecutor;
  * Performs a login operation in a Thread.  This thread will automatically register the user context
  * in the application core, and return a boolean value to it's callback method.
  */
-public final class LoginThread extends AsyncTask<String, Void, Boolean> {
+public final class PLoginThread extends AsyncTask<String, Void, Boolean> {
 
     private final int identifier;
     private final ThreadCallback threadCallback;
 
-    public LoginThread(final int identifier, final ThreadCallback callback) {
+    public PLoginThread(final int identifier, final ThreadCallback callback) {
         this.identifier = identifier;
         this.threadCallback = callback;
     }
