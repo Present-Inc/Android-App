@@ -16,21 +16,21 @@ import tv.present.android.util.PLog;
  * @author Kyle Weisel (kyle@present.tv)
  *
  */
-public final class SurfaceTextureManager implements SurfaceTexture.OnFrameAvailableListener {
+public final class PSurfaceTextureManager implements SurfaceTexture.OnFrameAvailableListener {
 
     private static final String TAG = "tv.present.android.recorder.SurfaceTextureManager";
     private final Object frameSyncObject = new Object();
     private SurfaceTexture surfaceTexture;
-    private SurfaceTextureRenderer textureRenderer;
+    private PSurfaceTextureRenderer textureRenderer;
     private boolean frameAvailable;
 
     /**
      * Creates an instance of a SurfaceTextureManager.  In addition, this constructor will also
      * create an instance of a SurfaceTexture and SurfaceTextureRenderer.
      */
-    public SurfaceTextureManager() {
+    public PSurfaceTextureManager() {
 
-        this.textureRenderer = new SurfaceTextureRenderer();
+        this.textureRenderer = new PSurfaceTextureRenderer();
         this.textureRenderer.surfaceCreated();
         PLog.logDebug(TAG, "SurfaceTextureManager() -> " + String.format("textureID=%d", textureRenderer.getTextureId()));
         this.surfaceTexture = new SurfaceTexture(this.textureRenderer.getTextureId());
