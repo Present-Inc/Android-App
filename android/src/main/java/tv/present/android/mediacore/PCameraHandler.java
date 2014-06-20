@@ -8,6 +8,7 @@ import android.util.Log;
 import java.lang.ref.WeakReference;
 
 import tv.present.android.controllers.PCreationalController;
+import tv.present.android.util.PLog;
 
 /**
  * Handles camera operation requests from other threads.  Necessary because the Camera
@@ -49,7 +50,7 @@ public class PCameraHandler extends Handler {
         PCreationalController controller = this.weakActivityReference.get();
 
         if (controller == null) {
-            Log.w(TAG, "CameraHandler.handleMessage: activity is null");
+            PLog.logWarning(TAG, "CameraHandler.handleMessage: activity is null");
             return;
         }
 
@@ -58,7 +59,8 @@ public class PCameraHandler extends Handler {
                 controller.handleSetSurfaceTexture((SurfaceTexture) inputMessage.obj);
                 break;
             default:
-                throw new RuntimeException("unknown msg " + what);
+                throw new RuntimeException("unknown msg " + messageNum);
         }
+        
     }
 }
