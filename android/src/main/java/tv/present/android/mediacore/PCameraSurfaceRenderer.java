@@ -19,14 +19,14 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class PCameraSurfaceRenderer implements GLSurfaceView.Renderer {
 
-    private static final String TAG = "tv.present.android.recorder.MediaMuxerWrapper";
+    private static final String TAG = "tv.present.android.mediacore.PCameraSurfaceRenderer";
     private static final boolean VERBOSE = false;
 
     private static final int RECORDING_OFF = 0;
     private static final int RECORDING_ON = 1;
     private static final int RECORDING_RESUMED = 2;
 
-    private CameraCaptureActivity.CameraHandler mCameraHandler;
+    private PCameraHandler mCameraHandler;
     private TextureMovieEncoder mVideoEncoder;
     private File mOutputFile;
 
@@ -56,8 +56,7 @@ public class PCameraSurfaceRenderer implements GLSurfaceView.Renderer {
      * @param movieEncoder video encoder object
      * @param outputFile output file for encoded video; forwarded to movieEncoder
      */
-    public PCameraSurfaceRenderer(CameraCaptureActivity.CameraHandler cameraHandler,
-                                 TextureMovieEncoder movieEncoder, File outputFile) {
+    public PCameraSurfaceRenderer(CameraCaptureActivity.CameraHandler cameraHandler, TextureMovieEncoder movieEncoder, File outputFile) {
         mCameraHandler = cameraHandler;
         mVideoEncoder = movieEncoder;
         mOutputFile = outputFile;
