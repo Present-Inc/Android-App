@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import java.io.Serializable;
+
 import tv.present.android.controllers.PController;
 
 /**
@@ -19,9 +21,9 @@ import tv.present.android.controllers.PController;
  *
  * @author  Kyle Weisel (kyle@present.tv)
  */
-public abstract class PView extends Fragment implements View.OnClickListener, View.OnLongClickListener, View.OnTouchListener {
+public abstract class PView extends Fragment implements View.OnClickListener, View.OnLongClickListener, View.OnTouchListener, Serializable {
 
-    protected PController controller;
+    protected transient PController controller;
 
     /**
      * Constructs a PView object.
