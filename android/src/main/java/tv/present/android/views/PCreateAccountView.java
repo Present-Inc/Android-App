@@ -32,7 +32,7 @@ public class PCreateAccountView extends PView implements View.OnFocusChangeListe
     private static final String TAG = "tv.present.android.views.CreateAccountView";
     private final int REQUEST_CODE_PROFILE_IMAGE_CAPTURE = 8;
 
-    ImageButton choosePhotoButton;
+    private transient ImageButton choosePhotoButton;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -168,7 +168,7 @@ public class PCreateAccountView extends PView implements View.OnFocusChangeListe
         if (view instanceof ImageButton) {
             final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (takePictureIntent.resolveActivity(this.getActivity().getPackageManager()) != null) {
-                startActivityForResult(takePictureIntent, REQUEST_CODE_PROFILE_IMAGE_CAPTURE);
+                this.startActivityForResult(takePictureIntent, REQUEST_CODE_PROFILE_IMAGE_CAPTURE);
             }
         }
 
@@ -203,6 +203,7 @@ public class PCreateAccountView extends PView implements View.OnFocusChangeListe
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        PLog.logDebug(TAG, "Made it back to the activity result!");
         if (requestCode == REQUEST_CODE_PROFILE_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             final Bundle extras = data.getExtras();
             final Bitmap imageBitmap = (Bitmap) extras.get("data");
