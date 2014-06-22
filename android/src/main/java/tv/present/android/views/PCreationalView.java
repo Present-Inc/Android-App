@@ -19,7 +19,6 @@ import tv.present.android.R;
 import tv.present.android.controllers.PController;
 import tv.present.android.controllers.PEntryController;
 import tv.present.android.mediacore.PCameraHandler;
-import tv.present.android.mediacore.PCameraSurfaceRenderer;
 import tv.present.android.models.PView;
 import tv.present.android.util.PLog;
 
@@ -32,7 +31,7 @@ public class PCreationalView extends PView {
 
     private Camera camera;
     private GLSurfaceView glSurfaceView;
-    private PCameraSurfaceRenderer cameraSurfaceRenderer;
+    //private PCameraSurfaceRenderer cameraSurfaceRenderer;
     private PCameraHandler cameraHandler;
     private boolean isRecording;
 
