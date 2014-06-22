@@ -1,22 +1,11 @@
 package tv.present.android.mediacore;
 
-import android.graphics.SurfaceTexture;
-import android.opengl.EGL14;
-import android.opengl.GLES20;
-import android.opengl.GLSurfaceView;
-import android.util.Log;
-
-import java.io.File;
-
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
-/**
+/*
  * Renderer object for our GLSurfaceView.
  * <p>
  * Do not call any methods here directly from another thread -- use the
  * GLSurfaceView#queueEvent() call.
- */
+
 public class PCameraSurfaceRenderer implements GLSurfaceView.Renderer {
 
     private static final String TAG = "tv.present.android.mediacore.PCameraSurfaceRenderer";
@@ -55,7 +44,7 @@ public class PCameraSurfaceRenderer implements GLSurfaceView.Renderer {
      * @param cameraHandler Handler for communicating with UI thread
      * @param movieEncoder video encoder object
      * @param outputFile output file for encoded video; forwarded to movieEncoder
-     */
+     *
     public PCameraSurfaceRenderer(CameraCaptureActivity.CameraHandler cameraHandler, TextureMovieEncoder movieEncoder, File outputFile) {
         mCameraHandler = cameraHandler;
         mVideoEncoder = movieEncoder;
@@ -79,7 +68,7 @@ public class PCameraSurfaceRenderer implements GLSurfaceView.Renderer {
      * Notifies the renderer thread that the activity is pausing.
      * <p>
      * For best results, call this *after* disabling Camera preview.
-     */
+     *
     public void notifyPausing() {
         if (mSurfaceTexture != null) {
             Log.d(TAG, "renderer pausing -- releasing SurfaceTexture");
@@ -95,7 +84,7 @@ public class PCameraSurfaceRenderer implements GLSurfaceView.Renderer {
 
     /**
      * Notifies the renderer that we want to stop or start recording.
-     */
+     *
     public void changeRecordingState(boolean isRecording) {
         Log.d(TAG, "changeRecordingState: was " + mRecordingEnabled + " now " + isRecording);
         mRecordingEnabled = isRecording;
@@ -103,14 +92,14 @@ public class PCameraSurfaceRenderer implements GLSurfaceView.Renderer {
 
     /**
      * Changes the filter that we're applying to the camera preview.
-     */
+
     public void changeFilterMode(int filter) {
         mNewFilter = filter;
     }
 
     /**
      * Updates the filter program.
-     */
+
     public void updateFilter() {
         Texture2dProgram.ProgramType programType;
         float[] kernel = null;
@@ -176,13 +165,13 @@ public class PCameraSurfaceRenderer implements GLSurfaceView.Renderer {
         mCurrentFilter = mNewFilter;
     }
 
-    /**
+    /*
      * Records the size of the incoming camera preview frames.
      * <p>
      * It's not clear whether this is guaranteed to execute before or after onSurfaceCreated(),
      * so we assume it could go either way.  (Fortunately they both run on the same thread,
      * so we at least know that they won't execute concurrently.)
-     */
+
     public void setCameraPreviewSize(int width, int height) {
         Log.d(TAG, "setCameraPreviewSize");
         mIncomingWidth = width;
@@ -315,7 +304,7 @@ public class PCameraSurfaceRenderer implements GLSurfaceView.Renderer {
 
     /**
      * Draws a red box in the corner.
-     */
+
     private void drawBox() {
         GLES20.glEnable(GLES20.GL_SCISSOR_TEST);
         GLES20.glScissor(0, 0, 100, 100);
@@ -324,3 +313,6 @@ public class PCameraSurfaceRenderer implements GLSurfaceView.Renderer {
         GLES20.glDisable(GLES20.GL_SCISSOR_TEST);
     }
 
+}
+
+*/
