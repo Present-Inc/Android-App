@@ -8,7 +8,7 @@
         android:label="@string/application_name"
         android:theme="@style/PresentTheme" >
         <activity
-            android:name="tv.present.android.controllers.PCreationalController"
+            android:name=".controllers.PRecordingSessionController"
             android:label="@string/application_name" >
         </activity>
         <activity
