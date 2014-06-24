@@ -18,7 +18,6 @@ import java.nio.ByteBuffer;
 import java.util.List;
 
 import tv.present.android.threads.PAudioRecordRunnable;
-import tv.present.android.util.PCodecInputSurface;
 import tv.present.android.util.PAndroidGlobals;
 import tv.present.android.util.PLog;
 
@@ -182,7 +181,7 @@ public final class PChunkingRecorder {
      * @param context is an EGLContext.
      */
     public void setDisplayEGLContext(EGLContext context) {
-        this.codecInputSurface.mEGLDisplayContext = context;
+        this.codecInputSurface.eglDisplayContext = context;
     }
 
     public void setAudioEOSRequested(final boolean eosRequested) {
@@ -208,6 +207,7 @@ public final class PChunkingRecorder {
             final SurfaceTexture surfaceTexture = this.surfaceTextureManager.getSurfaceTexture();
             this.eosReceived = false;
 
+            // Feed any pending encoder output to the muxer and chunk the media if necessary.
             // Feed any pending encoder output to the muxer and chunk the media if necessary.
             while (!(this.fullStopReceived && this.eosSentToVideoEncoder)) {
 
@@ -873,8 +873,8 @@ public final class PChunkingRecorder {
             // TODO:  Should something be thrown here, or should we ignore it?
             else if (encoderStatus < 0) {
                 PLog.logWarning(TAG, "drainEncoder() -> Got an unexpected result from encoder.dequeueOutputBuffer: " + encoderStatus);
-            } 
-            
+            }
+
 
             else {
 
