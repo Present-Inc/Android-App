@@ -10,7 +10,7 @@ import android.widget.Toast;
 import tv.present.android.R;
 import tv.present.android.models.PView;
 import tv.present.android.util.PLog;
-import tv.present.android.views.PCreationalView;
+import tv.present.android.views.PRecordingSessionView;
 
 /**
  * Present Creational Controller Object
@@ -21,10 +21,10 @@ import tv.present.android.views.PCreationalView;
  * @author Kyle Weisel (kyle@present.tv)
  *
  */
-public class PCreationalController extends PController implements SurfaceTexture.OnFrameAvailableListener {
+public class PRecordingSessionController extends PController implements SurfaceTexture.OnFrameAvailableListener {
 
     private static final String TAG ="tv.present.android.controllers.PCreationalController";
-    private PCreationalView creationalView;
+    private PRecordingSessionView creationalView;
 
     private Camera camera;
 
@@ -77,10 +77,10 @@ public class PCreationalController extends PController implements SurfaceTexture
      * Gets the login view that this controller controls.
      * @return a LoginView.
      */
-    public PCreationalView getCreationalView() {
+    public PRecordingSessionView getCreationalView() {
         if (this.creationalView == null) {
             PLog.logDebug(TAG, "getCreationalView() -> A creational view did not exist.  Creating a new one.");
-            this.creationalView = PCreationalView.newInstance(this);
+            this.creationalView = PRecordingSessionView.newInstance(this);
         }
 
         return this.creationalView;
@@ -89,13 +89,13 @@ public class PCreationalController extends PController implements SurfaceTexture
     /**
      * Connects the SurfaceTexture to the Camera preview output, and starts the preview.
      */
-    public void handleSetSurfaceTexture(SurfaceTexture surfaceTexture) {
+    public void handleSetSurfaceTexture(final SurfaceTexture surfaceTexture) {
         surfaceTexture.setOnFrameAvailableListener(this);
         this.creationalView.setCameraPreviewSurfaceTexture(surfaceTexture);
         this.camera.startPreview();
     }
 
-    public void onFrameAvailable(SurfaceTexture surfaceTexture) {
+    public void onFrameAvailable(final SurfaceTexture surfaceTexture) {
         PLog.logDebug(TAG, "Frame is available for the surface texture.");
         this.creationalView.requestGLViewRender();
     }
