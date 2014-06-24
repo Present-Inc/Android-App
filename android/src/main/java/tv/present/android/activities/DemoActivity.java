@@ -10,7 +10,7 @@ import android.widget.Button;
 
 import tv.present.android.R;
 import tv.present.android.controllers.PCoreController;
-import tv.present.android.controllers.PCreationalController;
+import tv.present.android.controllers.PRecordingSessionController;
 import tv.present.android.controllers.PEntryController;
 
 public final class DemoActivity extends Activity implements View.OnClickListener {
@@ -77,7 +77,7 @@ public final class DemoActivity extends Activity implements View.OnClickListener
                     startActivity(intent);
                     break;
                 case R.id.demo3Button:
-                    intent = new Intent(this, PCreationalController.class);
+                    intent = new Intent(this, PRecordingSessionController.class);
                     startActivity(intent);
                     break;
             }
