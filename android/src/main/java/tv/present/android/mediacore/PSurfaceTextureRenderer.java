@@ -234,7 +234,7 @@ public final class PSurfaceTextureRenderer {
      * @param fragmentSource is a String.
      * @return an integer.
      */
-    private final int createProgram(String vertexSource, String fragmentSource) {
+    private int createProgram(final String vertexSource, final String fragmentSource) {
 
         int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexSource);
 
