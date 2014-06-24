@@ -7,15 +7,13 @@ import android.util.Log;
 
 import java.lang.ref.WeakReference;
 
-import tv.present.android.controllers.PCreationalController;
+import tv.present.android.controllers.PRecordingSessionController;
 import tv.present.android.util.PLog;
 
 /**
  * Handles camera operation requests from other threads.  Necessary because the Camera
- * must only be accessed from one thread.
- * <p>
- * The object is created on the UI thread, and all handlers run there.  Messages are
- * sent from other threads, using sendMessage().
+ * must only be accessed from one thread.  This object is created on the UI thread, and all handlers
+ * run there.  Messages are sent from other threads, using sendMessage().
  */
 public class PCameraHandler extends Handler {
 
@@ -23,14 +21,14 @@ public class PCameraHandler extends Handler {
     
     private static final String TAG = "tv.present.android.mediacore.PCameraHandler";
 
-    private WeakReference<PCreationalController> weakActivityReference;
+    private WeakReference<PRecordingSessionController> weakActivityReference;
 
     /**
      * Constructs a PCameraHandler object.
      * @param controller is a PController object.
      */
-    public PCameraHandler(final PCreationalController controller) {
-        this.weakActivityReference = new WeakReference<PCreationalController>(controller);
+    public PCameraHandler(final PRecordingSessionController controller) {
+        this.weakActivityReference = new WeakReference<PRecordingSessionController>(controller);
     }
 
     /**
@@ -45,12 +43,12 @@ public class PCameraHandler extends Handler {
     public void handleMessage(final Message inputMessage) {
 
         int messageNum = inputMessage.what;
-        Log.d(TAG, "handleMessage() -> CameraHandler [" + this + "]: what = " + messageNum);
+        Log.d(TAG, "handleMessage() -> PCameraHandler [" + this + "]: what = " + messageNum);
 
-        PCreationalController controller = this.weakActivityReference.get();
+        PRecordingSessionController controller = this.weakActivityReference.get();
 
         if (controller == null) {
-            PLog.logWarning(TAG, "CameraHandler.handleMessage: activity is null");
+            PLog.logWarning(TAG, "CameraHandler.handleMessage: Controller is null!");
             return;
         }
 
