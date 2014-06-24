@@ -100,7 +100,7 @@ public class PCodecInputSurface {
         this.checkEglError("eglCreateContext");
 
         // Create a window surface and attach it to the Surface we received.
-        this.createEGLSurfaceFrosurface();
+        this.createEGLSurfaceFromSurface();
 
         this.checkEglError("eglCreateWindowSurface");
 
@@ -176,7 +176,7 @@ public class PCodecInputSurface {
         EGL14.eglDestroySurface(this.eglDisplay, this.eglSurface);
         this.surface = newSurface;
         // Create EGL surface from the new Surface
-        this.createEGLSurfaceFrosurface();
+        this.createEGLSurfaceFromSurface();
         this.checkEglError("eglCreateWindowSurface");
     }
 
@@ -195,7 +195,7 @@ public class PCodecInputSurface {
      * Creates an EGL surface from a regular surface.  This method cannot be called before the
      * surface has been set (if you can even find a way to do that).
      */
-    private void createEGLSurfaceFrosurface() {
+    private void createEGLSurfaceFromSurface() {
         this.eglSurface = EGL14.eglCreateWindowSurface(this.eglDisplay, configs[0], this.surface, this.surfaceAttribs, 0);
     }
 
