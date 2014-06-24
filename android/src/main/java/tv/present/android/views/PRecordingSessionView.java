@@ -25,7 +25,7 @@ import tv.present.android.util.PLog;
 /**
  * Created by kbw28 on 6/20/14.
  */
-public class PCreationalView extends PView {
+public class PRecordingSessionView extends PView {
 
     private static final String TAG = "tv.present.android.views.PCreationalView";
 
@@ -38,13 +38,13 @@ public class PCreationalView extends PView {
     /**
      * Returns a new instance of this view.
      */
-    public static PCreationalView newInstance(PController controller) {
+    public static PRecordingSessionView newInstance(PController controller) {
 
         Bundle arguments = new Bundle();
         arguments.putSerializable("controller", controller);
         PLog.logDebug(TAG, "newInstance -> the controller put into fragment arguments was " + (controller == null ? "in fact" : "not") + " null");
         PLog.logDebug(TAG, "newInstance -> the controller got out of the fragment arguments was " + (arguments.get("controller") == null ? "in fact" : "not") + " null");
-        PCreationalView creationalView = new PCreationalView();
+        PRecordingSessionView creationalView = new PRecordingSessionView();
         creationalView.setController(controller);
         creationalView.setArguments(arguments);
 
