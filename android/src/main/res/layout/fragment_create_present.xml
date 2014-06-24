@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context="tv.present.android.views.PCreationalView"
+    tools:context="tv.present.android.views.PRecordingSessionView"
     android:background="#FFFFFF">
 
     <Button
