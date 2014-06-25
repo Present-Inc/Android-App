@@ -19,7 +19,9 @@ import tv.present.android.R;
 import tv.present.android.controllers.PController;
 import tv.present.android.controllers.PEntryController;
 import tv.present.android.mediacore.PCameraHandler;
+import tv.present.android.mediacore.PCameraRenderer;
 import tv.present.android.models.PView;
+import tv.present.android.util.PAndroidGlobals;
 import tv.present.android.util.PLog;
 
 /**
@@ -31,14 +33,14 @@ public class PRecordingSessionView extends PView {
 
     private Camera camera;
     private GLSurfaceView glSurfaceView;
-    //private PCameraSurfaceRenderer cameraSurfaceRenderer;
+    private PCameraRenderer cameraRenderer;
     private PCameraHandler cameraHandler;
     private boolean isRecording;
 
     /**
      * Returns a new instance of this view.
      */
-    public static PRecordingSessionView newInstance(PController controller) {
+    public static PRecordingSessionView newInstance(PController controller, PCameraHandler cameraHandler, PCameraRenderer cameraRenderer) {
 
         Bundle arguments = new Bundle();
         arguments.putSerializable("controller", controller);
@@ -46,6 +48,8 @@ public class PRecordingSessionView extends PView {
         PLog.logDebug(TAG, "newInstance -> the controller got out of the fragment arguments was " + (arguments.get("controller") == null ? "in fact" : "not") + " null");
         PRecordingSessionView creationalView = new PRecordingSessionView();
         creationalView.setController(controller);
+        creationalView.setCameraHandler(cameraHandler);
+        creationalView.setCameraRenderer(cameraRenderer);
         creationalView.setArguments(arguments);
 
         return creationalView;
@@ -53,10 +57,14 @@ public class PRecordingSessionView extends PView {
     }
 
     /**
-     * Inflates and prepares this fragment view.  Within this method, the root layout element is
-     * given focus so that the username field doesn't steal it.  OnFocusChange listeners are also
-     * registered to both the username and password fields to toggle the keyboard when a field gains
-     * or loses focus.
+     * Constructs a PRecordingSessionView.
+     */
+    public PRecordingSessionView() {
+
+    }
+
+    /**
+     * Inflates and prepares this fragment view.
      * @param inflater is the LayoutInflater to use to inflate this layout.
      * @param container is a ViewGroup container that will display this inflated layout.
      * @param savedInstanceState is a Bundle of data that represents a previous instance state to
@@ -67,6 +75,12 @@ public class PRecordingSessionView extends PView {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         PLog.logDebug(TAG, "onCreateView() -> Creating and configuring fragment view.");
         View rootView = inflater.inflate(R.layout.fragment_create_present, container, false);
+
+        GLSurfaceView test = (GLSurfaceView) rootView.findViewById(R.id.recordingPreviewSV);
+
+        PLog.logDebug(TAG, "Performing surfaceview test.  The surface view was " + (test == null ? "null" : "not null"));
+
+        this.glSurfaceView = (GLSurfaceView) rootView.findViewById(R.id.recordingPreviewSV);
         return rootView;
     }
 
@@ -134,5 +148,41 @@ public class PRecordingSessionView extends PView {
         PLog.logDebug(TAG, "Requesting render on the GLView.");
         this.glSurfaceView.requestRender();
     }
+
+    public GLSurfaceView getGlSurfaceView() {
+        return this.glSurfaceView;
+    }
+
+    public void setEGLContextVersion(final int version) {
+        PLog.logWarning(TAG, "The GLSurfaceView is " + (this.glSurfaceView == null ? "null" : "not null"));
+        this.glSurfaceView.setEGLContextClientVersion(version);
+    }
+
+    public void setEGLRenderer(GLSurfaceView.Renderer renderer) {
+        this.glSurfaceView.setRenderer(renderer);
+    }
+
+    public void setEGLRenderMode(final int renderMode) {
+        this.glSurfaceView.setRenderMode(renderMode);
+    }
+
+    public void setCameraHandler(final PCameraHandler cameraHandler) {
+        this.cameraHandler = cameraHandler;
+    }
+
+    private void configureSurfaceView() {
+        this.setEGLContextVersion(PAndroidGlobals.EGL_CONTEXT_CLIENT_VERSION);
+        this.glSurfaceView.setRenderer(this.cameraRenderer);
+    }
+
+    public void setCameraRenderer(PCameraRenderer renderer) {
+        this.cameraRenderer = renderer;
+    }
+
+    public void associateSV() {
+        this.glSurfaceView = (GLSurfaceView) this.getView().findViewById(R.id.recordingPreviewSV);
+    }
+
+
 
 }
