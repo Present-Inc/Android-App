@@ -1,10 +1,13 @@
 package tv.present.android.mediacore;
 
-/*
- * Renderer object for our GLSurfaceView.
- * <p>
- * Do not call any methods here directly from another thread -- use the
- * GLSurfaceView#queueEvent() call.
+/**
+ * Present GL Surface Renderer
+ *
+ * This class renders things to our GLSurfaceView.
+ *
+ * June 24, 2014
+ * @author Kyle Weisel (kyle@present.tv)
+ *
 
 public class PCameraSurfaceRenderer implements GLSurfaceView.Renderer {
 
@@ -44,8 +47,8 @@ public class PCameraSurfaceRenderer implements GLSurfaceView.Renderer {
      * @param cameraHandler Handler for communicating with UI thread
      * @param movieEncoder video encoder object
      * @param outputFile output file for encoded video; forwarded to movieEncoder
-     *
-    public PCameraSurfaceRenderer(CameraCaptureActivity.CameraHandler cameraHandler, TextureMovieEncoder movieEncoder, File outputFile) {
+
+    public PCameraSurfaceRenderer(PCameraHandler cameraHandler, TextureMovieEncoder movieEncoder, File outputFile) {
         mCameraHandler = cameraHandler;
         mVideoEncoder = movieEncoder;
         mOutputFile = outputFile;
@@ -68,7 +71,7 @@ public class PCameraSurfaceRenderer implements GLSurfaceView.Renderer {
      * Notifies the renderer thread that the activity is pausing.
      * <p>
      * For best results, call this *after* disabling Camera preview.
-     *
+
     public void notifyPausing() {
         if (mSurfaceTexture != null) {
             Log.d(TAG, "renderer pausing -- releasing SurfaceTexture");
@@ -84,7 +87,7 @@ public class PCameraSurfaceRenderer implements GLSurfaceView.Renderer {
 
     /**
      * Notifies the renderer that we want to stop or start recording.
-     *
+
     public void changeRecordingState(boolean isRecording) {
         Log.d(TAG, "changeRecordingState: was " + mRecordingEnabled + " now " + isRecording);
         mRecordingEnabled = isRecording;
@@ -315,4 +318,4 @@ public class PCameraSurfaceRenderer implements GLSurfaceView.Renderer {
 
 }
 
-*/
+        */
