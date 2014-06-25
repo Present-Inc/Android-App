@@ -12,6 +12,7 @@ import tv.present.android.mediacore.PCameraHandler;
 import tv.present.android.mediacore.PCameraRenderer;
 import tv.present.android.mediacore.PChunkingRecorder;
 import tv.present.android.models.PView;
+import tv.present.android.util.PAndroidGlobals;
 import tv.present.android.util.PLog;
 import tv.present.android.views.PRecordingSessionView;
 
@@ -42,27 +43,23 @@ public class PRecordingSessionController extends PController implements SurfaceT
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_creation);
 
-        // If we aren't resuming an instance, get a creational view and add it.
+        // If we aren't resuming an instance, get a recording session view and add it.
         if (savedInstanceState == null) {
             PView recordingSessionView = this.getRecordingSessionView();
             getFragmentManager().beginTransaction().add(R.id.container, recordingSessionView).commit();
         }
 
-        // Create a camera handler
+        // Create the camera handler
         this.cameraHandler = new PCameraHandler(this);
 
-        // Create a chunking recorder
+        // Create the chunking recorder
         this.chunkingRecorder = new PChunkingRecorder(this.getApplicationContext());
 
-        final int EGL_CONTEXT_VERSION = 2;
+        PLog.logWarning(TAG, "The recording session view is " + (this.recordingSessionView == null ? " null" : "not null"));
 
-        PLog.logWarning(TAG, "The creational view is " + (this.recordingSessionView == null ? " null" : "not null"));
-        this.recordingSessionView.setEGLContextVersion(EGL_CONTEXT_VERSION);
+        this.recordingSessionView.setEGLContextVersion(PAndroidGlobals.EGL_CONTEXT_CLIENT_VERSION);
         this.recordingSessionView.setCameraHandler(this.cameraHandler);
         //this.recordingSessionView.setEGLRenderer();
-
-
-
 
     }
 
