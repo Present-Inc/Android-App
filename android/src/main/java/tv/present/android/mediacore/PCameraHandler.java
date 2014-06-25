@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
 
 import tv.present.android.controllers.PRecordingSessionController;
@@ -15,7 +16,7 @@ import tv.present.android.util.PLog;
  * must only be accessed from one thread.  This object is created on the UI thread, and all handlers
  * run there.  Messages are sent from other threads, using sendMessage().
  */
-public class PCameraHandler extends Handler {
+public class PCameraHandler extends Handler implements Serializable {
 
     public static final int MSG_SET_SURFACE_TEXTURE = 0;
     
