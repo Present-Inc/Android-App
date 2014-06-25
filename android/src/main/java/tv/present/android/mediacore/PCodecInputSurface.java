@@ -56,7 +56,7 @@ public class PCodecInputSurface {
      */
     private void eglSetup() {
 
-        PLog.logDebug(TAG, "eglSetup() -> creating EGL14 Surface");
+        PLog.logDebug(TAG, "eglSetup() -> Creating an EGL14 Surface");
 
         this.eglDisplay = EGL14.eglGetDisplay(EGL14.EGL_DEFAULT_DISPLAY);
 
@@ -87,7 +87,7 @@ public class PCodecInputSurface {
         this.checkEglError("eglSetup() -> eglCreateContext RGB888+recordable ES2");
 
         // Configure context for OpenGL ES 2.0.
-        int[] attrib_list = {
+        int[] attributeList = {
                 EGL14.EGL_CONTEXT_CLIENT_VERSION, 2,
                 EGL14.EGL_NONE
         };
@@ -96,7 +96,7 @@ public class PCodecInputSurface {
             PLog.logError(TAG, "eglSetup() -> eglDisplayContext not set properly");
         }
 
-        this.eglEncodeContext = EGL14.eglCreateContext(eglDisplay, configs[0], EGL14.eglGetCurrentContext(), attrib_list, 0);
+        this.eglEncodeContext = EGL14.eglCreateContext(eglDisplay, configs[0], EGL14.eglGetCurrentContext(), attributeList, 0);
         this.checkEglError("eglCreateContext");
 
         // Create a window surface and attach it to the Surface we received.
