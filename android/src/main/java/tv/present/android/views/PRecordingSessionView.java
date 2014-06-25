@@ -17,11 +17,11 @@ import java.io.IOException;
 
 import tv.present.android.R;
 import tv.present.android.controllers.PController;
-import tv.present.android.controllers.PEntryController;
 import tv.present.android.mediacore.PCameraHandler;
 import tv.present.android.mediacore.PCameraRenderer;
 import tv.present.android.models.PView;
 import tv.present.android.util.PAndroidGlobals;
+import tv.present.android.util.PKeys;
 import tv.present.android.util.PLog;
 
 /**
@@ -29,13 +29,12 @@ import tv.present.android.util.PLog;
  */
 public class PRecordingSessionView extends PView {
 
-    private static final String TAG = "tv.present.android.views.PCreationalView";
+    private static final String TAG = "tv.present.android.views.PRecordingSession";
 
     private Camera camera;
     private GLSurfaceView glSurfaceView;
     private PCameraRenderer cameraRenderer;
     private PCameraHandler cameraHandler;
-    private boolean isRecording;
 
     /**
      * Returns a new instance of this view.
@@ -43,16 +42,18 @@ public class PRecordingSessionView extends PView {
     public static PRecordingSessionView newInstance(PController controller, PCameraHandler cameraHandler, PCameraRenderer cameraRenderer) {
 
         Bundle arguments = new Bundle();
-        arguments.putSerializable("controller", controller);
+        arguments.putSerializable(PKeys.KEY_CONTROLLER, controller);
+        arguments.putSerializable(PKeys.KEY_CAMERA_HANDLER, cameraHandler);
+        arguments.putSerializable(PKeys.KEY_CAMERA_RENDERER, cameraRenderer);
         PLog.logDebug(TAG, "newInstance -> the controller put into fragment arguments was " + (controller == null ? "in fact" : "not") + " null");
         PLog.logDebug(TAG, "newInstance -> the controller got out of the fragment arguments was " + (arguments.get("controller") == null ? "in fact" : "not") + " null");
-        PRecordingSessionView creationalView = new PRecordingSessionView();
-        creationalView.setController(controller);
-        creationalView.setCameraHandler(cameraHandler);
-        creationalView.setCameraRenderer(cameraRenderer);
-        creationalView.setArguments(arguments);
+        PRecordingSessionView recordingSessionView = new PRecordingSessionView();
+        recordingSessionView.setController(controller);
+        recordingSessionView.setCameraHandler(cameraHandler);
+        recordingSessionView.setCameraRenderer(cameraRenderer);
+        recordingSessionView.setArguments(arguments);
 
-        return creationalView;
+        return recordingSessionView;
 
     }
 
@@ -60,7 +61,7 @@ public class PRecordingSessionView extends PView {
      * Constructs a PRecordingSessionView.
      */
     public PRecordingSessionView() {
-
+        /* Empty constructor */
     }
 
     /**
@@ -75,12 +76,9 @@ public class PRecordingSessionView extends PView {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         PLog.logDebug(TAG, "onCreateView() -> Creating and configuring fragment view.");
         View rootView = inflater.inflate(R.layout.fragment_create_present, container, false);
+        View aflView = rootView.findViewById(R.id.createPresentPreviewAFL);
 
-        GLSurfaceView test = (GLSurfaceView) rootView.findViewById(R.id.recordingPreviewSV);
-
-        PLog.logDebug(TAG, "Performing surfaceview test.  The surface view was " + (test == null ? "null" : "not null"));
-
-        this.glSurfaceView = (GLSurfaceView) rootView.findViewById(R.id.recordingPreviewSV);
+        this.glSurfaceView = (GLSurfaceView) aflView.findViewById(R.id.recordingPreviewSV);
         return rootView;
     }
 
@@ -113,15 +111,7 @@ public class PRecordingSessionView extends PView {
         View rootView = this.getView();
 
         if (view instanceof Button) {
-
-            // Get all of the data from the view
-            String emailAddress = ((EditText) rootView.findViewById(R.id.createEmailAddressField)).getText().toString();
-            String username = ((EditText) rootView.findViewById(R.id.createUsernameField)).getText().toString();
-            String password = ((EditText) rootView.findViewById(R.id.createPasswordField)).getText().toString();
-            String fullName = ((EditText) rootView.findViewById(R.id.createFullNameField)).getText().toString();
-            String phoneNumber = ((EditText) rootView.findViewById(R.id.createPhoneNumberField)).getText().toString();
-
-            ((PEntryController) this.controller).executeCreateAccount(username, password, emailAddress, fullName, phoneNumber);
+            /* Record/stop button was clicked */
         }
 
     }
@@ -178,11 +168,5 @@ public class PRecordingSessionView extends PView {
     public void setCameraRenderer(PCameraRenderer renderer) {
         this.cameraRenderer = renderer;
     }
-
-    public void associateSV() {
-        this.glSurfaceView = (GLSurfaceView) this.getView().findViewById(R.id.recordingPreviewSV);
-    }
-
-
 
 }
