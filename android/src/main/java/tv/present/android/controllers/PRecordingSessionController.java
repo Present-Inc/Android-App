@@ -8,6 +8,9 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import tv.present.android.R;
+import tv.present.android.mediacore.PCameraHandler;
+import tv.present.android.mediacore.PCameraRenderer;
+import tv.present.android.mediacore.PChunkingRecorder;
 import tv.present.android.models.PView;
 import tv.present.android.util.PLog;
 import tv.present.android.views.PRecordingSessionView;
@@ -24,9 +27,11 @@ import tv.present.android.views.PRecordingSessionView;
 public class PRecordingSessionController extends PController implements SurfaceTexture.OnFrameAvailableListener {
 
     private static final String TAG ="tv.present.android.controllers.PCreationalController";
-    private PRecordingSessionView creationalView;
 
     private Camera camera;
+    private PCameraHandler cameraHandler;
+    private PChunkingRecorder chunkingRecorder;
+    private PRecordingSessionView recordingSessionView;
 
     /**
      * Creates this view.
@@ -39,9 +44,25 @@ public class PRecordingSessionController extends PController implements SurfaceT
 
         // If we aren't resuming an instance, get a creational view and add it.
         if (savedInstanceState == null) {
-            PView creationalView = this.getCreationalView();
-            getFragmentManager().beginTransaction().add(R.id.container, creationalView).commit();
+            PView recordingSessionView = this.getRecordingSessionView();
+            getFragmentManager().beginTransaction().add(R.id.container, recordingSessionView).commit();
         }
+
+        // Create a camera handler
+        this.cameraHandler = new PCameraHandler(this);
+
+        // Create a chunking recorder
+        this.chunkingRecorder = new PChunkingRecorder(this.getApplicationContext());
+
+        final int EGL_CONTEXT_VERSION = 2;
+
+        PLog.logWarning(TAG, "The creational view is " + (this.recordingSessionView == null ? " null" : "not null"));
+        this.recordingSessionView.setEGLContextVersion(EGL_CONTEXT_VERSION);
+        this.recordingSessionView.setCameraHandler(this.cameraHandler);
+        //this.recordingSessionView.setEGLRenderer();
+
+
+
 
     }
 
@@ -74,30 +95,31 @@ public class PRecordingSessionController extends PController implements SurfaceT
     }
 
     /**
-     * Gets the login view that this controller controls.
-     * @return a LoginView.
-     */
-    public PRecordingSessionView getCreationalView() {
-        if (this.creationalView == null) {
-            PLog.logDebug(TAG, "getCreationalView() -> A creational view did not exist.  Creating a new one.");
-            this.creationalView = PRecordingSessionView.newInstance(this);
-        }
-
-        return this.creationalView;
-    }
-
-    /**
      * Connects the SurfaceTexture to the Camera preview output, and starts the preview.
      */
     public void handleSetSurfaceTexture(final SurfaceTexture surfaceTexture) {
         surfaceTexture.setOnFrameAvailableListener(this);
-        this.creationalView.setCameraPreviewSurfaceTexture(surfaceTexture);
+        this.recordingSessionView.setCameraPreviewSurfaceTexture(surfaceTexture);
         this.camera.startPreview();
     }
 
     public void onFrameAvailable(final SurfaceTexture surfaceTexture) {
         PLog.logDebug(TAG, "Frame is available for the surface texture.");
-        this.creationalView.requestGLViewRender();
+        this.recordingSessionView.requestGLViewRender();
+    }
+
+    /**
+     * Gets the recording session view that this controller controls.  This will register the view
+     * to the private recordingSessionView member.
+     * @return a PRecordingSessionView.
+     */
+    public PRecordingSessionView getRecordingSessionView() {
+        if (this.recordingSessionView == null) {
+            PLog.logDebug(TAG, "getRecordingSessionView() -> A recording session view did not exist.  Creating a new one.");
+            this.recordingSessionView = PRecordingSessionView.newInstance(this, this.cameraHandler, new PCameraRenderer(this.getApplicationContext()));
+
+        }
+        return this.recordingSessionView;
     }
 
 }
