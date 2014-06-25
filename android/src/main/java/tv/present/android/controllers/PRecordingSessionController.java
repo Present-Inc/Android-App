@@ -26,7 +26,7 @@ import tv.present.android.views.PRecordingSessionView;
  */
 public class PRecordingSessionController extends PController implements SurfaceTexture.OnFrameAvailableListener {
 
-    private static final String TAG ="tv.present.android.controllers.PCreationalController";
+    private static final String TAG ="tv.present.android.controllers.PRecordingSessionController";
 
     private Camera camera;
     private PCameraHandler cameraHandler;
@@ -119,6 +119,8 @@ public class PRecordingSessionController extends PController implements SurfaceT
             this.recordingSessionView = PRecordingSessionView.newInstance(this, this.cameraHandler, new PCameraRenderer(this.getApplicationContext()));
 
         }
+
+        PLog.logDebug(TAG, "getRecordingSessionView() -> A recording session view " + (this.recordingSessionView == null ? "does not exist" : "exists"));
         return this.recordingSessionView;
     }
 
