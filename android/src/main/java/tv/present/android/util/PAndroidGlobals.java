@@ -63,6 +63,8 @@ public final class PAndroidGlobals {
 
     public static final String TEMP_DIRECTORY = PAndroidGlobals.SD_ROOT_DIRECTORY + "/Present";
 
+    public static final int EGL_CONTEXT_CLIENT_VERSION = 2;
+
 }
 
 
