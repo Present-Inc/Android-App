@@ -9,18 +9,19 @@ import android.opengl.Matrix;
 import android.util.Log;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
 
 
 /**
  * Created by kbw28 on 6/24/14.
  */
-public class PCameraRenderer implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener {
+public class PCameraRenderer implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener, Serializable {
 
     private float[] mMVPMatrix = new float[16];
     private float[] mProjMatrix = new float[16];
