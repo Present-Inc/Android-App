@@ -421,12 +421,6 @@ public final class PChunkingRecorder {
     }
 
     /**
-     * Configures Camera for video capture.  Sets camera.
-     * <p/>
-     * Opens a Camera and sets parameters.  Does not start preview.
-     */
-
-    /**
      * Prepares the camera to capture video by opening and setting proper parameters.  This method
      * does not currently start a camera preview.
      * @param encWidth is the desired encoding width as an integer.
@@ -477,6 +471,7 @@ public final class PChunkingRecorder {
         // leave the frame rate set to default
         this.camera.setParameters(params);
         this.camera.setDisplayOrientation(DISPLAY_ORIENTATION_90);
+
 
         Camera.Size size = params.getPreviewSize();
         PLog.logDebug(TAG, "prepareCamera() -> Camera preview size is " + size.width + "x" + size.height);
