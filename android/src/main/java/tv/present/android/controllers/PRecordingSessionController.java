@@ -1,5 +1,7 @@
 package tv.present.android.controllers;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.os.Bundle;
@@ -17,7 +19,7 @@ import tv.present.android.util.PLog;
 import tv.present.android.views.PRecordingSessionView;
 
 /**
- * Present Creational Controller Object
+ * Present Recording Session Controller Object
  *
  * This controller manages the creation of content on Present.
  *
@@ -43,24 +45,33 @@ public class PRecordingSessionController extends PController implements SurfaceT
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_creation);
 
+        PLog.logDebug(TAG, "onCreate() -> The savedInstanceState Bundle is " + (savedInstanceState == null ? "null" : "not null"));
+
         // If we aren't resuming an instance, get a recording session view and add it.
         if (savedInstanceState == null) {
             PView recordingSessionView = this.getRecordingSessionView();
-            getFragmentManager().beginTransaction().add(R.id.container, recordingSessionView).commit();
+
+            FragmentManager fragmentManager = this.getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.add(R.id.container, recordingSessionView);
+            fragmentTransaction.commit();
+            fragmentManager.executePendingTransactions();
         }
 
-        // Create the camera handler
+        PLog.logDebug(TAG, "onCreate() -> The recording session view is " + (this.recordingSessionView == null ? " null" : "not null"));
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        PLog.logDebug(TAG, "onStart() -> Beginning of method");
+        this.camera = Camera.open();
         this.cameraHandler = new PCameraHandler(this);
-
-        // Create the chunking recorder
         this.chunkingRecorder = new PChunkingRecorder(this.getApplicationContext());
-
-        PLog.logWarning(TAG, "The recording session view is " + (this.recordingSessionView == null ? " null" : "not null"));
-
         this.recordingSessionView.setEGLContextVersion(PAndroidGlobals.EGL_CONTEXT_CLIENT_VERSION);
         this.recordingSessionView.setCameraHandler(this.cameraHandler);
-        //this.recordingSessionView.setEGLRenderer();
-
+        PLog.logDebug(TAG, "onStart() -> End of method");
     }
 
     /**
@@ -111,10 +122,10 @@ public class PRecordingSessionController extends PController implements SurfaceT
      * @return a PRecordingSessionView.
      */
     public PRecordingSessionView getRecordingSessionView() {
+
         if (this.recordingSessionView == null) {
             PLog.logDebug(TAG, "getRecordingSessionView() -> A recording session view did not exist.  Creating a new one.");
             this.recordingSessionView = PRecordingSessionView.newInstance(this, this.cameraHandler, new PCameraRenderer(this.getApplicationContext()));
-
         }
 
         PLog.logDebug(TAG, "getRecordingSessionView() -> A recording session view " + (this.recordingSessionView == null ? "does not exist" : "exists"));
