@@ -5,6 +5,7 @@ import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,12 +25,9 @@ import tv.present.android.util.PAndroidGlobals;
 import tv.present.android.util.PKeys;
 import tv.present.android.util.PLog;
 
-/**
- * Created by kbw28 on 6/20/14.
- */
 public class PRecordingSessionView extends PView {
 
-    private static final String TAG = "tv.present.android.views.PRecordingSession";
+    private static final String TAG = "tv.present.android.views.PRecordingSessionView";
 
     private Camera camera;
     private GLSurfaceView glSurfaceView;
@@ -41,12 +39,11 @@ public class PRecordingSessionView extends PView {
      */
     public static PRecordingSessionView newInstance(PController controller, PCameraHandler cameraHandler, PCameraRenderer cameraRenderer) {
 
+        PLog.logDebug(TAG, "newInstance() -> A new instance of this view is being requested");
         Bundle arguments = new Bundle();
         arguments.putSerializable(PKeys.KEY_CONTROLLER, controller);
         arguments.putSerializable(PKeys.KEY_CAMERA_HANDLER, cameraHandler);
         arguments.putSerializable(PKeys.KEY_CAMERA_RENDERER, cameraRenderer);
-        PLog.logDebug(TAG, "newInstance -> the controller put into fragment arguments was " + (controller == null ? "in fact" : "not") + " null");
-        PLog.logDebug(TAG, "newInstance -> the controller got out of the fragment arguments was " + (arguments.get("controller") == null ? "in fact" : "not") + " null");
         PRecordingSessionView recordingSessionView = new PRecordingSessionView();
         recordingSessionView.setController(controller);
         recordingSessionView.setCameraHandler(cameraHandler);
@@ -61,6 +58,7 @@ public class PRecordingSessionView extends PView {
      * Constructs a PRecordingSessionView.
      */
     public PRecordingSessionView() {
+        PLog.logDebug(TAG, "PRecordingSessionView() -> Constructor called");
         /* Empty constructor */
     }
 
@@ -74,12 +72,27 @@ public class PRecordingSessionView extends PView {
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         PLog.logDebug(TAG, "onCreateView() -> Creating and configuring fragment view.");
         View rootView = inflater.inflate(R.layout.fragment_create_present, container, false);
-        View aflView = rootView.findViewById(R.id.createPresentPreviewAFL);
 
-        this.glSurfaceView = (GLSurfaceView) aflView.findViewById(R.id.recordingPreviewSV);
+        //PLog.logDebug(TAG, "onCreateView() -> Inflating to find the GLSurfaceView " + (aflView.findViewById(R.id.recordingPreviewSV) == null ? "didnt work" : "worked!"));
+
+
+        //this.glSurfaceView = (GLSurfaceView) aflView.findViewById(R.id.recordingPreviewSV);
+        PLog.logDebug(TAG, "onCreateView() -> this.glSurfaceView = " + (this.glSurfaceView == null ? "null" : "not null"));
+        PLog.logDebug(TAG, "onCreateView() -> On inflation, looking for GLSurfaceView and it " + (rootView.findViewById(R.id.recordingPreviewSV) == null ? "is null" : "is not null"));
+        this.glSurfaceView = (GLSurfaceView) rootView.findViewById(R.id.recordingPreviewSV);
+        PLog.logDebug(TAG, "onCreateView() -> this.glSurfaceView = " + (this.glSurfaceView == null ? "null" : "not null"));
+
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle saved) {
+        super.onActivityCreated(saved);
+        this.glSurfaceView = (PGLSurfaceView) this.getView().findViewById(R.id.recordingPreviewSV);
+        Log.i(TAG, "onActivityCreated");
     }
 
     /**
@@ -134,6 +147,10 @@ public class PRecordingSessionView extends PView {
         }
     }
 
+    public void setPST() {
+        //this.camera.setPreviewTexture();
+    }
+
     public void requestGLViewRender() {
         PLog.logDebug(TAG, "Requesting render on the GLView.");
         this.glSurfaceView.requestRender();
@@ -145,6 +162,7 @@ public class PRecordingSessionView extends PView {
 
     public void setEGLContextVersion(final int version) {
         PLog.logWarning(TAG, "The GLSurfaceView is " + (this.glSurfaceView == null ? "null" : "not null"));
+        PLog.logWarning(TAG, "By the way, the camera renderer is  " + (this.cameraRenderer == null ? "also null" : "not null"));
         this.glSurfaceView.setEGLContextClientVersion(version);
     }
 
