@@ -21,7 +21,6 @@ import tv.present.android.controllers.PController;
 import tv.present.android.mediacore.PCameraHandler;
 import tv.present.android.mediacore.PCameraRenderer;
 import tv.present.android.models.PView;
-import tv.present.android.util.PAndroidGlobals;
 import tv.present.android.util.PKeys;
 import tv.present.android.util.PLog;
 
@@ -47,7 +46,7 @@ public class PRecordingSessionView extends PView {
         PRecordingSessionView recordingSessionView = new PRecordingSessionView();
         recordingSessionView.setController(controller);
         recordingSessionView.setCameraHandler(cameraHandler);
-        recordingSessionView.setCameraRenderer(cameraRenderer);
+        //recordingSessionView.setCameraRenderer(cameraRenderer);
         recordingSessionView.setArguments(arguments);
 
         return recordingSessionView;
@@ -160,15 +159,20 @@ public class PRecordingSessionView extends PView {
         return this.glSurfaceView;
     }
 
+    /**
+     * Sets the EGL context version.  We don't (and shouldn't) do this from here, as the new
+     * PGLSurfaceView now takes care of it.
+     * @param version is th integer version of the EGL context version to set.
+     */
     public void setEGLContextVersion(final int version) {
         PLog.logWarning(TAG, "The GLSurfaceView is " + (this.glSurfaceView == null ? "null" : "not null"));
         PLog.logWarning(TAG, "By the way, the camera renderer is  " + (this.cameraRenderer == null ? "also null" : "not null"));
-        this.glSurfaceView.setEGLContextClientVersion(version);
+        //this.glSurfaceView.setEGLContextClientVersion(version);
     }
 
-    public void setEGLRenderer(GLSurfaceView.Renderer renderer) {
+    /*public void setEGLRenderer(GLSurfaceView.Renderer renderer) {
         this.glSurfaceView.setRenderer(renderer);
-    }
+    }*/
 
     public void setEGLRenderMode(final int renderMode) {
         this.glSurfaceView.setRenderMode(renderMode);
@@ -178,13 +182,13 @@ public class PRecordingSessionView extends PView {
         this.cameraHandler = cameraHandler;
     }
 
-    private void configureSurfaceView() {
+    /* private void configureSurfaceView() {
         this.setEGLContextVersion(PAndroidGlobals.EGL_CONTEXT_CLIENT_VERSION);
         this.glSurfaceView.setRenderer(this.cameraRenderer);
     }
 
     public void setCameraRenderer(PCameraRenderer renderer) {
         this.cameraRenderer = renderer;
-    }
+    } */
 
 }
