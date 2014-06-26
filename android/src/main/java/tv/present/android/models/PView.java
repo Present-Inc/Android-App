@@ -10,6 +10,7 @@ import android.widget.EditText;
 import java.io.Serializable;
 
 import tv.present.android.controllers.PController;
+import tv.present.android.util.PLog;
 
 /**
  * Present Abstract View Object
@@ -23,7 +24,15 @@ import tv.present.android.controllers.PController;
  */
 public abstract class PView extends Fragment implements View.OnClickListener, View.OnLongClickListener, View.OnTouchListener, Serializable {
 
+    private static final String TAG = "tv.present.android.models.PView";
     protected transient PController controller;
+
+    @Override
+    public void onAttach(Activity controller) {
+        super.onAttach(controller);
+        PLog.logDebug(TAG, "onAttach() -> Setting controller to activity that was " + (controller == null ? "null" : "non-null"));
+        this.controller = (PController) controller;
+    }
 
     /**
      * Constructs a PView object.
