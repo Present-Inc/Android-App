@@ -45,7 +45,7 @@ public final class PEntryController extends PController implements ThreadCallbac
         setContentView(R.layout.activity_login);
         if (savedInstanceState == null) {
             PView loginView = this.getLoginView();
-            getFragmentManager().beginTransaction().add(R.id.container, loginView).commit();
+            this.getFragmentManager().beginTransaction().add(R.id.container, loginView).commit();
         }
     }
 
