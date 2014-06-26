@@ -57,8 +57,7 @@ public class PCameraRenderer implements GLSurfaceView.Renderer, SurfaceTexture.O
 
         mContext = context;
 
-        mTriangleVertices = ByteBuffer.allocateDirect(mTriangleVerticesData.length
-                * FLOAT_SIZE_BYTES).order(ByteOrder.nativeOrder()).asFloatBuffer();
+        mTriangleVertices = ByteBuffer.allocateDirect(mTriangleVerticesData.length * FLOAT_SIZE_BYTES).order(ByteOrder.nativeOrder()).asFloatBuffer();
         mTriangleVertices.put(mTriangleVerticesData).position(0);
 
         Matrix.setIdentityM(mSTMatrix, 0);
