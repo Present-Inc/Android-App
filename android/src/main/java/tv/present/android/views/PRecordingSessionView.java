@@ -29,7 +29,7 @@ public class PRecordingSessionView extends PView {
     private static final String TAG = "tv.present.android.views.PRecordingSessionView";
 
     private Camera camera;
-    private GLSurfaceView glSurfaceView;
+    private PGLSurfaceView glSurfaceView;
     private PCameraRenderer cameraRenderer;
     private PCameraHandler cameraHandler;
 
@@ -58,6 +58,7 @@ public class PRecordingSessionView extends PView {
      */
     public PRecordingSessionView() {
         PLog.logDebug(TAG, "PRecordingSessionView() -> Constructor called");
+        this.camera = Camera.open();
         /* Empty constructor */
     }
 
@@ -81,7 +82,7 @@ public class PRecordingSessionView extends PView {
         //this.glSurfaceView = (GLSurfaceView) aflView.findViewById(R.id.recordingPreviewSV);
         PLog.logDebug(TAG, "onCreateView() -> this.glSurfaceView = " + (this.glSurfaceView == null ? "null" : "not null"));
         PLog.logDebug(TAG, "onCreateView() -> On inflation, looking for GLSurfaceView and it " + (rootView.findViewById(R.id.recordingPreviewSV) == null ? "is null" : "is not null"));
-        this.glSurfaceView = (GLSurfaceView) rootView.findViewById(R.id.recordingPreviewSV);
+        this.glSurfaceView = (PGLSurfaceView) rootView.findViewById(R.id.recordingPreviewSV);
         PLog.logDebug(TAG, "onCreateView() -> this.glSurfaceView = " + (this.glSurfaceView == null ? "null" : "not null"));
 
         return rootView;
@@ -140,6 +141,7 @@ public class PRecordingSessionView extends PView {
     public void setCameraPreviewSurfaceTexture(SurfaceTexture surfaceTexture) {
         try {
             this.camera.setPreviewTexture(surfaceTexture);
+            //this.camera.setPre
         }
         catch (IOException e) {
             throw new RuntimeException(e);
