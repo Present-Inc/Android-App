@@ -17,6 +17,8 @@ import java.nio.FloatBuffer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import tv.present.android.util.PLog;
+
 
 /**
  * Created by kbw28 on 6/24/14.
@@ -140,6 +142,8 @@ public class PCameraRenderer implements GLSurfaceView.Renderer, SurfaceTexture.O
     }
 
     public void onSurfaceCreated(GL10 glUnused, EGLConfig config) {
+
+        PLog.logDebug(TAG, "onSurfaceCreated() -> Method start");
         // Ignore the passed-in GL10 interface, and use the GLES20 class's static methods instead.
 
         /* Set up alpha blending and an Android background color */
@@ -228,9 +232,13 @@ public class PCameraRenderer implements GLSurfaceView.Renderer, SurfaceTexture.O
 
         mLastTime = 0;
 
+        PLog.logDebug(TAG, "onSurfaceCreated() -> Method end");
+
         synchronized(this) {
             updateSurface = false;
         }
+
+
     }
 
     synchronized public void onFrameAvailable(SurfaceTexture surface) {
