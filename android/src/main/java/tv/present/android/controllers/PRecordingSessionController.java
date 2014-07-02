@@ -66,7 +66,7 @@ public class PRecordingSessionController extends PController implements SurfaceT
     protected void onStart() {
         super.onStart();
         PLog.logDebug(TAG, "onStart() -> Beginning of method");
-        this.camera = Camera.open();
+        //this.camera = Camera.open();
         this.cameraHandler = new PCameraHandler(this);
         this.chunkingRecorder = new PChunkingRecorder(this.getApplicationContext());
         this.recordingSessionView.setEGLContextVersion(PAndroidGlobals.EGL_CONTEXT_CLIENT_VERSION);
