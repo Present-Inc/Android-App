@@ -13,7 +13,7 @@ import tv.present.android.util.PLog;
 /**
  * Present Codec Input Surface
  *
- * This class manages staete associated with a Surface that is used as a MediaCodec encoder input.
+ * This class manages state associated with a Surface that is used as a MediaCodec encoder input.
  * The constructor will take a Surface that is obtained from MediaCodec.crateInputSurface(), and
  * uses that Surface to create an EGL window surface.  Any calls to eglSwapBuffers() cause a frame
  * of data to be sent to the video encoder.
