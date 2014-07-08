@@ -10,8 +10,8 @@ import android.widget.Button;
 
 import tv.present.android.R;
 import tv.present.android.controllers.PCoreController;
-import tv.present.android.controllers.PRecordingSessionController;
 import tv.present.android.controllers.PEntryController;
+import tv.present.android.controllers.PRecordingSessionController;
 
 public final class DemoActivity extends Activity implements View.OnClickListener {
 

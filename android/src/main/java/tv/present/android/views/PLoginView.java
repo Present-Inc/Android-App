@@ -2,6 +2,7 @@ package tv.present.android.views;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,14 +17,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import tv.present.android.R;
-import tv.present.android.controllers.PEntryController;
 import tv.present.android.controllers.PController;
+import tv.present.android.controllers.PEntryController;
 import tv.present.android.models.PView;
 import tv.present.android.util.PLog;
 
 public final class PLoginView extends PView implements View.OnFocusChangeListener, View.OnClickListener {
 
     private static final String TAG = "tv.present.android.views.LoginView";
+
+    //Loading spinner for logging in
+    private ProgressDialog loadingLoggingInDialog;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -162,14 +166,23 @@ public final class PLoginView extends PView implements View.OnFocusChangeListene
      */
     public void onClick(View view) {
 
+        //Log in button
         if (view instanceof Button) {
-
             final EditText username = (EditText) this.getActivity().findViewById(R.id.usernameField);
             final EditText password = (EditText) this.getActivity().findViewById(R.id.passwordField);
             PLog.logDebug(TAG, "Performing login with username " + username.getText().toString() + " and password: " + password.getText().toString());
             ((PEntryController)this.controller).executeLogin(username.getText().toString(), password.getText().toString());
 
+            ((Button) view).setText("Logging in");
+            loadingLoggingInDialog = new ProgressDialog(getActivity().getApplicationContext());
+            loadingLoggingInDialog.setMessage("Logging in...");
+            loadingLoggingInDialog.setIndeterminate(true);
+            loadingLoggingInDialog.show();
+
+            //Code to destroy loading dialog on either a successful login or bad login (incorrect username/password)
+            //loadingLoggingInDialog.dismiss();
         }
+
         else if (view instanceof TextView) {
 
             switch(view.getId()) {

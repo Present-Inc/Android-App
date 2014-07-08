@@ -4,8 +4,8 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 
 import tv.present.android.R;
-import tv.present.android.controllers.PCoreController;
 import tv.present.android.controllers.PController;
+import tv.present.android.controllers.PCoreController;
 import tv.present.android.views.PPlaceholderView;
 
 /**

@@ -1,5 +1,5 @@
 package tv.present.android.views;
-import android.widget.ImageView;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
+import android.widget.ImageView;
 
 public class PCircularImageView extends ImageView {
 

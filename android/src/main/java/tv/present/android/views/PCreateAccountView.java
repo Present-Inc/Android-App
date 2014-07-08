@@ -3,7 +3,9 @@ package tv.present.android.views;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -19,8 +21,8 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import tv.present.android.R;
-import tv.present.android.controllers.PEntryController;
 import tv.present.android.controllers.PController;
+import tv.present.android.controllers.PEntryController;
 import tv.present.android.models.PView;
 import tv.present.android.util.PLog;
 
@@ -31,6 +33,7 @@ public class PCreateAccountView extends PView implements View.OnFocusChangeListe
 
     private static final String TAG = "tv.present.android.views.CreateAccountView";
     private final int REQUEST_CODE_PROFILE_IMAGE_CAPTURE = 8;
+    private final int REQUEST_CODE_PROFILE_IMAGE_GALLERY = 1001;
 
     private transient ImageButton choosePhotoButton;
 
@@ -166,10 +169,57 @@ public class PCreateAccountView extends PView implements View.OnFocusChangeListe
 
         // Remember: there is only one ImageButton on this view
         if (view instanceof ImageButton) {
-            final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(this.getActivity().getPackageManager()) != null) {
-                this.startActivityForResult(takePictureIntent, REQUEST_CODE_PROFILE_IMAGE_CAPTURE);
-            }
+            final Context theC = this.getActivity();
+
+            //Dialog for either taking profile picture or choosing from gallery
+            AlertDialog theChoice = new AlertDialog.Builder(theC)
+                    .setTitle("Select Profile Photo")
+                    .setPositiveButton("From Camera", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            final Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                            //For cropping
+                            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString());
+                            takePictureIntent.putExtra("crop", "true");
+                            takePictureIntent.putExtra("aspectX", 0);
+                            takePictureIntent.putExtra("aspectY", 0);
+                            takePictureIntent.putExtra("outputX", 960);
+                            takePictureIntent.putExtra("outputY", 960);
+                            try { takePictureIntent.putExtra("return-data", true); }
+                            catch (Exception e) { }
+
+                            if (takePictureIntent.resolveActivity(theC.getPackageManager()) != null)
+                                startActivityForResult(takePictureIntent, REQUEST_CODE_PROFILE_IMAGE_CAPTURE);
+                        }
+                    })
+                    .setNegativeButton("From Gallery", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            Intent intent = new Intent();
+                            intent.setType("image/*");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+
+                            //For cropping
+                            intent.putExtra("crop", "true");
+                            intent.putExtra("aspectX", 1);
+                            intent.putExtra("aspectY", 1);
+                            intent.putExtra("outputX", 960);
+                            intent.putExtra("outputY", 960);
+                            try { intent.putExtra("return-data", true); }
+                            catch (Exception e) { }
+
+                            startActivityForResult(Intent.createChooser(intent, "Select Photo"),
+                                    REQUEST_CODE_PROFILE_IMAGE_GALLERY);
+                        }
+                    })
+                    .create();
+            theChoice.show();
         }
 
         if (view instanceof Button) {
@@ -183,7 +233,6 @@ public class PCreateAccountView extends PView implements View.OnFocusChangeListe
 
             ((PEntryController) this.controller).executeCreateAccount(username, password, emailAddress, fullName, phoneNumber);
         }
-
     }
 
     /**
@@ -204,11 +253,24 @@ public class PCreateAccountView extends PView implements View.OnFocusChangeListe
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         PLog.logDebug(TAG, "Made it back to the activity result!");
-        if (requestCode == REQUEST_CODE_PROFILE_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
-            final Bundle extras = data.getExtras();
-            final Bitmap imageBitmap = (Bitmap) extras.get("data");
-            this.choosePhotoButton.setImageBitmap(imageBitmap);
-        }
-    }
 
+        //Take Profile Picture with camera
+        if (requestCode == REQUEST_CODE_PROFILE_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK)
+        {
+            final Bundle extras = data.getExtras();
+            Bitmap photo = extras.getParcelable("data");
+            photo = Bitmap.createScaledBitmap(photo, this.choosePhotoButton.getWidth(), this.choosePhotoButton.getHeight(), true);
+            this.choosePhotoButton.setImageBitmap(photo);
+        }
+
+        //Choose Profile Photo from gallery. Same as above, but important to keep it separate
+        else if (requestCode == REQUEST_CODE_PROFILE_IMAGE_GALLERY && resultCode == Activity.RESULT_OK)
+        {
+            final Bundle extras = data.getExtras();
+            Bitmap photo = extras.getParcelable("data");
+            photo = Bitmap.createScaledBitmap(photo, this.choosePhotoButton.getWidth(), this.choosePhotoButton.getHeight(), true);
+            this.choosePhotoButton.setImageBitmap(photo);
+        }
+
+    }
 }

@@ -16,8 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import tv.present.android.R;
-import tv.present.android.controllers.PCoreController;
 import tv.present.android.controllers.PController;
+import tv.present.android.controllers.PCoreController;
 import tv.present.android.models.PView;
 import tv.present.android.util.PAndroidUtils;
 import tv.present.android.util.PKeys;
